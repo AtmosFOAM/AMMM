@@ -1,5 +1,0 @@
-ThermalProfile.C
-BCs/fixedFluxBuoyantExnerFvPatchScalarField.C
-BCs/fixedFluxBuoyantExnerMoistFvPatchScalarField.C
-
-LIB = $(FOAM_USER_LIBBIN)/libExnerTheta
