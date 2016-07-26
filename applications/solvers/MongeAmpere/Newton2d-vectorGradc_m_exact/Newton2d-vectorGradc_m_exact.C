@@ -40,8 +40,8 @@ Description
 #include "monitorFunction.H"
 #include "faceToPointReconstruct.H"
 
-
 using namespace Foam;
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Main program:
 
@@ -80,13 +80,12 @@ int main(int argc, char *argv[])
     // solver
     const dimensionedScalar Gamma1(controlDict.lookup("Gamma1"));
     const dimensionedScalar Gamma2(controlDict.lookup("Gamma2"));
-
     const scalar conv = readScalar(controlDict.lookup("conv"));
+    const int nCorr = readLabel(mesh.solutionDict().lookup("nCorrectors"));
     const dimensionedScalar matrixRelax =
           readScalar(controlDict.lookup("matrixRelax"))
        * dimensionedScalar("", dimLength,mesh.bounds().span().y())/min(mesh.V());
     Info << "matrixRelax = " << matrixRelax << endl;
-    const int nCorr = readLabel(mesh.solutionDict().lookup("nCorrectors"));
     const scalar gradientSmoothingCoeff = readScalar
     (
         controlDict.lookup("gradientSmoothingCoeff")
@@ -112,20 +111,19 @@ int main(int argc, char *argv[])
         forAll(matrixA, cellI)
         {
             
-            matrixA[cellI] = diagTensor::one*(1+phiBarLaplacian[cellI])
-                           - Hessian[cellI];
+            matrixA[cellI] = diagTensor::one*(1+phiBarLaplacian[cellI]) - Hessian[cellI];
             matrixA[cellI].yy() = 1.0;
             localA = 0.5*(matrixA[cellI] + matrixA[cellI].T());
             localAew = eigenValues(localA)[0];
 
             if(localAew <= 0)
             {
-                if(disp) {
+                if(disp)
+                {
                     Info << "Minimum eigenvalue = " << localAew << endl;
                     disp = false;
                 }
                 matrixA[cellI] = localA + (1.0e-5 - localAew)*diagTensor::one;
-              //matrixA[cellI] = localA -2*localAew*diagTensor::one;
             }
             else
             {
@@ -144,7 +142,9 @@ int main(int argc, char *argv[])
 
         // Transfer the cell centre gradient to the computational mesh, 
         // smooth then interpolate
-        gradc_m_c.internalField() = gradc_mR_c.internalField();
+        static_cast<DimensionedField<vector,volMesh> >(gradc_m_c.internalField())
+             = gradc_mR_c.internalField();
+
         for(int i = 0; i < nSmooth; i++)
         {
             gradc_m_c += gradientSmoothingCoeff
@@ -152,24 +152,13 @@ int main(int argc, char *argv[])
         }
         gradc_m = fvc::interpolate(gradc_m_c);
 
-        
-
-
-		//USING ORIGINAL WAY
-        //volVectorField reconstruct_snGradc_mR = fvc::reconstruct(snGradc_mR*rMesh.magSf());
-        //gradc_mR = fvc::interpolate(reconstruct_snGradc_mR);
-        //gradc_mR += (fvc::snGrad(c_mR) - (gradc_mR & rMesh.Sf())/rMesh.magSf())
-        //    *rMesh.Sf()/rMesh.magSf();
-
-		//USING Hops
+        //USING Hops
         volVectorField reconstruct_snGradc_mR = H.reconstructd(snGradc_mR*H.magd());
-		gradc_mR = fvc::interpolate(reconstruct_snGradc_mR);
-        //gradc_mR += (fvc::snGrad(c_mR) - (gradc_mR & H.delta())/H.magd())
-        //    *H.delta()/H.magd();
-
+        gradc_mR = fvc::interpolate(reconstruct_snGradc_mR);
 
         gradc_mR = equiDistMean*monitorFunc().grad(rMesh, gradc_mR);
-        gradc_m.internalField() = gradc_mR.internalField();
+        static_cast<DimensionedField<vector,surfaceMesh> >(gradc_m.internalField())
+             = gradc_mR.internalField();
 
         // The divergence of sngradc_m
         surfaceScalarField flux = mesh.Sf() & gradc_m;
@@ -195,9 +184,7 @@ int main(int argc, char *argv[])
         phi == dimensionedScalar("phi", dimArea, scalar(0));
 
         // Calculate the gradient of phiBar at cell centres and on faces
-        gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-        gradPhi.boundaryField()
-            == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
+        gradPhi = fvc::grad(Phi);
 
         // Interpolate gradPhi onto faces and correct the normal component
         gradPhif = fvc::interpolate(gradPhi);
@@ -218,7 +205,8 @@ int main(int argc, char *argv[])
 
         // map to or calculate the monitor function on the new mesh
         monitorR = monitorFunc().map(rMesh, monitor);
-        monitorNew.internalField() = monitorR.internalField();
+        static_cast<DimensionedField<scalar,volMesh> >(monitorNew.internalField())
+             = monitorR.internalField();
         monitorNew.correctBoundaryConditions();
 
         // The Equidistribution
@@ -226,7 +214,7 @@ int main(int argc, char *argv[])
 
         // mean equidistribution, c
         equiDistMean = fvc::domainIntegrate(detHess)
-                        /fvc::domainIntegrate(1/monitorNew);
+                       /fvc::domainIntegrate(1/monitorNew);
 
         runTime.write();
 
@@ -240,10 +228,9 @@ int main(int argc, char *argv[])
 
         if (converged)
         {
-          Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-               << nl << endl;
-          
-          runTime.writeAndEnd();
+            Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                 << nl <<endl;
+            runTime.writeAndEnd();
         }
     }
     

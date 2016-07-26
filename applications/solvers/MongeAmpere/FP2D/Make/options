@@ -1,10 +1,11 @@
 EXE_DEBUG = -DFULLDEBUG -ggdb3 -O0
 
-EXE_INC =  \
+EXE_INC = -I.\
     ${EXE_DEBUG} \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(ATMOSFOAM_SRC)/sampling/lnInclude \
-    -I$(ATMOSFOAM_SRC)/monitorFunction/lnInclude \
+    -I$(AMMM_SRC)/sampling/lnInclude \
+    -I$(AMMM_SRC)/monitorFunction/lnInclude \
+    -I$(AMMM_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude
 

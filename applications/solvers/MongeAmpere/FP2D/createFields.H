@@ -12,10 +12,8 @@ volVectorField gradPhi
 (
     IOobject("gradPhi", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
-    fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf())
+    fvc::grad(Phi)
 );
-gradPhi.boundaryField()
-    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
 
 // The gradient of Phi on faces
 surfaceVectorField gradPhif
@@ -35,19 +33,8 @@ volScalarField detHess
     IOobject("detHess", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     mesh,
-    dimensionedScalar("", dimless, scalar(1))
+    dimensionedScalar("detHess", dimless, scalar(1))
 );
-
-
-// the volume ratio between old and new meshes (the geometric Hessian)
-volScalarField volRatio
-(
-    IOobject("volRatio", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    mesh, dimless, wordList(5,"zeroGradient")
-);
-volRatio.internalField() = 1;
-volRatio.correctBoundaryConditions();
 
 // The original monitor function on the old mesh
 const volScalarField monitor
@@ -68,7 +55,7 @@ volScalarField monitorR
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     monitorFunc().map(rMesh, monitor)
 );
-monitorNew.internalField() = monitorR.internalField();
+setInternalAndBoundaryValues(monitorNew, monitorR);
 
 // The equidistribution PAB
 volScalarField PABequi
@@ -95,10 +82,7 @@ volScalarField equiDist
     monitorR*detHess
 );
 
-    dimensionedScalar Vtot = sum(mesh.V());
-
-// /(fvc::domainIntegrate(equiDist)/Vtot);
-    //pow(cmptAv(pow(equiDist,2))-pow(cmptAv(equiDist),2), 0.5)/cmptAv(equiDist);
+dimensionedScalar Vtot = sum(mesh.V());
 
 // Source term
 volScalarField source
@@ -116,7 +100,6 @@ Info << "Dimensions of gradPhi: " << gradPhi.dimensions() << endl;
 Info << "Dimensions of gradPhif: " << gradPhif.dimensions() << endl;
 Info << "Dimensions of Hessian: " << Hessian.dimensions() << endl;
 Info << "Dimensions of detHess: " << detHess.dimensions() << endl;
-Info << "Dimensions of volRatio: " << volRatio.dimensions() << endl;
 Info << "Dimensions of monitor: " << monitor.dimensions() << endl;
 Info << "Dimensions of monitorNew: " << monitorNew.dimensions() << endl;
 Info << "Dimension of the integral 1/monitorNew: " << fvc::domainIntegrate(1/monitorNew).dimensions() << endl;

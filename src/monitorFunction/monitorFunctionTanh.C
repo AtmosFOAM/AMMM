@@ -97,7 +97,7 @@ tmp<volScalarField> monitorFunctionTanh::map
             wordList(newMesh.boundaryMesh().size(), "zeroGradient")
         )
     );
-    volScalarField& mon = tMon();
+    volScalarField& mon = tMon.ref();
     
     point centreHat = spherical_? point(unitVector(centre_)) : centre_;
     
@@ -122,6 +122,7 @@ tmp<surfaceVectorField> monitorFunctionTanh::grad
     const surfaceVectorField& oldMonitor
 ) const
 {
+    // Why is this function empty?
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

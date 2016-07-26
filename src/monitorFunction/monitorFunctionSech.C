@@ -92,7 +92,7 @@ tmp<volScalarField> monitorFunctionSech::map
             wordList(newMesh.boundaryMesh().size(), "zeroGradient")
         )
     );
-    volScalarField& mon = tMon();
+    volScalarField& mon = tMon.ref();
     
     forAll(mon, cellI)
     {
@@ -113,23 +113,22 @@ tmp<surfaceVectorField> monitorFunctionSech::grad
 ) const
 {
     tmp<surfaceVectorField> tMon
+    (
+        new surfaceVectorField
         (
-         new surfaceVectorField
-         (
-          IOobject
-          (
-           "gradc_m",
-           newMesh.time().timeName(),
-           newMesh,
-           IOobject::NO_READ,
-           IOobject::NO_WRITE
-           ),
-          newMesh,
-          dimensionedVector("zero", dimless/dimLength, vector::zero)
-
-          )
-         );
-    surfaceVectorField& mon = tMon();
+            IOobject
+            (
+                "gradc_m",
+                newMesh.time().timeName(),
+                newMesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            newMesh,
+            dimensionedVector("zero", dimless/dimLength, vector::zero)
+        )
+    );
+    surfaceVectorField& mon = tMon.ref();
     
     forAll(mon, faceI)
     {
@@ -139,15 +138,14 @@ tmp<surfaceVectorField> monitorFunctionSech::grad
         scalar sinhT = sinh(T);
         scalar coshT = cosh(T);
         
-        scalar thing = 4*alpha1_*alpha2_*sinhT/(sqr((alpha1_/sqr(coshT))+1)*(coshT*coshT*coshT));
+        scalar thing = 4*alpha1_*alpha2_*sinhT
+                    /(sqr((alpha1_/sqr(coshT))+1)*(coshT*coshT*coshT));
 
         mon[faceI] = thing*(newMesh.Cf()[faceI] - centre_);
-
     }
     
     //    mon.correctBoundaryConditions();
-       return tMon;
-    
+    return tMon;
 }
 
 

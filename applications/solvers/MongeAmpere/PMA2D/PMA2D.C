@@ -34,6 +34,7 @@ Description
 #include "fvCFD.H"
 #include "monitorFunction.H"
 #include "faceToPointReconstruct.H"
+#include "setInternalValues.H"
 
 using namespace Foam;
 
@@ -69,58 +70,25 @@ int main(int argc, char *argv[])
     // The monitor funciton
     autoPtr<monitorFunction> monitorFunc(monitorFunction::New(controlDict));
     
-    // The ratio of the finite different to the geometric Hessian
-    // (HessianVolumeRatio=1 => geometric Hessian,
-    //  HessianVolumeRatio=0 => finite difference Hessian)
-    //const scalar HessianVolumeRatio
-    //(
-    //    readScalar(controlDict.lookup("HessianVolumeRatio"))
-    //);
-
-
-    const dimensionedScalar Gamma
-    (
-        controlDict.lookup("Gamma")
-    );
-
-
-    const dimensionedScalar dimfix
-    (
-        controlDict.lookup("dimfix")
-    );
-
-    // const dimensionedScalar conv
-    // (
-    //     controlDict.lookup("conv")
-    // );
-    scalar conv = readScalar(controlDict.lookup("conv"));
-
-    int iteration;
-    iteration = 0;
+    const dimensionedScalar Gamma(controlDict.lookup("Gamma"));
+    const scalar conv = readScalar(controlDict.lookup("conv"));
+    const dimensionedScalar dimfix(controlDict.lookup("dimfix"));
 
     #include "createFields.H"
 
-
-    Info << "Iteration = " << iteration
-	 << " PABe = " << PABe.value() << endl;
-    
+    Info << "Iteration = " << runTime.timeName()
+         << " PABe = " << PABe.value() << endl;
 
     // Use time-steps instead of iterations to solve the Monge-Ampere eqn
     bool converged = false;
     while (runTime.loop())
     {
-        
-        gradPhiOld = gradPhi;        
-
-        //constant = fvc::domainIntegrate(detHess*monitorNew)/Vtot;
         constant = fvc::domainIntegrate(pow(detHess*monitorNew,0.5))/Vtot;
         
         // Calculate the source terms for the PMA equation
-        //source = detHess*monitorNew - constant;
         source = (pow(detHess*monitorNew, 0.5) - constant);
 
         // Setup and solve the PMA eqn
-
         fvScalarMatrix PhiEqn
         (
             dimfix*fvm::ddt(Phi)
@@ -130,14 +98,11 @@ int main(int argc, char *argv[])
         );
         solverPerformance sp = PhiEqn.solve();
         converged = sp.nIterations() <= 1;
-	iteration++;
-        
-        // Calculate the gradient of Phi at cell centres and on faces
-        gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-        gradPhi.boundaryField()
-            == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
 
-        // Interpolate gradPhi onto faces and correct the normal component
+        // Calculate the gradient of Phi at cell centres and on faces
+        gradPhi = fvc::grad(Phi);
+
+        // Interpolate gradPhi (gradient of Phi) onto faces and correct the normal component
         gradPhif = fvc::interpolate(gradPhi);
         gradPhif += (fvc::snGrad(Phi) - (gradPhif & mesh.Sf())/mesh.magSf())
                     *mesh.Sf()/mesh.magSf();
@@ -147,67 +112,46 @@ int main(int argc, char *argv[])
              = fvc::faceToPointReconstruct(fvc::snGrad(Phi));
         rMesh.movePoints(mesh.points() + gradPhiP);
 
-        // finite difference Hessian and its determinant
+        // finite difference Hessian of phiBar and its determinant
         Hessian = fvc::grad(gradPhif);
         forAll(detHess, cellI)
         {
             detHess[cellI] = det(diagTensor::one + Hessian[cellI]);
         }
 
-	if (min(detHess.internalField()) < 0.0)
+        if (min(detHess.internalField()).value() < 0)
         {
-	  Info << "PMA method has tangled" << endl;
-	  return 0;
-	  runTime.writeAndEnd();
+            Info << "PMA method has tangled" << endl;
+            runTime.writeAndEnd();
         }
-
-
-
-        // Geometric version of the Hessian
-        //volRatio.internalField() =rMesh.V()/mesh.V();
-	//detHess.internalField() = rMesh.V()/mesh.V()
-
-        // combine the finite difference and geometric Hessian
-        //detHess = (1-HessianVolumeRatio)*detHess
-        //        + HessianVolumeRatio*volRatio;
 
         // map to or calculate the monitor function on the new mesh
         monitorR = monitorFunc().map(rMesh, monitor);
-        monitorNew.internalField() = monitorR.internalField();
-        monitorNew.correctBoundaryConditions();
+        setInternalValues(monitorNew, monitorR);
 
         // The Equidistribution
         equiDist = monitorR*detHess;
         equiDistMean = fvc::domainIntegrate(equiDist);
 
-        // Smooth the monitor function for the source term 
-        //monitorNew += 0.25*fvc::laplacian(sqr(1/mesh.deltaCoeffs()), monitorNew);
-        //monitorNew += 0.25*fvc::laplacian(sqr(1/mesh.deltaCoeffs()), monitorNew);
-        
 
-	// The global equidistribution
-	PABem = sum(equiDist)/mesh.nCells();
-	PABe = pow((sum(pow((equiDist-PABem),2))/mesh.nCells()),0.5)/PABem;
+        // The global equidistribution
+        PABem = sum(equiDist)/mesh.nCells();
+        PABe = pow((sum(pow((equiDist-PABem),2))/mesh.nCells()),0.5)/PABem;
+        converged = PABe.value() < conv;
 
-	// converged = PABe.value() < conv.value();
-	converged = PABe.value() < conv;
-
-        Info << "Iteration = " << iteration
+        Info << "Iteration = " << runTime.timeName()
              << " PABe = " << PABe.value() << endl;
-
 
         if (converged)
         {
-	  Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-	       << nl << endl;
-	  
-	  runTime.writeAndEnd();
+            Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                 << nl <<endl;
+            runTime.writeAndEnd();
         }
-
         runTime.write();
     }
     
-    Info<< "End\n" << endl;
+    Info << "End\n" << endl;
 
     return 0;
 }

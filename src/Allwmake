@@ -11,10 +11,5 @@ makeType=${1:-libso}
     exit 1
 }
 
-wmake $makeType ExnerTheta
-wmake $makeType finiteVolume
-wmake $makeType ghostMesh
-wmake $makeType Hops
-wmake $makeType orography
-wmake $makeType sampling
 wmake $makeType monitorFunction
+wmake $makeType shallowWater

@@ -41,6 +41,6 @@ Description
                                    *sqrt(g)*runTime.deltaT();
 
     Info << "  Max gravity wave Courant number = "
-         << max(waveCoNum.internalField()) << endl;
+         << max(waveCoNum.internalField()).value() << endl;
 
 // ************************************************************************* //

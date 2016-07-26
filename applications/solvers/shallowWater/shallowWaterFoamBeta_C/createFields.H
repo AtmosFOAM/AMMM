@@ -151,7 +151,7 @@ forAll(fluxU.boundaryField(), patchi)
      || htype == "geostrophicZeroFlux"
     )
     {
-        fluxU.boundaryField()[patchi] == 0;
+        static_cast<Foam::fvsPatchField<double>>(fluxU.boundaryField()[patchi]) == 0;
     }
 }
 

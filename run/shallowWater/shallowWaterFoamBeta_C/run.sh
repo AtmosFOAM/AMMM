@@ -50,7 +50,7 @@ awk '{if ($1 == 1*$1) print $1, $2/'$l1', $3/'$l2', $4/'$li'}' \
 
 # Calculate and plot the vorticity
 time=1e+06
-vorticity -time $time
+postProcess -func vorticity -time $time
 writeuvw vorticity -time $time
 gmtFoam -time $time vorticity
 evince $time/vorticity.pdf &
