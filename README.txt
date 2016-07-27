@@ -4,12 +4,17 @@
 A collection of OpenFOAM computational fluid dynamics applications and libraries for performing atmospheric experiments.  Includes mesh generators, scalar transport and Navier-Stokes solvers, and post-processing and visualisation tools.
 
 ## Installation
-First, install [OpenFOAM 3.0.1](http://www.openfoam.org/download/) or later.
-Second, set the variable the ATMOSFOAM_SRC in the .bashrc file:
-export ATMOSFOAM_SRC=$HOME/$WM_PROJECT/$USER-3.0.1/AMMM/src
+First, install [OpenFOAM 4 or dev](http://www.openfoam.org/download/).
+Second, set the variable the AMMM_SRC in the .bashrc file:
+export AMMM_SRC=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION/AMMM/src
 
+Third, install git repo AtmosFOAM-tools from:
 
-Compile all AtmosFOAM applications and libraries using `./Allwmake`
+in directory
+$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
+and compile AtmosFOAM-tools using Allwmake
+
+Compile all AMMM applications and libraries using `./Allwmake`
 
 
 # Running the codes

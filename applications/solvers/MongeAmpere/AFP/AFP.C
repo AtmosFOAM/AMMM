@@ -41,13 +41,12 @@ Description
 #include "fvCFD.H"
 #include "monitorFunction.H"
 #include "faceToPointReconstruct.H"
-
+#include "setInternalValues.H"
 
 using namespace Foam;
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Main program:
-
-
 
 int main(int argc, char *argv[])
 {
@@ -78,17 +77,11 @@ int main(int argc, char *argv[])
     // The monitor funciton
     autoPtr<monitorFunction> monitorFunc(monitorFunction::New(controlDict));
     
-    // The ratio of the finite different to the geometric Hessian
-    const dimensionedScalar Gamma
-    (
-        controlDict.lookup("Gamma")
-    );
-
-    scalar conv = readScalar(controlDict.lookup("conv"));
+    const dimensionedScalar Gamma(controlDict.lookup("Gamma"));
+    const scalar conv = readScalar(controlDict.lookup("conv"));
     const int nCorr = readLabel(mesh.solutionDict().lookup("nCorrectors"));
-       
-    #include "createFields.H"
 
+    #include "createFields.H"
 
     Info << "Iteration = " << runTime.timeName()
          << " PABe = " << PABe.value() << endl;
@@ -97,27 +90,26 @@ int main(int argc, char *argv[])
     bool converged = false;
     while (runTime.loop())
     {
-        Info<< "Time = " << runTime.timeName() << flush << nl;
+        Info<< "Time = " << runTime.timeName() << endl;
 
-        phiBarLaplacian = fvc::laplacian(Phi);
         // Calculate the matrix: matrixA = 1+fvc::laplacian(phiBar)-Hessian
+        phiBarLaplacian = fvc::laplacian(Phi);
         tensor localA (0,0,0,0,0,0,0,0,0);
         scalar localAew = 0.0;
-        bool print=true;
+        bool disp=true;
         forAll(matrixA, cellI)
         {
             
             matrixA[cellI] = diagTensor::one*(1+phiBarLaplacian[cellI]) - Hessian[cellI];
             matrixA[cellI].yy() = 1.0;
-            //            localA = 0.5*(matrixA[cellI]+matrixA[cellI].T());
             localA = matrixA[cellI];
             localAew = eigenValues(localA)[0];
             if(localAew <= 0)
             {
-                if(print)
+                if(disp)
                 {
                     Info << "Minimum eigenvalue = " << localAew << endl;
-                    print = false;
+                    disp = false;
                 }
                 matrixA[cellI] = localA + (1.0e-5 - localAew)*diagTensor::one;
             }
@@ -135,7 +127,6 @@ int main(int argc, char *argv[])
             fvScalarMatrix PhiEqn
             (
                 Gamma*fvm::laplacian(matrixA, phi)
-                //- Gamma*fvc::laplacian(matrixA, phi)
               + source
             );
             PhiEqn.setReference(0, scalar(0));
@@ -145,16 +136,10 @@ int main(int argc, char *argv[])
         Phi += phi;
         phi == dimensionedScalar("phi", dimArea, scalar(0));
 
-
         // Calculate the gradient of phiBar at cell centres and on faces
-        // gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-        // gradPhi.boundaryField()
-        //     == (static_cast<volVectorField>(fvc::grad(Phi))).bound
-        //    aryField();
-
         gradPhi = fvc::grad(Phi);
 
-        // Interpolate gradPhi (gradient of Phi) onto faces and correct the normal component
+        // Interpolate gradPhi onto faces and correct the normal component
         gradPhif = fvc::interpolate(gradPhi);
         gradPhif += (fvc::snGrad(Phi) - (gradPhif & mesh.Sf())/mesh.magSf())
                     *mesh.Sf()/mesh.magSf();
@@ -171,26 +156,21 @@ int main(int argc, char *argv[])
             detHess[cellI] = det(diagTensor::one + Hessian[cellI]);
         }
 
-       
-        // Geometric version of the Hessian
-        // detHess.internalField() =rMesh.V()/mesh.V();
-        
-        
         // map to or calculate the monitor function on the new mesh
         monitorR = monitorFunc().map(rMesh, monitor);
-        monitorNew.internalField() = monitorR.internalField();
-        monitorNew.correctBoundaryConditions();
+        setInternalValues(monitorNew, monitorR);
 
         // The Equidistribution
         equiDist = monitorR*detHess;
 
         // mean equidistribution, c
-        equiDistMean = fvc::domainIntegrate(detHess)/fvc::domainIntegrate(1/monitorNew);
+        equiDistMean = fvc::domainIntegrate(detHess)
+                       /fvc::domainIntegrate(1/monitorNew);
 
-       // The global equidistribution
-       PABem = sum(equiDist)/mesh.nCells();
-       PABe = pow((sum(pow((equiDist-PABem),2))/mesh.nCells()),0.5)/PABem;
-       converged = PABe.value() < conv;
+        // The global equidistribution and its variance
+        PABem = fvc::domainIntegrate(equiDist)/Vtot;
+        PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
+        converged = PABe.value() < conv; // || sp.nIterations() <= 0;
 
         Info << "Iteration = " << runTime.timeName()
              << " PABe = " << PABe.value() << endl;

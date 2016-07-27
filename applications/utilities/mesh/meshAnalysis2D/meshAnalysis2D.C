@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
         )
     );
 
-    const fileName dictName(args.additionalArgs()[0]);
+    const fileName dictName(args.args()[1].c_str());
     
     // Read the centre point for the analysis from the dictionary
     IOdictionary dict

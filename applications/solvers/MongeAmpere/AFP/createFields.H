@@ -14,16 +14,13 @@ phi == dimensionedScalar("phi", dimArea, scalar(0));
 // Create phiBarLaplacian
 volScalarField phiBarLaplacian("phiBarLaplacian", fvc::laplacian(Phi));
 
-
 // The gradient of Phi at cell centres
 volVectorField gradPhi
 (
     IOobject("gradPhi", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
-    fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf())
+    fvc::grad(Phi)
 );
-gradPhi.boundaryField()
-    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
 
 // The gradient of Phi on faces
 surfaceVectorField gradPhif
@@ -43,31 +40,25 @@ volScalarField detHess
     IOobject("detHess", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     mesh,
+    dimensionedScalar("detHess", dimless, scalar(1))
+);
+
+volScalarField detHessR
+(
+    IOobject("detHessR", runTime.timeName(), rMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    rMesh,
     dimensionedScalar("", dimless, scalar(1))
 );
 
-// The reqired matrix A
-//volTensorField matrixA("matrixA", 1+fvc::laplacian(Phi)-Hessian);
+// The matrix A
 volTensorField matrixA
 (
     IOobject("matrixA", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
-    -Hessian
+    mesh,
+    dimensionedTensor("A", dimless, tensor::one)
 );
-forAll(matrixA, cellI)
-{
-    matrixA[cellI] = matrixA[cellI] + diagTensor::one*(1+phiBarLaplacian[cellI]);
-}
-
-// the volume ratio between old and new meshes (the geometric Hessian)
-volScalarField volRatio
-(
-    IOobject("volRatio", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    mesh, dimless, wordList(5,"zeroGradient")
-);
-volRatio.internalField() = 1;
-volRatio.correctBoundaryConditions();
 
 // The original monitor function on the old mesh
 const volScalarField monitor
@@ -88,10 +79,17 @@ volScalarField monitorR
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     monitorFunc().map(rMesh, monitor)
 );
-monitorNew.internalField() = monitorR.internalField();
-
+setInternalAndBoundaryValues(monitorNew, monitorR);
 
 // The equidistribution PAB
+// The equidistribution
+volScalarField equiDist
+(
+    IOobject("equiDist", runTime.timeName(), rMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    monitorR*detHess
+);
+
 volScalarField PABequi
 (
     IOobject("PABequi", runTime.timeName(), rMesh,
@@ -100,25 +98,14 @@ volScalarField PABequi
 );
 
 // The global equidistribution
-dimensionedScalar PABem = sum(PABequi)/mesh.nCells();
-dimensionedScalar PABe = pow(  (sum( pow((PABequi-PABem),2) )/mesh.nCells()  ),0.5)/PABem;
-
-
+dimensionedScalar Vtot = sum(mesh.V());
+dimensionedScalar PABem = fvc::domainIntegrate(equiDist)/Vtot;
+dimensionedScalar PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))
+                         /(Vtot*PABem);
 
 // The mean equidistribution, c
 dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
                                  /fvc::domainIntegrate(1/monitorNew);
-
-// The equidistribution
-//volScalarField equiDist("equiDist", monitorR*detHess);
-volScalarField equiDist
-(
-    IOobject("equiDist", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    monitorR*detHess
-);
-
-dimensionedScalar Vtot = sum(mesh.V());
 
 // Source term
 volScalarField source

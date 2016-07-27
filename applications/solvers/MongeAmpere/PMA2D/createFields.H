@@ -12,13 +12,9 @@ volVectorField gradPhi
 (
     IOobject("gradPhi", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
-    fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf())
+    fvc::grad(Phi)
 );
-gradPhi.boundaryField()
-    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
-
-volVectorField gradPhiOld("gradPhiOld", gradPhi);
-
+gradPhi.oldTime();
 
 // The gradient of Phi on faces
 surfaceVectorField gradPhif
@@ -41,16 +37,6 @@ volScalarField detHess
     dimensionedScalar("detHess", dimless, scalar(1))
 );
 
-// the volume ratio between old and new meshes (the geometric Hessian)
-volScalarField volRatio
-(
-    IOobject("volRatio", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    mesh, dimless, wordList(5,"zeroGradient")
-);
-volRatio.internalField() = 1;
-volRatio.correctBoundaryConditions();
-
 // The original monitor function on the old mesh
 const volScalarField monitor
 (
@@ -70,8 +56,7 @@ volScalarField monitorR
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     monitorFunc().map(rMesh, monitor)
 );
-monitorNew.internalField() = monitorR.internalField();
-
+setInternalAndBoundaryValues(monitorNew, monitorR);
 
 // The equidistribution PAB
 volScalarField PABequi
@@ -84,7 +69,6 @@ volScalarField PABequi
 // The global equidistribution
 dimensionedScalar PABem = sum(PABequi)/mesh.nCells();
 dimensionedScalar PABe = pow(  (sum( pow((PABequi-PABem),2) )/mesh.nCells()  ),0.5)/PABem;
-  
 
 // The equidistribution
 //volScalarField equiDist("equiDist", monitorR*detHess);
@@ -97,13 +81,6 @@ volScalarField equiDist
 
 dimensionedScalar Vtot = sum(mesh.V());
 
-// /(fvc::domainIntegrate(equiDist)/Vtot);
-//pow(cmptAv(pow(equiDist,2))-pow(cmptAv(equiDist),2), 0.5)/cmptAv(equiDist);
-
-// The mean equidistribution
-//dimensionedScalar equiDistMean = fvc::domainIntegrate(equiDist);
-
-//dimensionedScalar constant = fvc::domainIntegrate(detHess*monitorNew)/Vtot;
 dimensionedScalar constant = fvc::domainIntegrate(pow(detHess*monitorNew,0.5))/Vtot;
 
 // Source term
@@ -117,13 +94,6 @@ volScalarField source
     //    pow(detHess*monitorNew, 0.5) - constant
 );
 
-//volScalarField source
-//(
-//    IOobject("source", runTime.timeName(), rMesh,
-///             IOobject::NO_READ, IOobject::AUTO_WRITE),
-//    detHess*monitorNew
-//);
-
 dimensionedScalar equiDistMean = fvc::domainIntegrate(equiDist);
 
 dimensionedScalar rdt = 1/runTime.deltaT();
@@ -136,7 +106,6 @@ Info << "Dimensions of gradPhi: " << gradPhi.dimensions() << endl;
 Info << "Dimensions of gradPhif: " << gradPhif.dimensions() << endl;
 Info << "Dimensions of Hessian: " << Hessian.dimensions() << endl;
 Info << "Dimensions of detHess: " << detHess.dimensions() << endl;
-Info << "Dimensions of volRatio: " << volRatio.dimensions() << endl;
 Info << "Dimensions of monitor: " << monitor.dimensions() << endl;
 Info << "Dimensions of monitorNew: " << monitorNew.dimensions() << endl;
 Info << "Dimension of the integral 1/monitorNew: " << fvc::domainIntegrate(1/monitorNew).dimensions() << endl;

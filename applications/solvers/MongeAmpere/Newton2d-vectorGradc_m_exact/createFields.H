@@ -5,6 +5,7 @@ volScalarField Phi
              IOobject::MUST_READ, IOobject::AUTO_WRITE),
     mesh
 );
+Phi.oldTime();
 
 // Create the perturbation from Phi
 volScalarField phi("phi", Phi);
@@ -12,7 +13,6 @@ phi == dimensionedScalar("phi", dimArea, scalar(0));
 
 // Create phiBarLaplacian
 volScalarField phiBarLaplacian("phiBarLaplacian", fvc::laplacian(Phi));
-phiBarLaplacian = fvc::laplacian(Phi);
 
 // The gradient of Phi at cell centres
 volVectorField gradPhi
@@ -21,9 +21,11 @@ volVectorField gradPhi
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf())
 );
-gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-gradPhi.boundaryField()
-    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
+static_cast<GeometricField<Vector<double>, fvPatchField, volMesh>::Boundary>
+(
+    gradPhi.boundaryField()
+)
+== (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
 
 // The gradient of Phi on faces
 surfaceVectorField gradPhif
@@ -33,13 +35,11 @@ surfaceVectorField gradPhif
     fvc::interpolate(gradPhi),
     "calculated"
 );
-gradPhif = fvc::interpolate(gradPhi);
 gradPhif += (fvc::snGrad(Phi) - (gradPhif & mesh.Sf())/mesh.magSf())
             *mesh.Sf()/mesh.magSf();
 
 // Hessian of Phi and its determinant
 volTensorField Hessian("Hessian", fvc::grad(gradPhif));
-Hessian = fvc::grad(gradPhif);
 volScalarField detHess
 (
     IOobject("detHess", runTime.timeName(), mesh,
@@ -47,40 +47,21 @@ volScalarField detHess
     mesh,
     dimensionedScalar("", dimless, scalar(1))
 );
-forAll(detHess, cellI)
-{
-    detHess[cellI] = det(diagTensor::one + Hessian[cellI]);
-}
 
-
+// The reqired matrix A
+volTensorField matrixA
+(
+    IOobject("matrixA", runTime.timeName(), mesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    mesh,
+    dimensionedTensor("I", dimless, tensor::one)
+);
 volScalarField detHessR
 (
     IOobject("detHessR", runTime.timeName(), rMesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     rMesh,
     dimensionedScalar("", dimless, scalar(1))
-);
-detHessR.internalField() = detHess.internalField();
-
-
-// The reqired matrix A
-volTensorField I
-(
-    IOobject("I", runTime.constant(), mesh),
-    mesh,
-    dimensionedTensor("I", dimless, tensor::one)
-);
-volTensorField matrixA("matrixA", -Hessian + I*(1+fvc::laplacian(Phi)));
-matrixA = -Hessian + I*(1+fvc::laplacian(Phi));
-
-// the volume ratio between old and new meshes (the geometric Hessian)
-volScalarField volRatio
-(
-    IOobject("volRatio", runTime.timeName(), mesh,
-             IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
-    mesh,
-    dimensionedScalar("volRatio", dimless, scalar(1)),
-    wordList(5,"zeroGradient")
 );
 
 // The original monitor function on the old mesh
@@ -102,8 +83,8 @@ volScalarField monitorR
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     monitorFunc().map(rMesh, monitor)
 );
-monitorR = monitorFunc().map(rMesh, monitor);
-monitorNew.internalField() = monitorR.internalField();
+static_cast<DimensionedField<scalar,volMesh> >(monitorNew.internalField())
+     = monitorR.internalField();
 
 // The mean equidistribution, c
 dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)

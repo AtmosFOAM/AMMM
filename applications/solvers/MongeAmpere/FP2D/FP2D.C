@@ -34,6 +34,7 @@ Description
 #include "fvCFD.H"
 #include "monitorFunction.H"
 #include "faceToPointReconstruct.H"
+#include "setInternalValues.H"
 
 using namespace Foam;
 
@@ -69,23 +70,13 @@ int main(int argc, char *argv[])
     // The monitor funciton
     autoPtr<monitorFunction> monitorFunc(monitorFunction::New(controlDict));
     
-
-
-    // boost the Laplacian to stabilise
-    const dimensionedScalar Gamma
-    (
-        controlDict.lookup("Gamma")
-    );
-
-    scalar conv = readScalar(controlDict.lookup("conv"));
-
+    const dimensionedScalar Gamma(controlDict.lookup("Gamma"));
+    const scalar conv = readScalar(controlDict.lookup("conv"));
 
     #include "createFields.H"
 
-
     Info << "Iteration = " << runTime.timeName()
-	 << " PABe = " << PABe.value() << endl;
-
+         << " PABe = " << PABe.value() << endl;
 
     // Use time-steps instead of iterations to solve the Monge-Ampere eqn
     bool converged = false;
@@ -106,13 +97,10 @@ int main(int argc, char *argv[])
         converged = sp.nIterations() <= 1;
 
         // Calculate the gradient of Phi at cell centres and on faces
-        //gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-        //gradPhi.boundaryField()
-        //    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
         gradPhi = fvc::grad(Phi);
 
-        // Interpolate gradPhi onto faces and correct the normal component
-        gradPhif = fvc::interpolate(gradPhi); 
+        // Interpolate gradPhi (gradient of Phi) onto faces and correct the normal component
+        gradPhif = fvc::interpolate(gradPhi);
         gradPhif += (fvc::snGrad(Phi) - (gradPhif & mesh.Sf())/mesh.magSf())
                     *mesh.Sf()/mesh.magSf();
 
@@ -121,20 +109,16 @@ int main(int argc, char *argv[])
              = fvc::faceToPointReconstruct(fvc::snGrad(Phi));
         rMesh.movePoints(mesh.points() + gradPhiP);
 
-        // finite difference Hessian and its determinant
+        // finite difference Hessian of phiBar and its determinant
         Hessian = fvc::grad(gradPhif);
         forAll(detHess, cellI)
         {
             detHess[cellI] = det(diagTensor::one + Hessian[cellI]);
         }
-        // Geometric version of the Hessian
-	// detHess.internalField() = rMesh.V()/mesh.V();
-
 
         // map to or calculate the monitor function on the new mesh
         monitorR = monitorFunc().map(rMesh, monitor);
-        monitorNew.internalField() = monitorR.internalField();
-        monitorNew.correctBoundaryConditions();
+        setInternalValues(monitorNew, monitorR);
 
         // The Equidistribution
         equiDist = monitorR*detHess;
@@ -142,38 +126,25 @@ int main(int argc, char *argv[])
         // mean equidistribution, c
         equiDistMean = fvc::domainIntegrate(detHess)
                        /fvc::domainIntegrate(1/monitorNew);
-	
-	PABem = sum(equiDist)/mesh.nCells();
-	PABe = pow((sum(pow((equiDist-PABem),2))/mesh.nCells()),0.5)/PABem;
 
-
-
-        // Smooth the monitor function for the source term
-        //monitorNew += 0.25*fvc::laplacian(sqr(1/mesh.deltaCoeffs()), monitorNew);
-        //monitorNew += 0.25*fvc::laplacian(sqr(1/mesh.deltaCoeffs()), monitorNew);
-        
-	converged = PABe.value() < conv;
-
-	if( sp.nIterations() <= 1 and (not converged))
-	  {
-	    //	    sp.tolerance() = 0.1*sp.tolerance();
-	  }
+        // The global equidistribution
+        PABem = sum(equiDist)/mesh.nCells();
+        PABe = pow((sum(pow((equiDist-PABem),2))/mesh.nCells()),0.5)/PABem;
+        converged = PABe.value() < conv;
 
         Info << "Iteration = " << runTime.timeName()
              << " PABe = " << PABe.value() << endl;
 
-
         if (converged)
         {
-	  Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-	       << nl << endl;
-	  
-	  runTime.writeAndEnd();
+            Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                 << nl <<endl;
+            runTime.writeAndEnd();
         }
         runTime.write();
     }
     
-    Info<< "End\n" << endl;
+    Info << "End\n" << endl;
 
     return 0;
 }
