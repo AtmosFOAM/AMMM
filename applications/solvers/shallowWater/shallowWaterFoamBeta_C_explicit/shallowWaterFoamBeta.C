@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 
             hEqn.solve();
 
-            // update diagnsotic fields
+            // update diagnostic fields
             hf = fvc::interpolate(h);
             U = fvc::reconstruct(flux/hf);
             Uf = fvc::interpolate(U);

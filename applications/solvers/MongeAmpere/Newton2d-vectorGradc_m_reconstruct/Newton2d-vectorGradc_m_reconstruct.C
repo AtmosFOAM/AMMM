@@ -195,9 +195,10 @@ int main(int argc, char *argv[])
         phi == dimensionedScalar("phi", dimArea, scalar(0));
 
         // Calculate the gradient of phiBar at cell centres and on faces
-        gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-        gradPhi.boundaryField()
-            == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
+        gradPhi = fvc::grad(Phi);
+        //gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
+        //gradPhi.boundaryField()
+        //    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
 
         // Interpolate gradPhi onto faces and correct the normal component
         gradPhif = fvc::interpolate(gradPhi);

@@ -12,12 +12,14 @@ volScalarField h
     mesh
 );
 
+// h interpolated on to faces
 surfaceScalarField hf
 (
     IOobject("hf", runTime.timeName(), mesh),
     fvc::interpolate(h)
 );
 
+// h0 is defined to be the orography
 Info<< "Reading field h0 if present (the orography)\n" << endl;
 volScalarField h0
 (

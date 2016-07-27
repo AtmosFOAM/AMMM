@@ -106,9 +106,11 @@ int main(int argc, char *argv[])
         converged = sp.nIterations() <= 1;
 
         // Calculate the gradient of Phi at cell centres and on faces
-        gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
-        gradPhi.boundaryField()
-            == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
+        //gradPhi = fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf());
+        //gradPhi.boundaryField()
+        //    == (static_cast<volVectorField>(fvc::grad(Phi))).boundaryField();
+        gradPhi = fvc::grad(Phi);
+
         // Interpolate gradPhi onto faces and correct the normal component
         gradPhif = fvc::interpolate(gradPhi); 
         gradPhif += (fvc::snGrad(Phi) - (gradPhif & mesh.Sf())/mesh.magSf())
