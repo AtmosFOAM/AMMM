@@ -99,6 +99,8 @@ int main(int argc, char *argv[])
         solverPerformance sp = PhiEqn.solve();
         converged = sp.nIterations() <= 1;
 
+        iteration++;
+        
         // Calculate the gradient of Phi at cell centres and on faces
         gradPhi = fvc::grad(Phi);
 
@@ -131,13 +133,15 @@ int main(int argc, char *argv[])
 
         // The Equidistribution
         equiDist = monitorR*detHess;
-        equiDistMean = fvc::domainIntegrate(equiDist);
 
+        // mean equidistribution, c
+        equiDistMean = fvc::domainIntegrate(detHess)
+                       /fvc::domainIntegrate(1/monitorNew);
 
-        // The global equidistribution
-        PABem = sum(equiDist)/mesh.nCells();
-        PABe = pow((sum(pow((equiDist-PABem),2))/mesh.nCells()),0.5)/PABem;
-        converged = PABe.value() < conv;
+        // The global equidistribution as CV of equidistribution
+        PABem = fvc::domainIntegrate(equiDist)/Vtot;
+        PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
+        converged = PABe.value() < conv; // || sp.nIterations() <= 0;
 
         Info << "Iteration = " << runTime.timeName()
              << " PABe = " << PABe.value() << endl;

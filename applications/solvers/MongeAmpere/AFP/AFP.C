@@ -136,10 +136,10 @@ int main(int argc, char *argv[])
         Phi += phi;
         phi == dimensionedScalar("phi", dimArea, scalar(0));
 
-        // Calculate the gradient of phiBar at cell centres and on faces
+        // Calculate the gradient of Phi at cell centres and on faces
         gradPhi = fvc::grad(Phi);
 
-        // Interpolate gradPhi onto faces and correct the normal component
+        // Interpolate gradPhi (gradient of Phi) onto faces and correct the normal component
         gradPhif = fvc::interpolate(gradPhi);
         gradPhif += (fvc::snGrad(Phi) - (gradPhif & mesh.Sf())/mesh.magSf())
                     *mesh.Sf()/mesh.magSf();
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
         equiDistMean = fvc::domainIntegrate(detHess)
                        /fvc::domainIntegrate(1/monitorNew);
 
-        // The global equidistribution and its variance
+        // The global equidistribution as CV of equidistribution
         PABem = fvc::domainIntegrate(equiDist)/Vtot;
         PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
         converged = PABe.value() < conv; // || sp.nIterations() <= 0;
