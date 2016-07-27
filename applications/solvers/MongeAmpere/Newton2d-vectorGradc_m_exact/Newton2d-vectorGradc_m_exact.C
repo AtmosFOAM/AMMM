@@ -35,7 +35,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "Hops.H"
+#include "HodgeOps.H"
 #include "fvCFD.H"
 #include "monitorFunction.H"
 #include "faceToPointReconstruct.H"
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ, IOobject::AUTO_WRITE
         )
     );
-    Hops H(rMesh);
+    HodgeOps H(rMesh);
     dimensionedScalar Vtot("Vtot", dimVol, gSum(mesh.V()));
 
     // Open control dictionary
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
         }
         gradc_m = fvc::interpolate(gradc_m_c);
 
-        //USING Hops
+        //USING HodgeOps
         volVectorField reconstruct_snGradc_mR = H.reconstructd(snGradc_mR*H.magd());
         gradc_mR = fvc::interpolate(reconstruct_snGradc_mR);
 
