@@ -74,9 +74,12 @@ int main(int argc, char *argv[])
     const scalar conv = readScalar(controlDict.lookup("conv"));
     const dimensionedScalar dimfix(controlDict.lookup("dimfix"));
 
+    int iteration;
+    iteration = 0;
+    
     #include "createFields.H"
 
-    Info << "Iteration = " << runTime.timeName()
+    Info << "Iteration = " << iteration
          << " PABe = " << PABe.value() << endl;
 
     // Use time-steps instead of iterations to solve the Monge-Ampere eqn
@@ -143,7 +146,7 @@ int main(int argc, char *argv[])
         PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
         converged = PABe.value() < conv; // || sp.nIterations() <= 0;
 
-        Info << "Iteration = " << runTime.timeName()
+        Info << "Iteration = " << iteration
              << " PABe = " << PABe.value() << endl;
 
         if (converged)
