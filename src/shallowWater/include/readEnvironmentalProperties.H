@@ -14,7 +14,8 @@ IOdictionary environmentalProperties
 
 const dimensionedScalar g(environmentalProperties.lookup("g"));
 const Switch rotating(environmentalProperties.lookup("rotating"));
+Info<< "about to define beta in readenvironmentalProperties.H \n" << endl;
 const dimensionedScalar beta = rotating ?
                     environmentalProperties.lookup("beta") :
-                    dimensionedScalar("beta", -dimTime-dimLength, scalar(0));
-
+                    dimensionedScalar("beta", dimless/(dimTime*dimLength), scalar(0));
+Info<< "finished reading environmental properties \n" << endl;

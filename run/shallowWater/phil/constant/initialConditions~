@@ -1,0 +1,38 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "";
+    local           "";
+
+    class           dictionary;
+    object          initialConditions;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+u0 u0 [0 1 -1 0 0 0 0] 0;
+jetCentre jetCentre [0 1  0 0 0 0 0] 6e6;
+jetHalfWidth jetHalfWidth [0 1 0 0 0] 1.5e6;
+he he [0 1 0 0 0] 10e3;
+bumpHeight bumpHeight [0 1 0 0 0] 120;
+bumpCentre bumpCentre [0 1 0 0 0] (18e6 6e6 0);
+bumpWidth bumpWidth [0 1 0 0 0] (1.5e6 2e6 0);
+orog_height 0;
+wave_height 1000;
+wave_width 2e6;
+wave_speed 20;
+wave_centre (0.25 0 0);
+
+// ************************************************************************* //

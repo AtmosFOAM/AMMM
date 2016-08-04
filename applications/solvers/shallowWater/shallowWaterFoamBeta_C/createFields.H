@@ -26,30 +26,18 @@ volScalarField h0
     IOobject
     (
         "h0",
-        runTime.findInstance("polyMesh", "points"),
+        runTime.timeName(),
         mesh,
         IOobject::READ_IF_PRESENT
     ),
-    mesh,
-    dimensionedScalar("h0", dimLength, 0.0)
+    mesh//,
+    //dimensionedScalar("h0", dimLength, 0.0)
 );
+Info<< "Read h0: max = " << max(h0) << endl;
 
 // The gradient of the orography is assumed not to change
 const surfaceScalarField gsnGradh0 = mesh.magSf()*g*fvc::snGrad(h0);
 
-Info<< "Reading field Uf - the velocity on the face\n" << endl;
-surfaceVectorField Uf
-(
-    IOobject
-    (
-        "Uf",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
 
 // The cell centre velocity
 volVectorField U
@@ -64,6 +52,22 @@ volVectorField U
     ),
     mesh
 );
+
+Info<< "calculating field Uf - the velocity on the face\n" << endl;
+surfaceVectorField Uf
+(
+    IOobject
+    (
+        "Uf",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    fvc::interpolate(U)
+    //    dimensionedVector("Uf", dimVelocity, vector(0 0 0))
+);
+
 
 Info<< "Reading/calculating face flux field\n" << endl;
 
@@ -82,20 +86,20 @@ surfaceScalarField flux
 flux.oldTime();
 
 
-//Info<< "Creating field hTotal for post processing\n" << endl;
-//volScalarField hTotal
-//(
-//    IOobject
-//    (
-//        "hTotal",
-//        runTime.timeName(),
-//        mesh,
-//        IOobject::READ_IF_PRESENT,
-//        IOobject::AUTO_WRITE
-//    ),
-//    h+h0
-//);
-//hTotal.write();
+Info<< "Creating field hTotal for post processing\n" << endl;
+volScalarField hTotal
+(
+   IOobject
+   (
+       "hTotal",
+       runTime.timeName(),
+       mesh,
+       IOobject::READ_IF_PRESENT,
+       IOobject::AUTO_WRITE
+   ),
+   h+h0
+);
+hTotal.write();
 
 Info<< "Creating Coriolis Force on the face, f (Sf x k)" << endl;
 const surfaceVectorField fSfxk
@@ -107,6 +111,7 @@ const surfaceVectorField fSfxk
 // Rate of change of flux
 surfaceScalarField dFluxdt = -hf*(gsnGradh0 + g*fvc::snGrad(h)*mesh.magSf())
                           - (fvc::interpolate(fvc::div(flux,U)) & mesh.Sf());
+Info<< "before rotating in createfields\n" << endl;
 if (rotating) dFluxdt -= hf*(fSfxk & Uf);
 dFluxdt.oldTime();
 

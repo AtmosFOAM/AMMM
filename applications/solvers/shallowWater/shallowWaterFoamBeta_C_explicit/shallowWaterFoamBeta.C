@@ -51,6 +51,23 @@ int main(int argc, char *argv[])
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+    ofstream myfile;
+    myfile.open (runTime.timeName()+"/data");
+    forAll(h, i)
+        {
+            myfile << mesh.C()[i].x() << ' '
+                   << h[i] << ' '
+                   << hTotal[i] << ' '
+                   << U[i].x() << '\n';
+        }            
+    myfile.close();
+    myfile.open (runTime.timeName()+"/inth");
+    myfile.precision(16);
+    myfile << fvc::domainIntegrate(h).value()/(mesh.bounds().span().y()*mesh.bounds().span().z()) << "\n";
+    myfile.close();
+    
+
+    
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
     {
@@ -96,8 +113,29 @@ int main(int argc, char *argv[])
         dFluxdt -= g*hf*fvc::snGrad(h)*mesh.magSf();
         if (rotating) dFluxdt -= hf*(fSfxk & Uf);
 
-        //hTotal == h + h0;
+        hTotal == h + h0;
         runTime.write();
+        if( int(runTime.value()) % 250*40 == 0 ) {
+            ofstream myfile;
+            myfile.open (runTime.timeName()+"/data");
+            myfile.precision(16);
+            //int i;
+            forAll(h, i)
+                {
+                    myfile << mesh.C()[i].x() << ' '
+                           << h[i] << ' '
+                           << hTotal[i] << ' '
+                           << U[i].x() << '\n';
+                }            
+            myfile.close();
+
+            myfile.open (runTime.timeName()+"/inth");
+            myfile.precision(16);
+            myfile << fvc::domainIntegrate(h).value()/(mesh.bounds().span().y()*mesh.bounds().span().z()) << "\n";
+            myfile.close();
+        }
+
+        Info<< fvc::domainIntegrate(h)/(mesh.bounds().span().y()*mesh.bounds().span().z()) << endl;
 
         Info<< "\n    ExecutionTime = " << runTime.elapsedCpuTime() << " s\n"
             << endl;
