@@ -204,6 +204,7 @@ int main(int argc, char *argv[])
         // map to or calculate the monitor function on the new mesh
         monitorR = monitorFunc().map(rMesh, monitor);
         setInternalValues(monitorNew, monitorR);
+        monitorNew.correctBoundaryConditions();
 
         // The Equidistribution
         equiDist = monitorR*detHess;

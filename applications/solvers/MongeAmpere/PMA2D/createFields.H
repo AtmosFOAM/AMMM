@@ -66,9 +66,6 @@ volScalarField PABequi
     monitorR*detHess
 );
 
-// The global equidistribution
-dimensionedScalar PABem = sum(PABequi)/mesh.nCells();
-dimensionedScalar PABe = pow(  (sum( pow((PABequi-PABem),2) )/mesh.nCells()  ),0.5)/PABem;
 
 // The equidistribution
 //volScalarField equiDist("equiDist", monitorR*detHess);
@@ -79,7 +76,13 @@ volScalarField equiDist
     monitorR*detHess
 );
 
+// The global equidistribution
 dimensionedScalar Vtot = sum(mesh.V());
+dimensionedScalar PABem = fvc::domainIntegrate(equiDist)/Vtot;
+dimensionedScalar PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))
+                         /(Vtot*PABem);
+
+
 
 dimensionedScalar constant = fvc::domainIntegrate(pow(detHess*monitorNew,0.5))/Vtot;
 
@@ -94,7 +97,8 @@ volScalarField source
     //    pow(detHess*monitorNew, 0.5) - constant
 );
 
-dimensionedScalar equiDistMean = fvc::domainIntegrate(equiDist);
+dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
+    /fvc::domainIntegrate(1/monitorNew);
 
 dimensionedScalar rdt = 1/runTime.deltaT();
 

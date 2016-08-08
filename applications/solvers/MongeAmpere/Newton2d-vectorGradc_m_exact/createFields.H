@@ -19,7 +19,7 @@ volVectorField gradPhi
 (
     IOobject("gradPhi", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
-    fvc::reconstruct(fvc::snGrad(Phi)*mesh.magSf())
+    fvc::grad(Phi)
 );
 static_cast<GeometricField<Vector<double>, fvPatchField, volMesh>::Boundary>
 (
@@ -45,23 +45,24 @@ volScalarField detHess
     IOobject("detHess", runTime.timeName(), mesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     mesh,
-    dimensionedScalar("", dimless, scalar(1))
+    dimensionedScalar("detHess", dimless, scalar(1))
 );
 
-// The reqired matrix A
-volTensorField matrixA
-(
-    IOobject("matrixA", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    mesh,
-    dimensionedTensor("I", dimless, tensor::one)
-);
 volScalarField detHessR
 (
     IOobject("detHessR", runTime.timeName(), rMesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     rMesh,
     dimensionedScalar("", dimless, scalar(1))
+);
+
+// The matrix A
+volTensorField matrixA
+(
+    IOobject("matrixA", runTime.timeName(), mesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    mesh,
+    dimensionedTensor("A", dimless, tensor::one)
 );
 
 // The original monitor function on the old mesh
@@ -83,8 +84,7 @@ volScalarField monitorR
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     monitorFunc().map(rMesh, monitor)
 );
-static_cast<DimensionedField<scalar,volMesh> >(monitorNew.internalField())
-     = monitorR.internalField();
+setInternalAndBoundaryValues(monitorNew, monitorR);
 
 // The mean equidistribution, c
 dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
@@ -147,7 +147,7 @@ surfaceVectorField gradc_m
     fvc::interpolate(gradc_m_c)
 );
 
-// The gradient of c_m on on the computational mesh computed by reconstruction
+// The gradient of c_m on on the computational mesh
 surfaceVectorField gradc_m_new
 (
     IOobject("gradc_m_new", runTime.timeName(), mesh,

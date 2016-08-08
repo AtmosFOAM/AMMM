@@ -142,8 +142,7 @@ int main(int argc, char *argv[])
 
         // Transfer the cell centre gradient to the computational mesh, 
         // smooth then interpolate
-        static_cast<DimensionedField<vector,volMesh> >(gradc_m_c.internalField())
-             = gradc_mR_c.internalField();
+        setInternalValues(gradc_m_c, gradc_mR_c);
 
         for(int i = 0; i < nSmooth; i++)
         {
@@ -157,9 +156,7 @@ int main(int argc, char *argv[])
         gradc_mR = fvc::interpolate(reconstruct_snGradc_mR);
 
         gradc_mR = equiDistMean*monitorFunc().grad(rMesh, gradc_mR);
-        static_cast<DimensionedField<vector,surfaceMesh> >(gradc_m.internalField())
-             = gradc_mR.internalField();
-
+        setInternalValues(gradc_m,gradc_mR);
         // The divergence of sngradc_m
         surfaceScalarField flux = mesh.Sf() & gradc_m;
         lapc_m = fvc::div(flux);
@@ -205,8 +202,7 @@ int main(int argc, char *argv[])
 
         // map to or calculate the monitor function on the new mesh
         monitorR = monitorFunc().map(rMesh, monitor);
-        static_cast<DimensionedField<scalar,volMesh> >(monitorNew.internalField())
-             = monitorR.internalField();
+        setInternalValues(monitorNew, monitorR);
         monitorNew.correctBoundaryConditions();
 
         // The Equidistribution

@@ -58,6 +58,14 @@ volScalarField monitorR
 setInternalAndBoundaryValues(monitorNew, monitorR);
 
 // The equidistribution PAB
+// The equidistribution
+volScalarField equiDist
+(
+    IOobject("equiDist", runTime.timeName(), rMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    monitorR*detHess
+);
+
 volScalarField PABequi
 (
     IOobject("PABequi", runTime.timeName(), rMesh,
@@ -66,23 +74,14 @@ volScalarField PABequi
 );
 
 // The global equidistribution
-dimensionedScalar PABem = sum(PABequi)/mesh.nCells();
-dimensionedScalar PABe = pow(  (sum( pow((PABequi-PABem),2) )/mesh.nCells()  ),0.5)/PABem;
+dimensionedScalar Vtot = sum(mesh.V());
+dimensionedScalar PABem = fvc::domainIntegrate(equiDist)/Vtot;
+dimensionedScalar PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))
+                         /(Vtot*PABem);
 
 // The mean equidistribution, c
 dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
                                  /fvc::domainIntegrate(1/monitorNew);
-
-// The equidistribution
-//volScalarField equiDist("equiDist", monitorR*detHess);
-volScalarField equiDist
-(
-    IOobject("equiDist", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    monitorR*detHess
-);
-
-dimensionedScalar Vtot = sum(mesh.V());
 
 // Source term
 volScalarField source
