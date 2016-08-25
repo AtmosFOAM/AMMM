@@ -34,6 +34,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "faceToPointReconstruct.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -95,6 +96,16 @@ int main(int argc, char *argv[])
             flux = fluxU - dt*offCentre*hf*g*fvc::snGrad(h)*mesh.magSf();
             if (rotating) flux -= dt*offCentre*hf*(fSfxk & Uf);
 
+            Info<<"before make relative" << endl;
+            Info<<"dim(flux) = " << flux.dimensions() << endl;
+            Info<<"dim(meshU) = " << meshU.dimensions() << endl;
+            dimensionedScalar rho("rho", dimLength, 1.0);
+            Info<<"dim(rho) = " << rho.dimensions() << endl;
+            surfaceScalarField asdf = fvc::meshPhi(rho,U);
+            Info<<"dim(meshPhi) = " << asdf.dimensions() << endl;
+            surfaceScalarField sflux = flux/rho;
+            fvc::makeRelative(flux,h,U);
+            Info<<"after make relative" << endl;
             // Solve the continuity equation
             fvScalarMatrix hEqn
             (
@@ -139,6 +150,9 @@ int main(int argc, char *argv[])
 
         Info<< "\n    ExecutionTime = " << runTime.elapsedCpuTime() << " s\n"
             << endl;
+
+        mesh.movePoints(mesh.points() + meshUpoints);
+        Info<<"mesh.movePoints completed" << endl;
     }
 
     Info<< "\n end \n";

@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
         // The divergence of sngradc_m
         surfaceScalarField flux = mesh.Sf() & gradc_m;
         lapc_m = fvc::div(flux);
-        
+
         // Setup and solve the MA equation to find Phi(t+1) 
         solverPerformance sp;
         for (int iCorr = 0; iCorr < nCorr; iCorr++)

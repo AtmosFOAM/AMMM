@@ -25,21 +25,24 @@ FoamFile
 ddtSchemes
 {
     default Euler;
+    ddt(T) CrankNicolson 0.5;
+    ddt(T) Euler;
 }
 offCentre 0.5;
 
 gradSchemes
 {
     default         none;
-    grad(h)         leastSquares;
-    grad(U)         leastSquares;
-    curl(U)         leastSquares;
+    grad(T)         Gauss;
 }
 
 divSchemes
 {
     default             none;
-    div(flux,U)          Gauss LUST grad(U);
+    //div(phi,T)           Gauss linear;
+    //div(phi,T)          Gauss LUST grad(T);
+    //div(phi,T)           Gauss UMIST grad(T);
+    div(phi,T)           Gauss vanLeer grad(T);
 }
 
 laplacianSchemes

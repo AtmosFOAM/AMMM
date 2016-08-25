@@ -162,3 +162,24 @@ forAll(fluxU.boundaryField(), patchi)
     }
 }
 
+
+//#include "faceToPointReconstruct.H"
+// The mesh velocity
+volVectorField meshU
+(
+    IOobject
+    (
+        "meshU",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+
+pointVectorField meshUpoints = fvc::faceToPointReconstruct(
+              ((fvc::interpolate(meshU)       //interpolate to faces
+                & mesh.Sf())/mesh.magSf())     // get surface normal component
+                                               );
