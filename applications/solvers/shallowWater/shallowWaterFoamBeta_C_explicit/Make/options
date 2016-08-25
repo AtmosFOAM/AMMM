@@ -9,5 +9,5 @@ EXE_INC = \
 EXE_LIBS = \
     -lfiniteVolume -lmeshTools \
     -L$(FOAM_USER_LIBBIN) \
-    -lshallowWater -lmeshTools -lsampling
+    -lshallowWater -lsampling
 

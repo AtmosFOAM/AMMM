@@ -1,5 +1,6 @@
 EXE_INC = \
     -ggdb3 -O0 \
+    -I$(ATMOSFOAM_TOOLS_SRC)/sampling/lnInclude \
     -I$(AMMM_SRC)/shallowWater/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
@@ -7,5 +8,5 @@ EXE_INC = \
 EXE_LIBS = \
     -lfiniteVolume -lmeshTools \
     -L$(FOAM_USER_LIBBIN) \
-    -lshallowWater
+    -lshallowWater -lsampling
 

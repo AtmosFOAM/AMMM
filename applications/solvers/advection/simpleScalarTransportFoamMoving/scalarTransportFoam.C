@@ -31,6 +31,7 @@ Description
 
 #include "fvCFD.H"
 #include "faceToPointReconstruct.H"
+#include "meshToMesh0.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
     );
     
     #include "createFields.H"
-
+    const bool subtract = false;
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nCalculating scalar transport\n" << endl;
@@ -69,6 +70,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         rMesh.movePoints(rMesh.points() + meshUpoints);
+        //meshToMesh(h0,rh0);
 
         if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
      
