@@ -32,7 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "mathematicalConstants.H"
-
+#include "setInternalValues.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -108,6 +108,16 @@ int main(int argc, char *argv[])
         "zeroGradient"
     );
 
+
+    // Create orography on the rMesh
+    volScalarField rh0
+    (
+        IOobject("rh0", runTime.timeName(), rMesh),
+        rMesh,
+        dimensionedScalar("h0",dimLength,scalar(0)),
+        "zeroGradient"
+    );
+
     
     // Create initial height and velocity field
     volScalarField T
@@ -148,19 +158,21 @@ int main(int argc, char *argv[])
 
     //set the orography
     forAll(h0, i)
-    {
-        const vector& Ci = C[i];
-        if (Ci.x() > 20000000 and Ci.x() < 24000000) {
-            h0[i] = orog_height;
+        {
+            const vector& Ci = C[i];
+            if (Ci.x() > 20000000 and Ci.x() < 24000000) {
+                h0[i] = orog_height;
+            }
         }
-     }
 
+    setInternalValues(rh0,h0);
 
     
     //h = hTotal-h0;
     
     //h.write();
-    //h0.write();
+    h0.write();
+    rh0.write();
     T.write();
     U.write();
     Uf.write();
