@@ -32,6 +32,14 @@ Description
 #include "fvCFD.H"
 #include "faceToPointReconstruct.H"
 #include "meshToMesh0.H"
+#include "processorFvPatch.H"
+#include "MapMeshes.H"
+#include "fvMesh.H"
+//#include "HashTable.H"
+//#include "fvPatchMapper.H"
+//#include "scalarList.H"
+//#include "className.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +59,7 @@ int main(int argc, char *argv[])
     );
     
     #include "createFields.H"
-    const bool subtract = false;
+    //const bool no_subtract = false;
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nCalculating scalar transport\n" << endl;
@@ -71,6 +79,11 @@ int main(int argc, char *argv[])
 
         rMesh.movePoints(rMesh.points() + meshUpoints);
         //meshToMesh(h0,rh0);
+
+        meshToMesh0 meshToMesh0Interp(mesh, rMesh);
+        meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;
+        
+        meshToMesh0Interp.interpolate(rh0,h0,mapOrder,eqOp<scalar>());
 
         if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
      
