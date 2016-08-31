@@ -78,7 +78,6 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         rMesh.movePoints(rMesh.points() + meshUpoints);
-        //meshToMesh(h0,rh0);
 
         meshToMesh0 meshToMesh0Interp(mesh, rMesh);
         meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;

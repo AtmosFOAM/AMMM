@@ -58,6 +58,7 @@ interpolationSchemes
     interpolate(U) linear;
     interpolate(rMeshU) linear;
     interpolate(T) linear;
+    interpolate(rh0) linear;
 }
 
 snGradSchemes

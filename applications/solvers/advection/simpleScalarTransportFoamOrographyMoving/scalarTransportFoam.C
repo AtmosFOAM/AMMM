@@ -79,6 +79,14 @@ int main(int argc, char *argv[])
     const dimensionedScalar u0(initDict.lookup("u0"));
         
 
+    Info << "Calculating phi from u0 and h0" << endl;
+    #include "StokesTheoremPhi.H"
+    Info << "Reconstructing initial U from phi " << endl;
+    U = fvc::reconstruct(phi);
+
+    phi.write();
+    U.write();
+    
     
     //const bool no_subtract = false;
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -100,21 +108,21 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        //rMesh.movePoints(rMesh.points() + meshUpoints);
+        rMesh.movePoints(rMesh.points() + meshUpoints);
         
-        //meshToMesh0 meshToMesh0Interp(mesh, rMesh);
-        //meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;
+        meshToMesh0 meshToMesh0Interp(mesh, rMesh);
+        meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;
         
-        //meshToMesh0Interp.interpolate(rh0,h0,mapOrder,eqOp<scalar>());
+        meshToMesh0Interp.interpolate(rh0,h0,mapOrder,eqOp<scalar>());
 
         rh0Faces = fvc::interpolate(rh0);
         #include "StokesTheoremPhi.H"
         U = fvc::reconstruct(phi);
-        //if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
+        if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
      
-        //fvc::makeRelative(phi,U);
+        fvc::makeRelative(phi,U);
         solve(fvm::ddt(T) + fvc::div(phi, T));
-        //fvc::makeAbsolute(phi,U);
+        fvc::makeAbsolute(phi,U);
 
 
         Info << "Max T = " << max(T) << " min T = " << min(T) << endl;

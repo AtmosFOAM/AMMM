@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
     // Maximum jet velocity
     const dimensionedScalar u0(initDict.lookup("u0"));
     // Shallow water height at the equator
+    const dimensionedScalar he(initDict.lookup("he"));
     const dimensionedScalar T0(initDict.lookup("T0"));
     const scalar orog_height(readScalar(initDict.lookup("orog_height")));
     const vector wave_centre(initDict.lookup("wave_centre"));
@@ -165,12 +166,42 @@ int main(int argc, char *argv[])
             }
         }
 
+    // Create initial tracer field
+    volScalarField t
+    (
+        IOobject("t", runTime.timeName(), rMesh),
+        rMesh,
+        dimensionedScalar("t", dimless/dimLength, T0.value()),
+        "zeroGradient"
+    );
+    
+    // Create height field
+    volScalarField h
+    (
+        IOobject("h", runTime.timeName(), rMesh),
+        rMesh,
+        he,
+        "zeroGradient"
+    );
+
+    forAll(h,cellI)
+        {
+            h[cellI] -= h0[cellI];
+            t[cellI] = T[cellI]/h[cellI];
+        }
+
+    
+
+
+
+    
     setInternalValues(rh0,h0);
 
     
     //h = hTotal-h0;
-    
-    //h.write();
+
+    t.write();
+    h.write();
     h0.write();
     rh0.write();
     T.write();

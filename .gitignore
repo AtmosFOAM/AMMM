@@ -95,3 +95,8 @@ polyMesh
 *.ttt
 
 testcases/build
+
+
+# video files
+*.gif
+*.ogv
