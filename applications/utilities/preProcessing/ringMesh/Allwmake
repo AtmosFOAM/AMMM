@@ -1,0 +1,15 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
+cat <<EOF >ringMesh.sh
+set -o errexit
+rm -rf 0/polyMesh
+blockMesh
+blockToRing
+stitchMesh -overwrite -perfect inlet outlet
+EOF
+chmod 744 ringMesh.sh
+
+mv ringMesh.sh $FOAM_USER_APPBIN/ringMesh
+echo ringMesh created

@@ -44,4 +44,10 @@ setup1D_advection
 sed 's/U;/rMeshU;/g' 0/rMesh/U | sed 's/.*internalField.*/internalField   uniform (50 0 0);/g' > 0/rMesh/rMeshU
 
 #run the application
-simpleScalarTransportFoamMoving | tee log
+simpleScalarTransportFoamOrographyMovingSine | tee log
+
+grep 'Total orography' log | cut -d']' -f2 > orography
+grep 'Total T' log | cut -d']' -f2 > tracer
+
+echo 'set terminal "pdf";set output "orography.pdf"; set ylabel "Integral of orography"; set xlabel "Timestep"; plot "./orography" w l notitle' | gnuplot
+echo 'set terminal "pdf";set output "tracer.pdf"; set ylabel "Integral of tracer"; set xlabel "Timestep"; plot "./tracer" w l notitle' | gnuplot
