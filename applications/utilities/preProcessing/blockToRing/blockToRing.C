@@ -33,6 +33,7 @@ Description
 #include "fvCFD.H"
 #include "mathematicalConstants.H"
 #include "setInternalValues.H"
+#include "ringMesh.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -72,35 +73,11 @@ int main(int argc, char *argv[])
     }
     mesh.movePoints(targetPoints);
 
-    const polyPatchList& patches = mesh.boundaryMesh();
-    forAll(patches, patchi)
-    {
-        const polyPatch& patch = patches[patchi];
-        Info << "hello I am patch " << patch.name() << endl;
-        if(patch.name() == "outerShell")
-        {
-            Info << "da dadadadad" << endl;
 
-            const labelList& meshPoints = patch.meshPoints();
-            forAll(meshPoints, ip)
-            {
-                point& meshPoint = targetPoints[meshPoints[ip]];
-                scalar x = meshPoint.x();
-                scalar y = meshPoint.y();
-                scalar r = Foam::sqrt(sqr(x) + sqr(y));
-                meshPoint.x() = 10*outer_radius*x/r;
-                meshPoint.y() = 10*outer_radius*y/r;
-            }
-        }
-        else if(patches[patchi].name() == "innerShell")
-        {
-            Info << "do doododododod" << endl;
-        }
-    }
-
-    mesh.movePoints(targetPoints);
+    Info << "calling patchShell" << endl;
+    patchShell(mesh,inner_radius,outer_radius);
+    Info << "called patchShell" << endl;
     mesh.write();
-
     return(0);
 }
 
