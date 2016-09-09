@@ -4,10 +4,18 @@ set -o nounset
 
 cat <<EOF >ringMesh.sh
 set -o errexit
-rm -rf 0/polyMesh
+rm -rf 0/polyMesh 0/rMesh
+rm -rf constant/rMesh/polyMesh/
 blockMesh
 blockToRing
 stitchMesh -overwrite -perfect inlet outlet
+rm 0/meshPhi
+#mkdir -p 0/rMesh/polyMesh
+#cp -r 0/polyMesh 0/rMesh/
+mkdir -p constant/rMesh/polyMesh/
+cp -r 0/polyMesh/* constant/rMesh/polyMesh/.
+setupRing_advection
+cp 0/rMesh/U 0/rMesh/rMeshU
 EOF
 chmod 744 ringMesh.sh
 

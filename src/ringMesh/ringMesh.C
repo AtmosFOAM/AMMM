@@ -1,5 +1,6 @@
 #include "fvCFD.H"
 #include "setInternalValues.H"
+#include "ringMesh.H"
 
 int patchShell(fvMesh& mesh, scalar inner_radius, scalar outer_radius){
 
@@ -40,3 +41,7 @@ int patchShell(fvMesh& mesh, scalar inner_radius, scalar outer_radius){
 
     return 0;
 }
+
+
+
+

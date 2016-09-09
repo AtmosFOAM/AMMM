@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
         } else {
             r = outer_radius;
         }
-        targetPoints[point].x() = r*Foam::sin(theta);
-        targetPoints[point].y() = r*Foam::cos(theta);
+        targetPoints[point].x() = r*Foam::cos(theta);
+        targetPoints[point].y() = r*Foam::sin(theta);
             
     }
     mesh.movePoints(targetPoints);
