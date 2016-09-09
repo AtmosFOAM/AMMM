@@ -71,39 +71,36 @@ int main(int argc, char *argv[])
             
     }
     mesh.movePoints(targetPoints);
-    
-    mesh.write();
-    Info<< "End\n" << endl;
 
-
-    forAll(mesh.points(),point){
-        
-    }
-    mesh.movePoints(targetPoints);
-
-    
     const polyPatchList& patches = mesh.boundaryMesh();
-    forAll(patches, patchi){
-        Info << "hello I am patch " << patches[patchi].name() << endl;
-        if(patches[patchi].name() == "outerShell"){
+    forAll(patches, patchi)
+    {
+        const polyPatch& patch = patches[patchi];
+        Info << "hello I am patch " << patch.name() << endl;
+        if(patch.name() == "outerShell")
+        {
             Info << "da dadadadad" << endl;
 
-            pointField patchTarget = patches[patchi].points();
-            forAll(patchTarget, point){
-                scalar x = patchTarget[point].x();
-                scalar y = patchTarget[point].y();
-                scalar r = Foam::sqrt( sqr(x) + sqr(y) );
-                patchTarget[point].x() = 10*outer_radius*x/r;
-                patchTarget[point].y() = 10*outer_radius*y/r;
+            const labelList& meshPoints = patch.meshPoints();
+            forAll(meshPoints, ip)
+            {
+                point& meshPoint = targetPoints[meshPoints[ip]];
+                scalar x = meshPoint.x();
+                scalar y = meshPoint.y();
+                scalar r = Foam::sqrt(sqr(x) + sqr(y));
+                meshPoint.x() = 10*outer_radius*x/r;
+                meshPoint.y() = 10*outer_radius*y/r;
             }
-            Info << "patchTarget = " << patchTarget << endl;
-            const pointField cpatchTarget = patchTarget;
-            patches[patchi].movePoints(cpatchTarget);
-
-        }    else if(patches[patchi].name() == "innerShell"){
+        }
+        else if(patches[patchi].name() == "innerShell")
+        {
             Info << "do doododododod" << endl;
         }
     }
+
+    mesh.movePoints(targetPoints);
+    mesh.write();
+
     return(0);
 }
 

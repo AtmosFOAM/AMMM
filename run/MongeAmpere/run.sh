@@ -1,11 +1,14 @@
+# clean up first
+rm -r constant/polyMesh [1-9]* constant/rMesh
+
 blockMesh && mkdir -p constant/rMesh && cp -r constant/polyMesh constant/rMesh
 
 #Then run the appropriate executable:
-AFP
-FP2D
-PMA2D
-Newton2d-vectorGradc_m_reconstruct
-Newton2d-vectorGradc_m_exact
+AFP                 # 53 iterations
+FP2D                # generates error message
+PMA2D               # tangles and gives error messages
+Newton2d-vectorGradc_m_reconstruct  # 46 iterations
+Newton2d-vectorGradc_m_exact        # error message
 
 # Post-processing
 time=???
