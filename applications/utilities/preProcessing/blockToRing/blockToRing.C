@@ -46,6 +46,11 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createMesh.H"
 
+    Info<< "Reading initial conditions\n" << endl;
+
+       
+
+    
     // pointScalarField x = mesh.points().x();
     // pointScalarField y = mesh.points().y();
     // pointScalarField z = mesh.points().z();
@@ -56,11 +61,13 @@ int main(int argc, char *argv[])
     scalar theta = 0.0;
 
     pointField targetPoints = mesh.points();
+
+    //Info << "Before doing anything, the mesh volumes are: " << mesh.V();
     
     forAll(mesh.points(),point){
         scalar x = mesh.points()[point].x();
         scalar y = mesh.points()[point].y();
-        Info << "hello my name is point " << point << " "<< x << endl;
+        //Info << "hello my name is point " << point << " "<< x << endl;
         theta = tau*x;
         if( y > 0.5 ) {
             r = inner_radius;
@@ -69,14 +76,17 @@ int main(int argc, char *argv[])
         }
         targetPoints[point].x() = r*Foam::cos(theta);
         targetPoints[point].y() = r*Foam::sin(theta);
-            
+        
     }
     mesh.movePoints(targetPoints);
 
 
-    Info << "calling patchShell" << endl;
+
+    //Info << "calling patchShell" << endl;
     patchShell(mesh,inner_radius,outer_radius);
-    Info << "called patchShell" << endl;
+    //Info << "called patchShell" << endl;
+
+    //Info << "After moving the points, the mesh volumes are: " << mesh.V();
     mesh.write();
     return(0);
 }

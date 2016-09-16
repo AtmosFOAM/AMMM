@@ -4,18 +4,26 @@ set -o nounset
 
 cat <<EOF >ringMesh.sh
 set -o errexit
-rm -rf 0/polyMesh 0/rMesh
-rm -rf constant/rMesh/polyMesh/
+rm -rf 0/polyMesh 0/rMesh 0/h0 0/pMesh
+rm -rf constant/rMesh/polyMesh/ constant/pMesh/polyMesh
 blockMesh
 blockToRing
 stitchMesh -overwrite -perfect inlet outlet
-rm 0/meshPhi
-#mkdir -p 0/rMesh/polyMesh
-#cp -r 0/polyMesh 0/rMesh/
+rm -rf 0/meshPhi
 mkdir -p constant/rMesh/polyMesh/
-cp -r 0/polyMesh/* constant/rMesh/polyMesh/.
+mkdir -p constant/pMesh/polyMesh/
+cp -p constant/polyMesh/* constant/rMesh/polyMesh/.
+cp -p constant/polyMesh/* constant/pMesh/polyMesh/.
+cp -r 0/polyMesh/* constant/rMesh/polyMesh/. 
+cp -r 0/polyMesh/* constant/pMesh/polyMesh/. 
+rmInletOutlet 0/polyMesh/boundary
+rmInletOutlet constant/polyMesh/boundary
+rmInletOutlet constant/rMesh/polyMesh/boundary
+rmInletOutlet constant/pMesh/polyMesh/boundary
 setupRing_advection
-cp 0/rMesh/U 0/rMesh/rMeshU
+#cp 0/rMesh/U 0/rMesh/rMeshU
+#cp 0/pMesh/U 0/pMesh/pMeshU
+ringSetFlow
 EOF
 chmod 744 ringMesh.sh
 
