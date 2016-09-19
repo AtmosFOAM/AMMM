@@ -6,6 +6,18 @@ forAll(meshUpoints,point){
         if (theta > pi/2 and theta < 9*pi/16) {
             //set the new height
             meshUpoints[point].z() = orog_height;
+        }else{
+            meshUpoints[point].z() = 0;
         }
-    }
+    }// else{
+    //     scalar x = meshUpoints[point].x();
+    //     scalar y = meshUpoints[point].y();
+    //     scalar theta = Foam::atan2(y,x);
+    //     if (theta > pi/2 and theta < 9*pi/16) {
+    //         //set the new height
+    //         meshUpoints[point].z() = 1.0+orog_height;
+    //     }else{
+    //         meshUpoints[point].z() = 1.0;
+    //     }
+    // }
 }

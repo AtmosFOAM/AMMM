@@ -89,10 +89,11 @@ int main(int argc, char *argv[])
 
 
     Info << "Calculating phi from u0 and h0" << endl;
-    #include "StokesTheoremPhi.H"
+    //#include "StokesTheoremPhi.H"
     Info << "Reconstructing initial U from phi " << endl;
     U = fvc::reconstruct(phi);
 
+    Mass.write();
     phi.write();
     U.write();
     const scalar pi = Foam::constant::mathematical::pi;
@@ -128,10 +129,11 @@ int main(int argc, char *argv[])
             
             meshUpoints[point].x() = r_orig*Foam::cos(theta_new);
             meshUpoints[point].y() = r_orig*Foam::sin(theta_new);
+            meshUpoints[point].z() = pMesh.points()[point].z();
         }
         #include "ringSetOrographyZ.H"
         
-        rMesh.movePoints(meshUpoints);
+        pMesh.movePoints(meshUpoints);
         
         
         meshToMesh0 meshToMesh0Interp(mesh, rMesh);
@@ -140,21 +142,25 @@ int main(int argc, char *argv[])
         meshToMesh0Interp.interpolate(rh0,h0,mapOrder,eqOp<scalar>());
         
         rh0Faces = fvc::interpolate(rh0);
-        #include "StokesTheoremPhi.H"
+        // #include "StokesTheoremPhi.H"
         U = fvc::reconstruct(phi);
 
         if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
      
         fvc::makeRelative(phi,U);
-        solve(fvm::ddt(T) + fvc::div(phi, T));
-        //T = T.oldTime() - fvc::div(phi,T);
-        //phiT = fvc::interpolate(T)*phi;
+        phiR = phi;
+        //solve(fvm::ddt(T) + fvc::div(phi, T));
+        T = T.oldTime() - runTime.time().deltaT()*fvc::div(phi,T);
         fvc::makeAbsolute(phi,U);
-
+        phiT = fvc::interpolate(T)*phi;
+        forAll(Mass,c){Mass[c] = T.mesh().V()[c]*T[c];}
 
         Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
         Info << "Total T = " << fvc::domainIntegrate(T) << endl;
-        Info << "Total orography = " << fvc::domainIntegrate(rh0) << endl;
+        Info << "Mean T = " << sum(T)/T.size() << endl;
+        Info << "Total Mass = " << sum(Mass) << endl;
+        Info << "Total orography = " << sum(rMesh.V())-sum(pMesh.V()) << endl;
+        Info << "Vol pMesh = " << sum(pMesh.V()) << endl;
 
         runTime.write();
     }

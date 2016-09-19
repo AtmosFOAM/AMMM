@@ -13,7 +13,20 @@ volScalarField T
  pMesh
  );
 
-Info<< "Reading field t\n" << endl;
+//scalarField Mass = fvc::volumeIntegrate(T);
+volScalarField Mass
+(
+ IOobject
+ (
+  "Mass",
+  runTime.timeName(),
+  pMesh,
+  IOobject::READ_IF_PRESENT,
+  IOobject::AUTO_WRITE
+  ),
+ pMesh
+ );
+forAll(Mass,c){Mass[c] = T.mesh().V()[c]*T[c];}
 
 // volScalarField h
 // (
@@ -57,12 +70,38 @@ surfaceScalarField phi
  linearInterpolate(U) & pMesh.Sf()
  );
 Info<< "Read field phi\n" << endl;
+forAll(phi,p){phi[p] = 0.00001;}
+phi[1] *= -1;
 
-//pointVectorField meshUpoints = fvc::faceToPointReconstructFake(
-//                                                           ((fvc::interpolate(rMeshU)       //interpolate to faces
-//                                                             & rMesh.Sf())/rMesh.magSf())     // get surface normal component
-//                                                           );
-//pointField thingy = pMesh.points();
+
+surfaceScalarField phiR
+(
+ IOobject
+ (
+  "phiR",
+  runTime.timeName(),
+  pMesh,
+  IOobject::NO_READ,
+  IOobject::AUTO_WRITE
+  ),
+ phi
+ );
+
+surfaceScalarField phiT
+(
+ IOobject
+ (
+  "phiT",
+  runTime.timeName(),
+  pMesh,
+  IOobject::NO_READ,
+  IOobject::AUTO_WRITE
+  ),
+ fvc::interpolate(T)*phi
+ );
+
+Info<< "Read field phiT\n" << endl;
+
 pointField meshUpoints = pMesh.points();
 
 Info<< "Reading field h0 if present (the orography)\n" << endl;

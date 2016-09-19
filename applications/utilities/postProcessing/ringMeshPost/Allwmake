@@ -1,0 +1,56 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
+name=$(readlink -f "$0" | rev | cut -d'/' -f2 | rev)
+echo $name
+cat <<EOF >$name.sh
+set -o errexit
+usage()
+{
+echo ''
+echo    usage of $name:
+echo ''
+echo ''     $name logfile
+echo '' 
+echo    where logfile is the output resulting from the OpenFOAM application
+}
+
+if [[ \$# -ne 1 ]]; then 
+echo "Error. Please provide the logfile as an argument."
+usage
+exit -1
+fi
+if [[ ! -f \$1 ]]; then
+    echo "No log file named \$1 present"
+    usage
+    exit -1
+fi
+
+log=\$1
+tmpOrog=\$(tempfile)
+tmpMeanT=\$(tempfile)
+tmpMass=\$(tempfile)
+tmpGnu=\$(tempfile)
+tmpVpMesh=\$(tempfile)
+echo \$tmpOrog
+echo \$tmpGnu
+grep 'Total orography' \$log | rev | cut -f1 -d' ' | rev > \$tmpOrog
+grep 'Mean T' \$log | rev | cut -f1 -d' ' | rev > \$tmpMeanT
+grep 'Total Mass' \$log | rev | cut -f1 -d' ' | rev > \$tmpMass
+grep 'Vol pMesh' \$log | rev | cut -f1 -d' ' | rev > \$tmpVpMesh
+echo 'set xlabel "Timestep"' > \$tmpGnu
+echo 'set ylabel "Volume of the pMesh"' >> \$tmpGnu
+echo 'set y2label "Total Mass"' >> \$tmpGnu
+echo 'set y2tics' >> \$tmpGnu
+echo 'plot \' >> \$tmpGnu
+#echo -n \"\$tmpOrog\" w l title \"Total Orography\" axes x1y1  >> \$tmpGnu
+echo -n \"\$tmpVpMesh\" w l title \"Volume of the pMesh\" axes x1y1  >> \$tmpGnu
+echo -n , \"\$tmpMass\" w l title \"Total Mass\" axes x1y2  >> \$tmpGnu
+
+gnuplot --persist \$tmpGnu
+EOF
+chmod 744 $name.sh
+
+mv $name.sh $FOAM_USER_APPBIN/$name
+echo $name created at $FOAM_USER_APPBIN/$name
