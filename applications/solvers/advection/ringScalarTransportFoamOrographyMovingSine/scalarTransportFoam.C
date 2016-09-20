@@ -30,7 +30,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "faceToPointReconstructFake.H"
 #include "meshToMesh0.H"
 #include "processorFvPatch.H"
 #include "MapMeshes.H"
@@ -49,6 +48,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
+    Info().precision(16);
     // Create the moving mesh
     fvMesh rMesh
     (
@@ -89,10 +89,12 @@ int main(int argc, char *argv[])
 
 
     Info << "Calculating phi from u0 and h0" << endl;
-    //#include "StokesTheoremPhi.H"
+    #include "StokesTheoremPhi.H"
     Info << "Reconstructing initial U from phi " << endl;
     U = fvc::reconstruct(phi);
 
+    Info << "Divergence of U = " << fvc::div(phi) << endl;
+    
     Mass.write();
     phi.write();
     U.write();
@@ -115,11 +117,10 @@ int main(int argc, char *argv[])
     Info << "Total depth of mesh = " << mesh.bounds().span().z() << endl;
     Info << "Total depth of  phi mesh = " << phi.mesh().bounds().span().z() << endl;
 
-    Info << "mesh volumes = " << mesh.V();
-    
+
     while (runTime.loop())
     {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.timeName() << ":" << nl << endl;
 
         //meshUpoints = rMesh.points();
         forAll(meshUpoints,point){
@@ -129,12 +130,14 @@ int main(int argc, char *argv[])
             
             meshUpoints[point].x() = r_orig*Foam::cos(theta_new);
             meshUpoints[point].y() = r_orig*Foam::sin(theta_new);
-            meshUpoints[point].z() = pMesh.points()[point].z();
+            meshUpoints[point].z() = rMesh.points()[point].z();
         }
+        rMesh.movePoints(meshUpoints);
         #include "ringSetOrographyZ.H"
-        
         pMesh.movePoints(meshUpoints);
-        
+        dV = V;
+        forAll(V,c){V[c] = pMesh.V()[c];}
+        dV /= V;
         
         meshToMesh0 meshToMesh0Interp(mesh, rMesh);
         meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;
@@ -142,14 +145,17 @@ int main(int argc, char *argv[])
         meshToMesh0Interp.interpolate(rh0,h0,mapOrder,eqOp<scalar>());
         
         rh0Faces = fvc::interpolate(rh0);
-        // #include "StokesTheoremPhi.H"
+        #include "StokesTheoremPhi.H"
         U = fvc::reconstruct(phi);
 
         if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
-     
+        //T *= dV;
         fvc::makeRelative(phi,U);
         phiR = phi;
         //solve(fvm::ddt(T) + fvc::div(phi, T));
+        //T *= dV;
+        Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
+        Info << "before we do it, phi = " << phi << endl;
         T = T.oldTime() - runTime.time().deltaT()*fvc::div(phi,T);
         fvc::makeAbsolute(phi,U);
         phiT = fvc::interpolate(T)*phi;

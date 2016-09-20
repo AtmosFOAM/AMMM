@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     patchShell(mesh,inner_radius,outer_radius);
     //Info << "called patchShell" << endl;
 
-    //Info << "After moving the points, the mesh volumes are: " << mesh.V();
+    Info << "After moving the points, the mesh volumes are: " << mesh.V();
     mesh.write();
     return(0);
 }

@@ -43,6 +43,7 @@ divSchemes
     //div(phi,T)           Gauss linear;
     //div(phi,T)          Gauss LUST grad(T);
     //div(phi,T)           Gauss UMIST grad(T);
+    div(U)           Gauss vanLeer grad(phi);
     div(phi,T)           Gauss vanLeer grad(T);
     div(phi,t)           Gauss vanLeer grad(t);
 }

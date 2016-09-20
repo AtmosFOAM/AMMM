@@ -25,7 +25,8 @@ setupRing_advection
 #cp 0/rMesh/U 0/rMesh/rMeshU
 #cp 0/pMesh/U 0/pMesh/pMeshU
 ringSetFlow
-cp 0/pMesh/T 0/pMesh/Mass
+#cp 0/pMesh/T 0/pMesh/Mass
+#cp 0/pMesh/T 0/pMesh/V
 EOF
 chmod 744 ringMesh.sh
 

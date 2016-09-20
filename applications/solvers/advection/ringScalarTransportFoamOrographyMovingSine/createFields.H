@@ -13,6 +13,34 @@ volScalarField T
  pMesh
  );
 
+volScalarField V
+(
+ IOobject
+ (
+  "V",
+  runTime.timeName(),
+  pMesh,
+  IOobject::READ_IF_PRESENT,
+  IOobject::AUTO_WRITE
+  ),
+ pMesh
+ );
+forAll(V,c){V[c] = pMesh.V()[c];}
+
+volScalarField dV
+(
+ IOobject
+ (
+  "dV",
+  runTime.timeName(),
+  pMesh,
+  IOobject::READ_IF_PRESENT,
+  IOobject::AUTO_WRITE
+  ),
+ pMesh
+ );
+
+
 //scalarField Mass = fvc::volumeIntegrate(T);
 volScalarField Mass
 (

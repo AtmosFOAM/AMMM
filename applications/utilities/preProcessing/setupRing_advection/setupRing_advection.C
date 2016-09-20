@@ -143,7 +143,34 @@ int main(int argc, char *argv[])
         T0,
         "zeroGradient"
     );
+    
+    volScalarField V
+    (
+        IOobject("V", runTime.timeName(), pMesh),
+        pMesh,
+        T0,
+        "zeroGradient"
+    );
 
+    volScalarField dV
+        (
+         IOobject("dV", runTime.timeName(), pMesh),
+         pMesh,
+         1.0,
+         "zeroGradient"
+         );
+
+
+    
+    volScalarField Mass
+    (
+        IOobject("Mass", runTime.timeName(), pMesh),
+        pMesh,
+        T0,
+        "zeroGradient"
+    );
+    
+    
     
     volVectorField U
     (
@@ -232,6 +259,12 @@ int main(int argc, char *argv[])
     U.write();
     Uf.write();
 
+    forAll(V,c){V[c] = pMesh.V()[c];}
+    V.write();
+    forAll(Mass,c){Mass[c] = T.mesh().V()[c]*T[c];}
+    Mass.write();
+    dV.write();
+    
     Info<< "End\n" << endl;
 
     return(0);
