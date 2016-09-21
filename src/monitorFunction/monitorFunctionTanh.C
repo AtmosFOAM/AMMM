@@ -26,6 +26,7 @@ License
 #include "monitorFunctionTanh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 #include "VectorSpaceFunctions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -123,6 +124,8 @@ tmp<surfaceVectorField> monitorFunctionTanh::grad
 ) const
 {
     // Why is this function empty?
+    NotImplemented;
+    return surfaceVectorField::null();
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
