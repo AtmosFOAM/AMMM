@@ -70,7 +70,7 @@ volVectorField U
         ),
     pMesh
 );
-Info<< "Read field U\n" << endl;
+Info<< "Creating field phi\n" << endl;
 surfaceScalarField phi
 (
     IOobject
@@ -83,12 +83,6 @@ surfaceScalarField phi
         ),
     linearInterpolate(U) & pMesh.Sf()
 );
-Info<< "Read field phi\n" << endl;
-Info<< "Dimensions of pMesh.Sf() = " << pMesh.Sf().dimensions() << endl;
-Info<< "Dimensions of phi = " << phi.dimensions() << endl;;
-forAll(phi,p){phi[p] = 0.00001;}
-phi[1] *= -1;
-
 
 surfaceScalarField phiR
 (

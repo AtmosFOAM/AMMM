@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ, IOobject::AUTO_WRITE
         )
     );
+    
     #include "createFields.H"
 
     Info<< "Reading initial conditions\n" << endl;
@@ -81,7 +82,8 @@ int main(int argc, char *argv[])
     // Maximum jet velocity
     const dimensionedScalar u0(initDict.lookup("u0"));
     const scalar orog_height(readScalar(initDict.lookup("orog_height")));
-    
+    const dimensionedScalar meshPeriod(initDict.lookup("meshPeriod"));
+
     #include "StokesTheoremPhi.H"
     U = fvc::reconstruct(phi);
 
@@ -94,8 +96,6 @@ int main(int argc, char *argv[])
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nCalculating scalar transport\n" << endl;
-
-    #include "CourantNo.H"
 
     const scalar deltaT = runTime.time().deltaT().value();
     meshUpoints *=deltaT;
@@ -111,12 +111,25 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << ":" << nl << endl;
-
+        
         //meshUpoints = rMesh.points();
-        forAll(meshUpoints,point){
-            scalar theta_orig = Foam::atan2(mesh.points()[point].y(), mesh.points()[point].x());
-            scalar r_orig = Foam::sqrt( sqr(mesh.points()[point].x()) + sqr(mesh.points()[point].y()) );
-            scalar theta_new = theta_orig + Foam::sin(theta_orig)*Foam::sin(tau*runTime.value()/runTime.endTime().value())*tau/16;
+        forAll(meshUpoints, point)
+        {
+            scalar theta_orig = Foam::atan2
+            (
+                mesh.points()[point].y(), mesh.points()[point].x()
+            );
+            scalar r_orig = Foam::sqrt
+            (
+                sqr(mesh.points()[point].x()) + sqr(mesh.points()[point].y())
+            );
+            scalar theta_new = theta_orig
+                             + Foam::sin(theta_orig)
+                             *Foam::sin
+                             (
+                                tau*runTime.value()/meshPeriod.value()
+                             )*tau/16;
+            
             meshUpoints[point].x() = r_orig*Foam::cos(theta_new);
             meshUpoints[point].y() = r_orig*Foam::sin(theta_new);
             meshUpoints[point].z() = rMesh.points()[point].z();
@@ -138,11 +151,15 @@ int main(int argc, char *argv[])
         #include "StokesTheoremPhi.H"
         U = fvc::reconstruct(phi);
 
+        if( !phi().mesh().moving() )
+        {
+            Info << "The mesh is not moving." << endl;
+        }
+
         fvc::makeRelative(phi,U);
         #include "CourantNo.H"
         phiR = phi;
         solve(fvm::ddt(T) + fvc::div(phi, T));
-        Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
         fvc::makeAbsolute(phi,U);
         phiT = fvc::interpolate(T)*phi;
         Mass = T*V;
@@ -155,7 +172,6 @@ int main(int argc, char *argv[])
         Info << "Vol pMesh = " << sum(pMesh.V()) << endl;
 
         runTime.write();
-    
     }
 
     Info<< "End\n" << endl;
