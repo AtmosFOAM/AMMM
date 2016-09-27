@@ -25,38 +25,26 @@ FoamFile
 ddtSchemes
 {
     default Euler;
-    ddt(T) CrankNicolson 0.5;
-    ddt(T) Euler;
 }
-offCentre 0.5;
 
 gradSchemes
 {
     default         none;
-    grad(T)         Gauss;
 }
 
 divSchemes
 {
     default             none;
-    //div(phi,T)           Gauss linear;
-    //div(phi,T)          Gauss LUST grad(T);
-    //div(phi,T)           Gauss UMIST grad(T);
-    div(phi,T)           Gauss vanLeer grad(T);
 }
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         none;
 }
 
 interpolationSchemes
 {
     default        none;
-    interpolate(h) linear;
-    interpolate(convection(flux,U)) linear;
-    interpolate(U) linear;
-    interpolate(meshU) linear;
 }
 
 snGradSchemes
