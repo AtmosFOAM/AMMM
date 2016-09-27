@@ -36,6 +36,7 @@ divSchemes
 {
     default             none;
     div(phi_0,T_0)           Gauss linear;
+    div(phi,T)           Gauss linear;
 }
 
 laplacianSchemes
@@ -47,6 +48,7 @@ interpolationSchemes
 {
     default        none;
     interpolate(U) linear;
+    interpolate(T) linear;
 }
 
 snGradSchemes
