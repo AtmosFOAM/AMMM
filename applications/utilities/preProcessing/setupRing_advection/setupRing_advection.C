@@ -170,15 +170,22 @@ int main(int argc, char *argv[])
         "zeroGradient"
     );
     
-    
-    
     volVectorField U
-    (
-        IOobject("U", runTime.timeName(), pMesh),
-        pMesh,
-        dimensionedVector("U", dimLength/dimTime, Foam::vector(1,0,0)*u0.value())
-    );
-        
+        (
+         IOobject
+         (
+          "U",
+          runTime.timeName(),
+          pMesh,
+          IOobject::MUST_READ,
+          IOobject::AUTO_WRITE
+          ),
+         pMesh
+         );
+    Info<< "Read field U\n" << endl;
+       
+    U = Foam::vector(1,0,0)*u0;
+    
     surfaceVectorField Uf
     (
         IOobject("Uf", runTime.timeName(), pMesh),

@@ -36,12 +36,6 @@ Description
 #include "fvMesh.H"
 #include "StreamFunctionAt.H"
 #include "fvcMeshPhi.H"
-//#include "HashTable.H"
-//#include "fvPatchMapper.H"
-//#include "scalarList.H"
-//#include "className.H"
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -87,21 +81,16 @@ int main(int argc, char *argv[])
     // Maximum jet velocity
     const dimensionedScalar u0(initDict.lookup("u0"));
     const scalar orog_height(readScalar(initDict.lookup("orog_height")));
-
-
-    Info << "Calculating phi from u0 and h0" << endl;
+    
     #include "StokesTheoremPhi.H"
-    Info << "Reconstructing initial U from phi " << endl;
     U = fvc::reconstruct(phi);
 
-    Info << "Divergence of U = " << fvc::div(phi) << endl;
-    
     Mass.write();
     phi.write();
     U.write();
     const scalar pi = Foam::constant::mathematical::pi;
     const scalar tau=2.0*Foam::constant::mathematical::pi;
-    //const bool no_subtract = false;
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nCalculating scalar transport\n" << endl;
@@ -135,6 +124,7 @@ int main(int argc, char *argv[])
         rMesh.movePoints(meshUpoints);
         #include "ringSetOrographyZ.H"
         pMesh.movePoints(meshUpoints);
+
         dV = V;
         forAll(V,c){V[c] = pMesh.V()[c];}
         dV /= V;
@@ -148,20 +138,15 @@ int main(int argc, char *argv[])
         #include "StokesTheoremPhi.H"
         U = fvc::reconstruct(phi);
 
-        //T *= dV;
         fvc::makeRelative(phi,U);
         #include "CourantNo.H"
         phiR = phi;
-        Info << "fvc::div(phi,T) = " << fvc::div(phi,T) << endl;
-        Info << "pMesh.meshPhi() = " << fvc::meshPhi(U) << endl;
-        //solve(fvm::ddt(T) + fvm::div(phi, T));
-        //T *= dV;
+        solve(fvm::ddt(T) + fvc::div(phi, T));
         Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
-        //Info << "before we do it, phi = " << phi << endl;
-        T = T.oldTime()*dV - dV*runTime.time().deltaT()*fvc::div(phi.oldTime(),T.oldTime());
         fvc::makeAbsolute(phi,U);
         phiT = fvc::interpolate(T)*phi;
-
+        Mass = T*V;
+        
         Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
         Info << "Total T = " << fvc::domainIntegrate(T) << endl;
         Info << "Mean T = " << sum(T)/T.size() << endl;
@@ -170,7 +155,7 @@ int main(int argc, char *argv[])
         Info << "Vol pMesh = " << sum(pMesh.V()) << endl;
 
         runTime.write();
-        return 0;
+    
     }
 
     Info<< "End\n" << endl;
