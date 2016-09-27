@@ -124,10 +124,6 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << ":" << nl << endl;
 
         //meshUpoints = rMesh.points();
-        forAll(meshUpoints,point){
-            scalar theta_orig = Foam::atan2(mesh.points()[point].y(), mesh.points()[point].x());
-            scalar r_orig = Foam::sqrt( sqr(mesh.points()[point].x()) + sqr(mesh.points()[point].y()) );
-            scalar theta_new = theta_orig + Foam::sin(theta_orig)*Foam::sin(tau*runTime.value()/runTime.endTime().value())*tau/16;
             
             meshUpoints[point].x() = r_orig*Foam::cos(theta_new);
             meshUpoints[point].y() = r_orig*Foam::sin(theta_new);
@@ -149,7 +145,6 @@ int main(int argc, char *argv[])
         #include "StokesTheoremPhi.H"
         U = fvc::reconstruct(phi);
 
-        if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
         //T *= dV;
         fvc::makeRelative(phi,U);
         #include "CourantNo.H"
@@ -163,7 +158,6 @@ int main(int argc, char *argv[])
         T = T.oldTime()*dV - dV*runTime.time().deltaT()*fvc::div(phi.oldTime(),T.oldTime());
         fvc::makeAbsolute(phi,U);
         phiT = fvc::interpolate(T)*phi;
-        forAll(Mass,c){Mass[c] = T.mesh().V()[c]*T[c];}
 
         Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
         Info << "Total T = " << fvc::domainIntegrate(T) << endl;
