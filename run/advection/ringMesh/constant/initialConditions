@@ -22,12 +22,12 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-u0 u0 [0 1 -1 0 0 0 0] -0.0001;
+u0 u0 [0 1 -1 0 0 0 0] -0.000;
 T0 T0 [0 0 0 0 0] 10000;
-orog_height 0.5;
+orog_height 0.0;
 wave_centre (0.25 0 0);
 wave_angle 0.75;
-wave_height 0;
+wave_height 00;
 wave_width 0.5;
 he he [0 1 0 0 0] 1;
 

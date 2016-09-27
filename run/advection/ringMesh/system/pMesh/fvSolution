@@ -32,7 +32,8 @@ solvers
     }
     T
     {
-        solver AMG;
+        solver GAMG;
+        smoother symGaussSeidel;
         preconditioner PCG;
         tolerance 1e-16;
         relTol 0;

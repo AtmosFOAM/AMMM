@@ -98,6 +98,8 @@ surfaceScalarField phi
  linearInterpolate(U) & pMesh.Sf()
  );
 Info<< "Read field phi\n" << endl;
+Info<< "Dimensions of pMesh.Sf() = " << pMesh.Sf().dimensions() << endl;
+Info<< "Dimensions of phi = " << phi.dimensions() << endl;;
 forAll(phi,p){phi[p] = 0.00001;}
 phi[1] *= -1;
 

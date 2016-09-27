@@ -35,6 +35,7 @@ Description
 #include "MapMeshes.H"
 #include "fvMesh.H"
 #include "StreamFunctionAt.H"
+#include "fvcMeshPhi.H"
 //#include "HashTable.H"
 //#include "fvPatchMapper.H"
 //#include "scalarList.H"
@@ -151,12 +152,15 @@ int main(int argc, char *argv[])
         if( !phi().mesh().moving() ){Info << "The mesh is not moving." << endl;}
         //T *= dV;
         fvc::makeRelative(phi,U);
+        #include "CourantNo.H"
         phiR = phi;
-        //solve(fvm::ddt(T) + fvc::div(phi, T));
+        Info << "fvc::div(phi,T) = " << fvc::div(phi,T) << endl;
+        Info << "pMesh.meshPhi() = " << fvc::meshPhi(U) << endl;
+        //solve(fvm::ddt(T) + fvm::div(phi, T));
         //T *= dV;
         Info << "Max T = " << max(T) << " min T = " << min(T) << endl;
-        Info << "before we do it, phi = " << phi << endl;
-        T = T.oldTime() - runTime.time().deltaT()*fvc::div(phi,T);
+        //Info << "before we do it, phi = " << phi << endl;
+        T = T.oldTime()*dV - dV*runTime.time().deltaT()*fvc::div(phi.oldTime(),T.oldTime());
         fvc::makeAbsolute(phi,U);
         phiT = fvc::interpolate(T)*phi;
         forAll(Mass,c){Mass[c] = T.mesh().V()[c]*T[c];}
@@ -169,6 +173,7 @@ int main(int argc, char *argv[])
         Info << "Vol pMesh = " << sum(pMesh.V()) << endl;
 
         runTime.write();
+        return 0;
     }
 
     Info<< "End\n" << endl;

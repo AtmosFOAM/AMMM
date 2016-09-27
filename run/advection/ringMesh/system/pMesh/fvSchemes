@@ -34,6 +34,7 @@ gradSchemes
 {
     default         none;
     grad(T)         Gauss;
+    grad(T_0)         Gauss;
     grad(t)         Gauss;
 }
 
@@ -45,6 +46,7 @@ divSchemes
     //div(phi,T)           Gauss UMIST grad(T);
     div(U)           Gauss vanLeer grad(phi);
     div(phi,T)           Gauss vanLeer grad(T);
+    div(phi_0,T_0)           Gauss vanLeer grad(T_0);
     div(phi,t)           Gauss vanLeer grad(t);
 }
 
