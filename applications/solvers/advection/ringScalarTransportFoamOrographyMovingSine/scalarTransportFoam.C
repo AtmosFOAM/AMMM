@@ -35,6 +35,7 @@ Description
 #include "MapMeshes.H"
 #include "fvMesh.H"
 #include "StreamFunctionAt.H"
+#include "fvcMeshPhi.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -165,6 +166,7 @@ int main(int argc, char *argv[])
         Info << "Vol pMesh = " << sum(pMesh.V()) << endl;
 
         runTime.write();
+        return 0;
     }
 
     Info<< "End\n" << endl;

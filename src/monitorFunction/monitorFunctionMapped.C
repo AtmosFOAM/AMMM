@@ -26,6 +26,7 @@ License
 #include "monitorFunctionMapped.H"
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 #include "meshToMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -97,6 +98,8 @@ tmp<surfaceVectorField> monitorFunctionMapped::grad
     // );
     
     // return tMon;
+    NotImplemented;
+    return surfaceVectorField::null();
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
