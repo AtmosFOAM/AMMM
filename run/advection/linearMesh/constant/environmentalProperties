@@ -17,52 +17,12 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          fvSchemes;
+    object          environmentalProperties;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default Euler;
-}
-
-gradSchemes
-{
-    default         none;
-    grad(T)               Gauss linear;
-}
-
-divSchemes
-{
-    default             none;
-    div(phi_0,T_0)           Gauss linear;
-    div(phi,T)           Gauss vanLeer grad(T);
-    //    div(phi,T)           Gauss linear;
-}
-
-laplacianSchemes
-{
-    default         none;
-}
-
-interpolationSchemes
-{
-    default        none;
-    interpolate(U) linear;
-    interpolate(T) linear;
-}
-
-snGradSchemes
-{
-    default         uncorrected;
-}
-
-fluxRequired
-{
-    default         no;
-    h;
-}
-
-
+g g       [0 1 -2 0 0 0 0] 10;
+rotating false;
+beta beta [0 -1 -1 0 0] 2e-11;
 // ************************************************************************* //

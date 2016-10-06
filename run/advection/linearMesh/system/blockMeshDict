@@ -1,0 +1,94 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "";
+    local           "";
+
+    class           dictionary;
+    object          blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// This file makes a 1D domain with cyclic boundary conditions
+
+
+convertToMeters 1;
+x 10;
+
+vertices
+(
+    (0 0 0)
+    ($x 0 0)
+    ($x 1 0)
+    (0 1 0)
+    (0 0 1)
+    ($x 0 1)
+    ($x 1 1)
+    (0 1 1)
+   
+
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (100 1 9) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    outerShell
+    {
+        type            zeroGradient;
+        faces           ((3 2 6 7));
+    }
+    innerShell
+    {
+        type            zeroGradient;
+        faces           ((0 1 5 4));
+    }
+    inlet
+    {
+        type cyclic;
+        neighbourPatch  outlet;
+        faces           ((0 3 7 4));
+    }
+    outlet
+    {
+        type cyclic;
+        neighbourPatch  inlet;
+        faces           ((1 2 6 5));
+    }
+    z1
+    {
+        type            zeroGradient;
+        faces           ((4 5 6 7));
+    }
+    z0
+    {
+        type            zeroGradient;
+        faces           ((0 1 2 3));
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

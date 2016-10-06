@@ -30,15 +30,11 @@ ddtSchemes
 gradSchemes
 {
     default         none;
-    grad(T)               Gauss linear;
 }
 
 divSchemes
 {
     default             none;
-    div(phi_0,T_0)           Gauss linear;
-    div(phi,T)           Gauss vanLeer grad(T);
-    //    div(phi,T)           Gauss linear;
 }
 
 laplacianSchemes
@@ -49,8 +45,6 @@ laplacianSchemes
 interpolationSchemes
 {
     default        none;
-    interpolate(U) linear;
-    interpolate(T) linear;
 }
 
 snGradSchemes
