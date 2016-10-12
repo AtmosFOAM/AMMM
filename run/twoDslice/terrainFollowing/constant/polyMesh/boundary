@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+6
+(
+    outerShell
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          2700;
+        startFace       5205;
+        faces           ( ( 3 2 6 7 ) );
+    }
+    innerShell
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          2700;
+        startFace       7905;
+        faces           ( ( 0 1 5 4 ) );
+    }
+    inlet
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          15;
+        startFace       10605;
+        faces           ( ( 0 3 7 4 ) );
+    }
+    outlet
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          15;
+        startFace       10620;
+        faces           ( ( 1 2 6 5 ) );
+    }
+    z1
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          180;
+        startFace       10635;
+        faces           ( ( 4 5 6 7 ) );
+    }
+    z0
+    {
+        type            zeroGradient;
+        inGroups        1(zeroGradient);
+        nFaces          180;
+        startFace       10815;
+        faces           ( ( 0 1 2 3 ) );
+    }
+)
+
+// ************************************************************************* //

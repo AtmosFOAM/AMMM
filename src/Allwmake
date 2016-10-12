@@ -11,6 +11,7 @@ makeType=${1:-libso}
     exit 1
 }
 
+wmake $makeType orography
 wmake $makeType ringMesh
 wmake $makeType monitorFunction
 wmake $makeType shallowWater

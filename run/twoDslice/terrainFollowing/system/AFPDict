@@ -1,0 +1,49 @@
+// The FOAM Project // File: fvSchemes
+/*
+-------------------------------------------------------------------------------
+ =========         | dictionary
+ \\      /         |
+  \\    /          | Name:   fvSchemes
+   \\  /           | Family: FoamX configuration file
+    \\/            |
+    F ield         | FOAM version: 2.3
+    O peration     | Product of Nabla Ltd.
+    A and          |
+    M anipulation  | Email: Enquiries@Nabla.co.uk
+-------------------------------------------------------------------------------
+*/
+// FoamX Case Dictionary.
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "system";
+    local           "";
+
+    class           dictionary;
+    object          AL2DDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+monitorFunctionFrom monitorFunctionFront;
+
+//front
+p0 -9.0;
+alpha 6.0;
+gamma 1.5;
+m 0.4;
+resolution 2.0;
+width 1.0;
+meshperiod 25000;
+
+conv 1.0e-3;
+matrixRelax 1e-4;
+Gamma Gamma [0 0 0 0 0] 1.0;
+// ************************************************************************* //
+
+
