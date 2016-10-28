@@ -100,3 +100,9 @@ testcases/build
 # video files
 *.gif
 *.ogv
+
+# paraFoam files
+#########################
+*.foam
+*.obj
+*.blockMesh
