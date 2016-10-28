@@ -31,7 +31,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         1000;
+endTime         210;
 
 deltaT          10;
 
