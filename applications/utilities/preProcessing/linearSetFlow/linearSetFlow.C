@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
          //dimensionedScalar("h0", dimLength, 0.0)
          );
 
-
+    const scalar dx = mesh.bounds().span().x();
     Info << "Calculating phi from u0 and h0" << endl;
 #include "StokesTheoremPhi.H"
     Info << "Reconstructing initial U from phi " << endl;
