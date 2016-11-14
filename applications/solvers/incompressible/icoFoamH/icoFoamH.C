@@ -88,14 +88,8 @@ int main(int argc, char *argv[])
 
         #include "CourantNo.H"
 
-        // update old time variables for Crank-Nicholson
-        V.oldTime() += (1-offCentre)*dt*dVdt;
-
         #include "pEqn.H"
         
-        // Updates for next time step
-        dVdt -= H.magd()*fvc::snGrad(p);
-
         runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

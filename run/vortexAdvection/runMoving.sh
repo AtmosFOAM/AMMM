@@ -6,7 +6,7 @@ set -o pipefail
 here=$(pwd)
 
 # Compile the source if necessary
-cd $AMMM_SRC/../applications/solvers/incompressible/icoFoamH && wmake && cd -
+cd $AMMM_SRC/../applications/solvers/incompressible/movingIcoFoamH && wmake && cd -
 
 wd=$(pwd)
 if [[ "$wd" != "$here" ]]; then
@@ -38,7 +38,7 @@ cp init_0/* 0/
 cp init_pMesh/* 0/pMesh/
 
 # Solve incompressible Euler equations
-time AMMMicoFoamH | tee log
+time movingIcoFoamH | tee log
 
 # plot the results
 time=$(ls -1dv [1-9]* | tail -1)

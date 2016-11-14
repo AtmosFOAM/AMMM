@@ -22,7 +22,7 @@ clearAll.sh
 
 # create mesh and plot
 blockMesh
-terrainFollowingMesh
+#terrainFollowingMesh
 
 mkdir -p constant/rMesh/polyMesh constant/pMesh/polyMesh
 cp constant/polyMesh/* constant/rMesh/polyMesh/
@@ -36,6 +36,13 @@ mkdir -p 0/pMesh
 # initialise the velocity field and the pressure
 cp init_0/* 0/
 cp init_pMesh/* 0/pMesh/
+
+
+[ ! -f 0/Uf.pdf ] && gmtFoam -time 0 -region pMesh Uf
+[ -f 0/Uf.pdf ] && evince 0/Uf.pdf &
+
+
+exit 0
 
 # Solve incompressible Euler equations
 time AMMMicoFoamH | tee log

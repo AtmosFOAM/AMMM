@@ -1,6 +1,6 @@
 FoamFile
 {
-    version         2.3;
+    version         2.2;
     format          ascii;
 
     root            "";
@@ -14,18 +14,12 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/9c";
+projection "X18c/3c";
 projection2D XZ;
+//patch frontAndBack;
 
 FieldsToPlot
+1
 (
-    [Ucor filledContours 0 0 10 "$GMTU/colours/red_white_blue.cpt"]
-    [none mesh "grey"]
+    [none mesh "black"]
 );
-
-//separateLegend true;
-region "-25e3/25e3/0/25e3";
-annotate "minMax -1.2e3 -5000";
-//annotate "minMax 0 10000";
-boundaryMarks "5e3/2.5e3";
-

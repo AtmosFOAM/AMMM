@@ -1,0 +1,41 @@
+/*---------------------------------------------------------------------------*\
+1;4205;0c| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "";
+    local           "";
+
+    class           dictionary;
+    object          initialConditions;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vortexCentre (0 0 12500);
+vortexRadius 4000.0;
+vortexMagnitude 10;
+constantAdvection constantAdvection [0 1 -1 0 0] (10 0 0);
+u0 u0 [0 1 -1 0 0 0 0] 0.0001;
+T0 T0 [0 0 0 0 0] 10000;
+orog_height 0.1; //0.5;
+wave_centre 0.9;
+wave_angle 0.75;
+wave_height 00;
+wave_width 0.1;
+orog_start 0.333;
+orog_stop 0.433;
+he he [0 1 0 0 0] 1;
+meshPeriod meshPeriod [0 0 1 0 0] 25000;
+
+// ************************************************************************* //
