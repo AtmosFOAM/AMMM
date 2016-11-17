@@ -47,6 +47,8 @@ exit 0
 # Solve incompressible Euler equations
 time AMMMicoFoamH | tee log
 
+postProcess -region pMesh -func "vorticityF"
+
 # plot the results
 time=$(ls -1dv [1-9]* | tail -1)
 if [ -d $time ]; then
