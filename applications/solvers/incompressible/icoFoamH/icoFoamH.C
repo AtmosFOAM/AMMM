@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
         #include "CourantNo.H"
 
         // update old time variables for Crank-Nicholson
-        V.oldTime() += (1-offCentre)*dt*dVdt;
+        V.oldTime() += (1-offCentre)*dt*dVdt.oldTime();
 
         #include "pEqn.H"
         
