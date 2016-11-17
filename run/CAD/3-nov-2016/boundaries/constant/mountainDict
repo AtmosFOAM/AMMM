@@ -11,7 +11,7 @@ domainHeight 25e3;
 mountain
 {
     type schaerCos;
-    peakHeight 000;
+    peakHeight 3000;
     halfWidth  25e3;
     wavelength 8e3;
 }

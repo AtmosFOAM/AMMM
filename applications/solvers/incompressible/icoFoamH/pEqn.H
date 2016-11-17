@@ -1,3 +1,6 @@
+// update old time variables for Crank-Nicholson
+V.oldTime() += (1-offCentre)*dt*dVdt; //this is on the old mesh no worries
+
 // Initial prediction of cell centre velocity without a projection step
 // for the initialcalculation of the non-linear advection term
 if (uPredictor)
@@ -15,7 +18,8 @@ if (uPredictor)
     );
     u = H.reconstructd(V);
     Uf = fvc::interpolate(u);
-}
+ } //I can ignore this uPredictor loop apparently
+
 
 {
     for (int corr=0; corr<nCorr; corr++)
@@ -64,3 +68,7 @@ if (uPredictor)
         }
     }
 }
+
+
+// Updates for next time step
+dVdt -= H.magd()*fvc::snGrad(p);

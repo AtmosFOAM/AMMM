@@ -32,10 +32,6 @@ gradSchemes
 {
     default         none;
     linearUpwind     Gauss linear;
-    grad(phi)       Gauss linear;
-    grad(mmphi)       Gauss linear;
-    grad(mmPhi)       leastSquares;
-    grad(gradmmPhif)  Gauss linear;
 }
 
 divSchemes
@@ -55,14 +51,12 @@ interpolationSchemes
     interpolate(convection(U,u)) linearUpwind U linearUpwind;
     interpolate(u)  midPoint;
     H               midPoint;
-    interpolate(gradmmPhi)    linear;
 }
 
 snGradSchemes
 {
     default         none;
     snGrad(p)   uncorrected;
-    snGrad(mmPhi) uncorrected;
 }
 
 fluxRequired

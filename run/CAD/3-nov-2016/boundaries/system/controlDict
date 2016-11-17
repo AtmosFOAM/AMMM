@@ -17,59 +17,45 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          fvSchemes;
+    object          controlDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default Euler;
-}
-offCentre 0.6;
+application buoyantFoam;
 
-gradSchemes
-{
-    default         none;
-    linearUpwind     Gauss linear;
-    grad(phi)       Gauss linear;
-    grad(mmphi)       Gauss linear;
-    grad(mmPhi)       leastSquares;
-    grad(gradmmPhif)  Gauss linear;
-}
+startFrom       startTime;
+//startFrom       latestTime;
 
-divSchemes
-{
-    default none;
-    div(U,u)   Gauss linearUpwind linearUpwind;
-}
+startTime       0;
 
-laplacianSchemes
-{
-    default         Gauss midPoint uncorrected;
-}
+stopAt          endTime;
 
-interpolationSchemes
-{
-    default         none;
-    interpolate(convection(U,u)) linearUpwind U linearUpwind;
-    interpolate(u)  midPoint;
-    H               midPoint;
-    interpolate(gradmmPhi)    linear;
-}
+endTime         210;
 
-snGradSchemes
-{
-    default         none;
-    snGrad(p)   uncorrected;
-    snGrad(mmPhi) uncorrected;
-}
+deltaT          10;
 
-fluxRequired
-{
-    default         no;
-    p;
-}
+writeControl    runTime;
 
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep no;
+maxCo          0.5;
+
+libs            ("libfiniteVolumeAtmos.so" "libfiniteVolumeAtmosFOAMtools.so");
 
 // ************************************************************************* //
