@@ -26,12 +26,13 @@ ddtSchemes
 {
     default Euler;
 }
-offCentre 0.5;
+offCentre 0.6;
 
 gradSchemes
 {
     default         none;
     linearUpwind     Gauss linear;
+    curl(u)          Gauss linear;
 }
 
 divSchemes

@@ -37,6 +37,8 @@ mkdir -p 0/pMesh
 cp init_0/* 0/
 cp init_pMesh/* 0/pMesh/
 
+vortexAdvectionSetup
+
 # Solve incompressible Euler equations
 time movingIcoFoamH | tee log
 

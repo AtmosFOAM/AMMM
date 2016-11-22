@@ -22,10 +22,11 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-vortexCentre (0 0 12500);
-vortexRadius 4000.0;
-vortexMagnitude 10;
-constantAdvection constantAdvection [0 1 -1 0 0] (10 0 0);
+vortexCentre (0 0 9000);
+vortexRadius 2000.0;
+vortexMagnitude 30;
+constantMeshVelocity constantMeshVelocity [0 1 -1 0 0] (-5 0 0);
+constantAdvection constantAdvection [0 1 -1 0 0] (0 0 0);
 u0 u0 [0 1 -1 0 0 0 0] 0.0001;
 T0 T0 [0 0 0 0 0] 10000;
 orog_height 0.1; //0.5;
