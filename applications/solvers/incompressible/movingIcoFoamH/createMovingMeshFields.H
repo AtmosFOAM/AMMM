@@ -11,6 +11,10 @@ IOdictionary monitorDict
 // The monitor funciton
 autoPtr<monitorFunction> monitorFunc(monitorFunction::New(monitorDict));
 
+const scalar conv = readScalar(monitorDict.lookup("conv"));
+const dimensionedScalar Gamma(monitorDict.lookup("Gamma"));
+
+
 // Create the mesh displacement potential, Phi
 volScalarField mmPhi
 (
@@ -133,5 +137,24 @@ volScalarField source
 Info << "createMovingMeshFields.H finished" << endl;
 
 pointField meshUpoints = pMesh.points();
+
+
+volScalarField monitorP //the monitor function as calculated on the pMesh
+(
+ IOobject("monitorP", runTime.timeName(), pMesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
+    pMesh,
+ dimensionedScalar("monitorP", dimensionSet(0,0,0,0,0), scalar(1)),
+ wordList(6,"zeroGradient")
+    //
+);
+
+volScalarField monitorM //the monitor function as calculated on the pMesh
+(
+ IOobject("monitorM", runTime.timeName(), mesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
+    mesh,
+ dimensionedScalar("monitorM", dimensionSet(0,0,0,0,0), scalar(1)),
+ wordList(6,"zeroGradient")
+    //
+);
 
 

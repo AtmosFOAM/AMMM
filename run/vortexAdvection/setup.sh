@@ -41,11 +41,11 @@ cp init_pMesh/* 0/pMesh/
 [ ! -f 0/Uf.pdf ] && gmtFoam -time 0 -region pMesh Uf
 [ -f 0/Uf.pdf ] && evince 0/Uf.pdf &
 
-
+vortexAdvectionSetup
 exit 0
 
 # Solve incompressible Euler equations
-time AMMMicoFoamH | tee log
+time movingIcoFoamH | tee log
 
 # plot the results
 time=$(ls -1dv [1-9]* | tail -1)

@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
          H.reconstruct(Uf & pMesh.Sf()),
          uBCs
          );
-    u.write();
+    //    u.write();
     volVectorField q // the vorticity
         (
          IOobject("q", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
         vector direction = vector(z,0,-x);
         direction /=mag(direction);
         scalar vortexDistance = mag(vector(x,y,z));
-                    Uf[face] -= direction * vortexMagnitude*Foam::exp(-sqr(vortexDistance)/(2*sqr(vortexRadius)));//*vortexDistance);//* Foam::exp(-(  sqr(vortexDistance-vortexRadius) ));
+        Uf[face] -= direction * vortexMagnitude*Foam::exp(-sqr(vortexDistance)/(2*sqr(vortexRadius)));//*vortexDistance);//* Foam::exp(-(  sqr(vortexDistance-vortexRadius) ));
 
     }
 
@@ -266,6 +266,38 @@ int main(int argc, char *argv[])
     //Uf = U*(pMesh.Sf()/sqr(pMesh.magSf()));
     //u = fvc::reconstruct(U);
     Uf.write();
+
+
+
+
+
+
+
+    u *= 0.0;
+ 
+    forAll(u,celli){
+        scalar x = (u.mesh().C()[celli].x()-vortexCentre.x());
+        scalar y = (u.mesh().C()[celli].y()-vortexCentre.y());
+        scalar z = (u.mesh().C()[celli].z()-vortexCentre.z());
+        
+        vector direction = vector(z,0,-x);
+        direction /=mag(direction);
+        scalar vortexDistance = mag(vector(x,y,z));
+        u[celli] = direction * vortexMagnitude*Foam::exp(-sqr(vortexDistance)/(2*sqr(vortexRadius)));//*vortexDistance);//* Foam::exp(-(  sqr(vortexDistance-vortexRadius) ));
+    }
+
+    forAll(u,celli){
+        scalar x = (u.mesh().C()[celli].x()-vortexCentre.x());
+        scalar y = (u.mesh().C()[celli].y()-vortexCentre.y());
+        scalar z = (u.mesh().C()[celli].z()-(vortexCentre.z()+3*vortexRadius));
+        
+        vector direction = vector(z,0,-x);
+        direction /=mag(direction);
+        scalar vortexDistance = mag(vector(x,y,z));
+        u[celli] -= direction * vortexMagnitude*Foam::exp(-sqr(vortexDistance)/(2*sqr(vortexRadius)));//*vortexDistance);//* Foam::exp(-(  sqr(vortexDistance-vortexRadius) ));
+    }
+
+    
     u.write();
     q = fvc::curl(u);
     q.write();

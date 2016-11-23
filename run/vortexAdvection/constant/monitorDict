@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-| =========                 |                                                 |
+1;4205;0c| =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  1.4                                   |
 |   \\  /    A nd           | Web:      http://www.openfoam.org               |
@@ -17,45 +17,12 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          controlDict;
+    object          monitorDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application buoyantFoam;
-
-startFrom       startTime;
-//startFrom       latestTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         2000;
-
-deltaT          10;
-
-writeControl    runTime;
-
-writeInterval   10;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression uncompressed;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep no;
-maxCo          0.5;
-
-libs            ("libfiniteVolumeAtmos.so" "libfiniteVolumeAtmosFOAMtools.so");
+m1 m1 [0 0 2 0 0] 10000;
+m2 m2 [0 2 0 0 0] 2000;
 
 // ************************************************************************* //

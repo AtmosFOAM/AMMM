@@ -30,3 +30,5 @@ centre (0 0 0);
 Gamma Gamma [0 0 0 0 0] 1;
 Gamma1 Gamma1 [0 0 0 0 0] 1;
 Gamma2 Gamma2 [0 0 0 0 0] 0;
+
+conv 1.0e-8;

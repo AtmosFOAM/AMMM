@@ -39,7 +39,21 @@ solvers
             relTol          0;
         }
     
+    "mmPhi|mmphi"
+    {
+        solver GAMG; //BICCG;
+        smoother symGaussSeidel;
+        preconditioner   DILU;
+        tolerance        1e-13;
+        relTol           1e-10;
+        maxIter          500;
+        debug 1;
+        DebugSwitch 0;
+    };
 }
+
+nCorrectors 3;
+
 
 iterations
 {

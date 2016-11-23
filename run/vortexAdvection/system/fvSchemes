@@ -44,6 +44,7 @@ divSchemes
     default none;
     div(U,u)   Gauss linearUpwind linearUpwind;
     div(phi,U)      Gauss linear;// only for icoFoam
+    div((S&gradc_m,phi) Gauss linear;
 }
 
 laplacianSchemes
@@ -53,7 +54,7 @@ laplacianSchemes
 
 interpolationSchemes
 {
-    default         none;
+    default         linear;
     interpolate(convection(U,u)) linearUpwind U linearUpwind;
     interpolate(u)  midPoint;
     H               midPoint;

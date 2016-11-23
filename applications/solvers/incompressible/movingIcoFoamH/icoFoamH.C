@@ -34,10 +34,13 @@ Description
 
 #include "HodgeOps.H"
 #include "fvCFD.H"
+#include "meshToMesh0.H"
 #include "monitorFunction.H"
+#include "faceToPointReconstruct.H"
 #include "setInternalValues.H"
 #include "fvMesh.H"
 #include "fvcMeshPhi.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
@@ -99,6 +102,31 @@ int main(int argc, char *argv[])
     const dimensionedVector constantMeshVelocity(initDict.lookup("constantMeshVelocity"));
     
 
+    IOdictionary monDict
+        (
+         IOobject
+         (
+          "monitorDict",
+          mesh.time().constant(),
+          mesh,
+          IOobject::MUST_READ,
+          IOobject::NO_WRITE
+          )
+         );
+    
+    
+    const dimensionedScalar m1(monDict.lookup("m1"));
+    const dimensionedScalar m2(monDict.lookup("m2"));
+    #include "monitorCalc.H"
+    monitorP.write();
+    #include "monitorMap.H"
+    monitorM.write();
+
+    #include "refineMesh.H"
+    rMesh.write();
+    //meshUpoints=rMesh.points();pMesh.movePoints(meshUpoints);pMesh.write();
+    meshUpoints=pMesh.points();
+    
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
@@ -109,10 +137,15 @@ int main(int argc, char *argv[])
 
         #include "CourantNo.H"
 
-        forAll(meshUpoints,point){
-            meshUpoints[point] += dt.value()*constantMeshVelocity.value();
-        }
+        //forAll(meshUpoints,point){
+        //    meshUpoints[point] += dt.value()*constantMeshVelocity.value();
+        //}
+        #include "refineMesh.H"
+        meshUpoints=rMesh.points();
         #include "pEqn.H"
+
+        #include "monitorCalc.H"
+        #include "monitorMap.H"
         
         runTime.write();
 
