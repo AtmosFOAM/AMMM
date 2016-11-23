@@ -58,7 +58,7 @@ if (uPredictor)
             if (nonOrth == nNonOrthCorr)
             {
                 Ucor = -dt*offCentre*fvc::snGrad(p)*pMesh.magSf();
-                //U += pEqn.flux()/offCentre;
+                //U += pEqn.flux();
                 U += Ucor;
                 //U -= dt*offCentre*fvc::snGrad(p)*pMesh.magSf();
                 V -= dt*offCentre*fvc::snGrad(p)*H.magd();
