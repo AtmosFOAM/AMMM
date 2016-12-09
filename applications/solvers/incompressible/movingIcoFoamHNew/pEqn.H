@@ -15,7 +15,7 @@ for (int corr=0; corr<nCorr; corr++)
         Info << "before fvVectorMatrix " << max(u) << endl;
         fvVectorMatrix uEqn
             (
-             fvm::ddt(u) - (
+             fvm::ddt(u) + (
                             (fvc::div(phi,u))
               //+ (2*(Omega^(Uf-Ug)))
               )
