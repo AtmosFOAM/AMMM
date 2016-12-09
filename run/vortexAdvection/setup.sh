@@ -6,8 +6,8 @@ set -o pipefail
 here=$(pwd)
 
 # Compile the source if necessary
-cd $AMMM_SRC/../applications/utilities/preProcessing/vortexAdvectionSetup && wmake && cd -
-cd $AMMM_SRC/../applications/solvers/incompressible/movingIcoFoamH && wmake && cd -
+#cd $AMMM_SRC/../applications/utilities/preProcessing/vortexAdvectionSetup && #wmake && cd -
+#cd $AMMM_SRC/../applications/solvers/incompressible/movingIcoFoamH && wmake && #cd -
 
 wd=$(pwd)
 if [[ "$wd" != "$here" ]]; then
