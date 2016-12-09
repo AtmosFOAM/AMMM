@@ -47,7 +47,9 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss midPoint uncorrected;
+    default         none;
+    laplacian(monitorP) Gauss linear uncorrected;
+    laplacian(p)        Gauss linear corrected;
 }
 
 interpolationSchemes
@@ -63,7 +65,7 @@ interpolationSchemes
 snGradSchemes
 {
     default         none;
-    snGrad(p)   uncorrected;
+    snGrad(p)   corrected;
 }
 
 fluxRequired
