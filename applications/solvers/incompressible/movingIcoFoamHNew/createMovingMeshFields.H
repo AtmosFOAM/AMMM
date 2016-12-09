@@ -12,6 +12,7 @@ IOdictionary monitorDict
 autoPtr<monitorFunction> monitorFunc(monitorFunction::New(monitorDict));
 
 const scalar conv = readScalar(monitorDict.lookup("conv"));
+const int maxIters = monitorDict.lookupOrDefault<int>("maxIters", 30);
 const dimensionedScalar Gamma(monitorDict.lookup("Gamma"));
 
 

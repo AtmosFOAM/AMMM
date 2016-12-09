@@ -96,7 +96,7 @@ if (MArefinement) {
             PABem = fvc::domainIntegrate(equiDist)/Vtot;
             PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
             Info << "Iterations = " << iterations << " PABe = " << PABe.value() << endl;
-            converged = PABe.value() < conv;
+            converged = PABe.value() < conv || iterations > maxIters;
             //Info << "convergence criteria PABe = " << PABe.value() << endl; 
             if (iterations == 0) {
                 Info << "refineMesh convergence criteria start  = " << PABe.value() << endl;

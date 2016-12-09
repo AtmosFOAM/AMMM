@@ -2,6 +2,7 @@ monitorFunction.C
 monitorFunctionTanh.C
 monitorFunctionFront.C
 monitorFunctionSech.C
+monitorFunctionVorticity.C
 monitorFunctionMapped.C
 tensor.C
 

@@ -3,14 +3,22 @@ pMesh.movePoints(meshUpoints);
 
 // 2. Make the boundaries orthogonal and calculate d^{n+1}
 #include "orthogonalBoundariesPMesh.H"
-//HodgeOps H(pMesh);
+HodgeOps H(pMesh);
+Hdelta = H.delta();
 
 // 3. Calculate V0 = u^n \cdot d^{n+1}
-V0 = H.delta() & Uf;
-V0 = V.oldTime();
+V0 = H.delta() & Ufv;
+//V0 = V.oldTime();
 
 // 3b. Add explicit part
-V0 += (1-offCentre)*dt*dVdt;
+V0 += -(1-offCentre)*dt*(
+                         (H.delta() &
+        (
+         fvc::interpolate(fvc::div(U.oldTime()-meshPhi.oldTime(),u.oldTime()))
+            //+ (2*(Omega^(Uf-Ug)))
+         ))
+                         +H.magd().oldTime()*fvc::snGrad(p))
+                         ;
 
 // 4. Save the meshPhi
 meshPhi = fvc::meshPhi(u);
@@ -21,13 +29,14 @@ for (int corr=0; corr<nCorr; corr++)
 
         // 5. Make U relative:
         U -= meshPhi;
+        #include "CourantNo.H"
         //fvc::makeRelative(U,u);
         
         // Explicit part of rate of change of flux
         // Subtract from V0 the term \alpha{\delta t} \div{ u^{n}_r u^{n} } \cdot d^{n+1}
         dVdt = -H.delta() &
         (
-            fvc::interpolate(fvc::div(U,u))
+         fvc::interpolate(fvc::div(U,u))
             //+ (2*(Omega^(Uf-Ug)))
         );
 
@@ -37,7 +46,8 @@ for (int corr=0; corr<nCorr; corr++)
             {
                 U = H.ddirToFlux(V)
                     - H.ddirToFluxCorr(offCentre*dt*fvc::snGrad(p)*H.magd());
-
+                Info << " before pEqn " << max(U) << endl;
+                Info << " before pEqn " << max(V) << endl;
                 fvScalarMatrix pEqn
                     (
                      fvc::div(U)
@@ -47,6 +57,7 @@ for (int corr=0; corr<nCorr; corr++)
 
                 if(nonOrth == nNonOrthCorr && corr == nCorr-1)
                     {
+                        Info << "pFinal ";
                 pEqn.solve(pMesh.solver(p.name() + "Final"));
                     }
                 else
@@ -57,12 +68,13 @@ for (int corr=0; corr<nCorr; corr++)
                 if (nonOrth == nNonOrthCorr)
                 {
                     //Ucor = -dt*fvc::snGrad(p)*pMesh.magSf();
-                    U += pEqn.flux()/offCentre;
+                    U += pEqn.flux();///offCentre;
                     //U += Ucor;
                     //U -= dt*offCentre*fvc::snGrad(p)*pMesh.magSf();
                     V -= dt*offCentre*fvc::snGrad(p)*H.magd();
                     u = H.reconstructd(V);
                     Uf = fvc::interpolate(u);
+                    Ufv = Uf - ((Uf & H.delta()) - V)*H.delta()/magSqr(H.delta());
                     q = fvc::curl(u);
                 }
             }
@@ -72,3 +84,5 @@ for (int corr=0; corr<nCorr; corr++)
 
 // Updates for next time step
 dVdt -= H.magd()*fvc::snGrad(p);
+
+div = fvc::div(u);

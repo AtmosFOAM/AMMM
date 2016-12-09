@@ -31,9 +31,11 @@
   \*---------------------------------------------------------------------------*/
 #include "HodgeOps.H"
 #include "fvCFD.H"
+#include "meshToMesh0.H"
+#include "monitorFunction.H"
+#include "faceToPointReconstruct.H"
 #include "mathematicalConstants.H"
 #include "setInternalValues.H"
-#include "ringMesh.H"
 #include "StreamFunctionVortexAdvection.H"
 using namespace Foam::constant::mathematical;
 
@@ -304,6 +306,70 @@ int main(int argc, char *argv[])
     p.write();
 
 
+
+    Info << "Everything is set up, lets do the Monge-Ampere now" << endl;
+    fvMesh rMesh
+    (
+        Foam::IOobject
+        (
+            "rMesh", runTime.timeName(), runTime,
+            IOobject::MUST_READ, IOobject::AUTO_WRITE
+        )
+    );
+    #include "createMovingMeshFields.H"
+    const dictionary& itsDict = pMesh.solutionDict().subDict("iterations");
+    const int nCorr = itsDict.lookupOrDefault<int>("nCorrectors", 1);
+    IOdictionary monDict
+        (
+         IOobject
+         (
+          "monitorDict",
+          mesh.time().constant(),
+          mesh,
+          IOobject::MUST_READ,
+          IOobject::NO_WRITE
+          )
+         );
+    
+    
+    const dimensionedScalar m1(monDict.lookup("m1"));
+    const dimensionedScalar m2(monDict.lookup("m2"));
+    const int nSmooth = monDict.lookupOrDefault<int>("nSmooth", 1);
+    
+    Info << "Max velocity u= " << max(mag(u)) << endl;
+    Info << "Max vorticity = " << max(mag(q)) << endl; 
+    #include "monitorCalc.H"
+    #include "monitorMap.H"
+    #include "refineMesh.H"
+    Info << "FINAL Max velocity u= " << max(mag(u)) << endl;
+    Info << "FINAL Max vorticity = " << max(mag(q)) << endl; 
+    rMesh.write();
+    meshUpoints=rMesh.points();
+    pMesh.movePoints(meshUpoints);
+    pMesh.write();
+    { HodgeOps H(pMesh);
+        u = H.reconstruct(Uf & pMesh.Sf());
+    q = fvc::curl(u);
+    Info << "FINAL H Max velocity u= " << max(mag(u)) << endl;
+    Info << "FINAL H Max vorticity = " << max(mag(q)) << endl;
+
+Info << " Min mmPhi = " << min(mmPhi) << " max mmPhi = " << max(mmPhi) << endl;
+Info << " Min mmphi = " << min(mmphi) << " max mmphi = " << max(mmphi) << endl;
+Info << " Min mmphiBarLaplacian = " << min(mmphiBarLaplacian) << " max mmphiBarLaplacian = " << max(mmphiBarLaplacian) << endl;
+Info << " min detHess = " << min(detHess) << " max detHess = " << max(detHess) << endl;
+Info << " min detHessR = " << min(detHessR) << " max detHessR = " << max(detHessR) << endl;
+Info << " min monitorR = " << min(monitorR) << " max monitorR = " << max(monitorR) << endl;
+Info << " min equidist = " << min(equiDist) << " max equidist = " << max(equiDist) << endl;
+   Info << " min PABequi = " << min(PABequi) << " max PABequi = " << max(PABequi) << endl;
+ Info << "calculated PABe = " << PABe << endl;
+ Info << " min monitorNew = " << min(monitorNew) << " max monitorNew = " << max(monitorNew) << endl;
+Info << "calculated equiDistMean = " << equiDistMean << endl;
+Info << "min source = " << min(source) << " max source = " << max(source) << endl;
+
+    u.write();
+    Uf.write();
+    q.write();
+    mmPhi.write();}
     Info<< "End\n" << endl;
     
     return(0);

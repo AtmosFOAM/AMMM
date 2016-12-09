@@ -14,16 +14,17 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/9c";
+projection "X18c/18c";
 projection2D XZ;
 
 FieldsToPlot
 (
     [none mesh "grey"]
-    [Uf vectors 50 100 "black"]
+    [Uf vectors 50 1 "black"]
+    [u vectors 50 1 "red"]
 );
 
-separateLegend true;
+//separateLegend true;
 region "-25e3/25e3/0/25e3";
 annotate "minMax -1.2e3 -2000";
 boundaryMarks "5e3/2.5e3";

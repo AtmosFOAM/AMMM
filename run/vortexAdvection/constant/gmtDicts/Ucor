@@ -14,12 +14,12 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/9c";
+projection "X18c/19c";
 projection2D XZ;
 
 FieldsToPlot
 (
-    [Ucor filledContours 0 0 10 "$GMTU/colours/red_white_blue.cpt"]
+    [Ucor filledContours -1e3 1e3 1e2 "$GMTU/colours/red_white_blue.cpt"]
     [none mesh "grey"]
 );
 

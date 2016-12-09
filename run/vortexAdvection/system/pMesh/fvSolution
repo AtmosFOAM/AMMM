@@ -1,4 +1,6 @@
-/*--------------------------------*- C++ -*----------------------------------*\
+
+
+/*--------------------------------*- C++ -*----------------------------------* \
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  1.5                                   |
@@ -20,8 +22,9 @@ solvers
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-6;
-        relTol           0.01;
+        tolerance        1e-7;
+        relTol           0.0001;
+        maxIter         50;
     }
 
     pFinal
@@ -30,12 +33,20 @@ solvers
         tolerance        1e-6;
         relTol           0;
     }
+    u
+        {
+            solver PCG;
+            preconditoner DIC;
+            tolerance 1e-7;
+            relTol 0.0001;
+            maxIter 500;
+        }
 }
 
 iterations
 {
-    nCorrectors      4;
-    nNonOrthogonalCorrectors 0;
+    nCorrectors      1;
+    nNonOrthogonalCorrectors 25;
     uPredictor       false;
 }
 

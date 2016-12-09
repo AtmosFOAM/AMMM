@@ -37,6 +37,6 @@ wave_width 0.1;
 orog_start 0.333;
 orog_stop 0.433;
 he he [0 1 0 0 0] 1;
-meshPeriod meshPeriod [0 0 1 0 0] 25000;
+meshPeriod meshPeriod [0 0 1 0 0] 100;
 
 // ************************************************************************* //

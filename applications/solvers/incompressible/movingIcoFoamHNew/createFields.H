@@ -91,11 +91,11 @@ q.write();
 
 
 Info<< "Calculating face flux field U\n" << endl;
-surfaceScalarField U
+surfaceScalarField phi
 (
     IOobject
     (
-       "U",
+       "phi",
         runTime.timeName(),
         pMesh
     ),
@@ -109,7 +109,7 @@ surfaceScalarField meshPhi
         runTime.timeName(),
         pMesh
     ),
-    U
+    phi
 );
 
 volScalarField div // the divergence
@@ -154,7 +154,7 @@ V0=V;
 surfaceScalarField dVdt
 (
     IOobject("dVdt", runTime.timeName(), pMesh),
-    -(H.delta() & (fvc::interpolate(fvc::div(U,u))/*+2*(Omega^(Uf-Ug))*/))
+    -(H.delta() & (fvc::interpolate(fvc::div(phi,u))/*+2*(Omega^(Uf-Ug))*/))
     - H.magd()*fvc::snGrad(p),
      VuBCs
 );
