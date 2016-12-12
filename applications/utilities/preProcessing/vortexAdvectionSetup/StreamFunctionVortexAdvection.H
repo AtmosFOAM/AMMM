@@ -1,20 +1,20 @@
 scalar streamFunctionVortexAdvection(const point& p, const scalar& u0, const scalar& Htop, const scalar& orog_height, const scalar& orog_start, const scalar& orog_stop, const scalar& dx)
 {
-    scalar psi_c = 0.0;
+    //scalar psi_c = 0.0;
     scalar psi_v = 0.0;
-    scalar h = 0;
-    scalar theta = p.x()/dx;
-    if (theta > orog_start and theta < orog_stop) {
-        h = orog_height;
-    }
-    if (p.z() > Htop)
-        {
-            psi_c = -u0 * p.z();
-        }
-    else
-        {
-            psi_c =  -u0 * (Htop * (p.z() - h) / (Htop - h));
-        }
+    //scalar h = 0;
+    // scalar theta = p.x()/dx;
+    // if (theta > orog_start and theta < orog_stop) {
+    //     h = orog_height;
+    // }
+    // if (p.z() > Htop)
+    //     {
+    //         psi_c = -u0 * p.z();
+    //     }
+    // else
+    //     {
+    //         psi_c =  -u0 * (Htop * (p.z() - h) / (Htop - h));
+    //     }
 
 
 

@@ -4,7 +4,7 @@ bool moveTooLarge = true;
 scalar moveFactor = 1.0;
 int moveScal = 0;
 while (moveTooLarge) {
-    pMesh.movePoints(pMesh.points()+moveFactor*meshPointsMovement);
+    pMesh.movePoints(meshPointsOld+moveFactor*meshPointsMovement);
     meshPhi = fvc::meshPhi(u);
     phi -= meshPhi;
     #include "CourantNo.H"
@@ -13,11 +13,11 @@ while (moveTooLarge) {
         moveFactor *= 0.5;
     } else {
         moveTooLarge = false;
-        meshUpoints = pMesh.points() + moveFactor*meshPointsMovement;
+        meshUpoints = meshPointsOld + moveFactor*meshPointsMovement;
     }
     phi += meshPhi;
     pMesh.movePoints(meshPointsOld);
     moveScal++;
  }
-
+Info << " adjustMovementFourCourantNo.H successfull " << endl;
 

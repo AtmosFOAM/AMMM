@@ -101,12 +101,17 @@ Info << "Max vorticity = " << max(mag(q)) << endl;
         // The Equidistribution
         equiDist = monitorR*detHess;
 
+
+        
         // mean equidistribution, c
         equiDistMean = fvc::domainIntegrate(detHess)
             /fvc::domainIntegrate(1/monitorNew);
 
         // The global equidistribution as CV of equidistribution
         PABem = fvc::domainIntegrate(equiDist)/Vtot;
+
+        Info << "equidist: " << min(equiDist) << " " << PABem << " " << max(equiDist) << endl;
+        
         PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
         Info << "Iterations = " << iterations << " PABe = " << PABe.value() << endl;
         converged = PABe.value() < conv;

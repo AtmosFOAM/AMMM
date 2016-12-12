@@ -17,16 +17,3 @@ and compile AtmosFOAM-tools using Allwmake
 Compile all AMMM applications and libraries using `./Allwmake`
 
 
-# Running the codes
-To run the test cases from the paper, move to the appropriate run directory:
-cd run/MongeAmpere
-
-Generate the initial mesh:
-blockMesh && mkdir -p constant/rMesh && cp -r constant/polyMesh constant/rMesh
-
-Then run the appropriate executable:
-AFP
-FP2D
-PMA2D
-Newton2d-vectorGradc_m_reconstruct
-Newton2d-vectorGradc_m_exact

@@ -22,15 +22,15 @@ solvers
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-7;
-        relTol           0.0001;
-        maxIter         50;
+        tolerance        1e-8;
+        relTol           0.00001;
+        maxIter         80;
     }
 
     pFinal
     {
         $p;
-        tolerance        1e-6;
+        tolerance        1e-8;
         relTol           0;
     }
     u
@@ -46,7 +46,7 @@ solvers
 iterations
 {
     nCorrectors      1;
-    nNonOrthogonalCorrectors 25;
+    nNonOrthogonalCorrectors 40;
     uPredictor       false;
 }
 

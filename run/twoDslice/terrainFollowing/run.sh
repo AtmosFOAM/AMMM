@@ -1,3 +1,5 @@
+## this code will create a "frontal" mesh moving over orography
+
 rm -rf [0-9]* constant/*Mesh
 rm -rf 0/polyMesh 0/rMesh 0/h0 0/pMesh
 rm -rf constant/rMesh/polyMesh/ constant/pMesh/polyMesh

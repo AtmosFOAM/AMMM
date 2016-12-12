@@ -256,11 +256,11 @@ int main(int argc, char *argv[])
     
     //Uf += constantAdvection;
 
-    const scalar dx = mesh.bounds().span().x();
+    //    const scalar dx = mesh.bounds().span().x();
     const dimensionedScalar u0(initDict.lookup("u0"));
-    const scalar orog_height(readScalar(initDict.lookup("orog_height")));
-    const scalar orog_start(readScalar(initDict.lookup("orog_start")));
-    const scalar orog_stop(readScalar(initDict.lookup("orog_stop")));
+    //const scalar orog_height(readScalar(initDict.lookup("orog_height")));
+    //const scalar orog_start(readScalar(initDict.lookup("orog_start")));
+    //const scalar orog_stop(readScalar(initDict.lookup("orog_stop")));
     Info << "Calling StokesTheoremU to calculate initial velocities" << endl;
     //    #include "StokesTheoremU.H"
 

@@ -1,5 +1,7 @@
 // 1. Move the mesh
+Info << " in pEqn.H " << endl;
 pMesh.movePoints(meshUpoints);
+Info << " I have just done pMesh.movePOints " << endl;
 Info << " The divergence of u = " << min(div) << " to " << max(div) << endl;
 {
 for (int corr=0; corr<nCorr; corr++)
