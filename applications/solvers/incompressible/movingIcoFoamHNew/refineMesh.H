@@ -157,5 +157,5 @@ if (MArefinement) {
         }
     rMesh.movePoints(meshUpoints);
 
- }
-rMesh.write();
+}
+

@@ -31,13 +31,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         10;
+endTime         50;
 
 deltaT          0.2;
 
 writeControl    runTime;
 
-writeInterval   $deltaT;
+writeInterval   2;
 
 purgeWrite      0;
 
