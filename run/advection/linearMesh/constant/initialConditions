@@ -27,7 +27,7 @@ T0 T0 [0 0 0 0 0] 10000;
 orog_height 0.1; //0.5;
 wave_centre 0.9;
 wave_angle 0.75;
-wave_height 00;
+wave_height 500;
 wave_width 0.1;
 orog_start 0.333;
 orog_stop 0.433;
