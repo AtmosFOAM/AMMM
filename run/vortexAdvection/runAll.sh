@@ -1,5 +1,6 @@
 #!/bin/bash -e
 #
-setup.sh
-movingIcoFoamH
+./setup.sh
+movingIcoFoamA >& log &
+tail -f log
 
