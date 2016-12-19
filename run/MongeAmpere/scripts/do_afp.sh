@@ -7,9 +7,9 @@ set -o xtrace
 methods=(AFP)
 monitors=('bell' 'ring')
 
-resultspath=/home/pbrowne/OpenFOAM/results
- bl2drunpath=/home/pbrowne/OpenFOAM/pbrowne-3.0.1/AtmosFOAM-3.0.1/run/MongeAmpere/BL2D
-AFPpath=/home/pbrowne/OpenFOAM/pbrowne-3.0.1/AtmosFOAM-3.0.1/run/MongeAmpere/AFP
+resultspath=results
+bl2drunpath=/home/hilary/OpenFOAM/hilary-dev/AMMM/run/MongeAmpere/MongeAmpere/BL2D
+AFPpath=/home/hilary/OpenFOAM/hilary-dev/AMMM/run/MongeAmpere/AFP
 
 mkdir -p $resultspath/{bell,ring}/AFP
 

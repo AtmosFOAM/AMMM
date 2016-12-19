@@ -19,6 +19,7 @@ usage(){
     echo -e "\t \t -h \t \t Display this help text"
 }
 
+scriptpath=/home/hilary/OpenFOAM/hilary-dev/AMMM/run/MongeAmpere/scripts
 nval=False
 xval=False
 yval=False
@@ -82,7 +83,7 @@ if [[ "$nval" == "True" || "$xval" == "True" || "$yval" == "True" ]]; then
     oldres=$(/bin/grep simpleGrading $mesh | cut -d'(' -f3 | cut -d')' -f 1)
     sed -i "s/$oldres/$X $Y 1/" $mesh
  #   sed -i "s/$oldres/$X $Y 1/" $rmesh
-    ofmesh.sh
+    $scriptpath/ofmesh.sh
 fi
 
 if [[ "$gval" == "True" ]]; then
