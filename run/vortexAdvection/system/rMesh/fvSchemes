@@ -26,37 +26,36 @@ ddtSchemes
 {
     default Euler;
 }
-offCentre 0.5;
+offCentre 0.6;
 
 gradSchemes
 {
-    default         none;
-    linearUpwind     Gauss linear;
+    default         Gauss linear;
 }
 
 divSchemes
 {
     default none;
     div(U,u)   Gauss linearUpwind linearUpwind;
+    div((U_0-meshPhi_0),u_0) Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
 {
-    default         Gauss midPoint uncorrected;
+    default         none;
+    laplacian(streamFunction) Gauss linear corrected;
+    laplacian(deltaT,p)       Gauss linear uncorrected;
 }
 
 interpolationSchemes
 {
-    default         none;
-    interpolate(convection(U,u)) linearUpwind U linearUpwind;
-    interpolate(u)  midPoint;
-    H               midPoint;
+    default         linear;
 }
 
 snGradSchemes
 {
     default         none;
-    snGrad(p)   uncorrected;
+    snGrad(p)       uncorrected;
 }
 
 fluxRequired

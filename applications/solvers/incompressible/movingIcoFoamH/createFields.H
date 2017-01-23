@@ -1,64 +1,37 @@
-// Read in prognostic variables
-Info<< "Reading field Uf\n" << endl;
+HodgeOps H(rMesh);
+
+// Uf is the velocity on the faces of the moving mesh
+Info<< "Reading field Uf" << endl;
 surfaceVectorField Uf
 (
     IOobject
     (
-        "Uf",
-        runTime.timeName(),
-        pMesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
+        "Uf", runTime.timeName(), rMesh,
+        IOobject::MUST_READ, IOobject::AUTO_WRITE
     ),
-    pMesh
+    rMesh
 );
 
-surfaceVectorField Ufv
-(
-    IOobject
-    (
-        "Ufv",
-        runTime.timeName(),
-        pMesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    pMesh
-);
-Ufv == Uf;
-surfaceVectorField Hdelta
-(
-    IOobject
-    (
-        "Hdelta",
-        runTime.timeName(),
-        pMesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    pMesh
-);
-
-Info<< "Reading pressure, p\n" << endl;
+Info<< "Reading pressure, p" << endl;
 volScalarField p
 (
     IOobject
     (
-        "p",
-        runTime.timeName(),
-        pMesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
+        "p", runTime.timeName(), rMesh,
+        IOobject::MUST_READ, IOobject::AUTO_WRITE
     ),
-    pMesh
+    rMesh
 );
 
+// Uf with component in direction H.delta corrected
+surfaceVectorField Ufv("Ufv", Uf);
+
 // fixed flux boundary conditions
-wordList VuBCs(pMesh.boundaryMesh().size(), "calculated");
-wordList uBCs(pMesh.boundaryMesh().size(), "zeroGradient");
-forAll(pMesh.boundaryMesh(), patchi)
+wordList VuBCs(rMesh.boundaryMesh().size(), "calculated");
+wordList uBCs(rMesh.boundaryMesh().size(), "zeroGradient");
+forAll(rMesh.boundaryMesh(), patchi)
 {
-    const word btype = pMesh.boundaryMesh()[patchi].type();
+    const word btype = rMesh.boundaryMesh()[patchi].type();
     const word utype = Uf.boundaryField()[patchi].type();
     if (btype == "wall" || btype == "symmetryPlane" || btype == "empty")
     {
@@ -72,98 +45,52 @@ forAll(pMesh.boundaryMesh(), patchi)
     }
 }
 
-// Cell centre velocity
+Info << "Calculating the cell centre velocity, u" << endl;
 volVectorField u
 (
- IOobject("u", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
-    H.reconstruct(Uf & pMesh.Sf()),
+    IOobject("u", runTime.timeName(), rMesh,
+             IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
+    H.reconstruct(Uf & rMesh.Sf()),
     uBCs
 );
-u.oldTime();
 u.write();
+u.oldTime();
 
-volVectorField q // the vorticity
-(
- IOobject("q", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
- fvc::curl(u)
-);
-q.write();
-
-
-Info<< "Calculating face flux field U\n" << endl;
+Info<< "Calculating face flux field U" << endl;
 surfaceScalarField U
 (
-    IOobject
-    (
-       "U",
-        runTime.timeName(),
-        pMesh
-    ),
-    Uf & pMesh.Sf()
+    IOobject("U", runTime.timeName(), rMesh),
+    Uf & rMesh.Sf()
 );
+U.oldTime();
+
+Info << "Calculating the mesh flux, meshPhi" << endl;
 surfaceScalarField meshPhi
 (
-    IOobject
-    (
-       "meshPhi",
-        runTime.timeName(),
-        pMesh
-    ),
-    U
+    IOobject("meshPhi", runTime.timeName(), rMesh),
+    fvc::meshPhi(u)
 );
+meshPhi.oldTime();
 
-volScalarField div // the divergence
-(
- IOobject("div", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
- fvc::div(u)
-);
-div.write();
-
-
-// surfaceScalarField Ucor
-// (
-//     IOobject
-//     (
-//        "Ucor",
-//         runTime.timeName(),
-//        pMesh,
-//        IOobject::READ_IF_PRESENT,
-//        IOobject::AUTO_WRITE
-//     ),
-//     U
-// );
-
-Info << "Calculating V mass circulation field\n" << endl;
+Info << "Calculating V mass circulation field" << endl;
 surfaceScalarField V
 (
- IOobject("V", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
- Uf & H.delta(),
- VuBCs
+    IOobject
+    (
+        "V", runTime.timeName(), rMesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
+    ),
+    Uf & H.delta(),
+    VuBCs
 );
-V.oldTime();
 
-surfaceScalarField V0
-(
- IOobject("V0", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
- Uf & H.delta(),
- VuBCs
-);
-V0=V;
-
-// Rates of change for Crank-Nicholson
-surfaceScalarField dVdt
-(
-    IOobject("dVdt", runTime.timeName(), pMesh),
-    -(H.delta() & (fvc::interpolate(fvc::div(U,u))/*+2*(Omega^(Uf-Ug))*/))
-    - H.magd()*fvc::snGrad(p),
-     VuBCs
-);
-dVdt.oldTime();
+Info << "Storing the old value of V, V0 on the new mesh" << endl;
+surfaceScalarField V0("V", V);
 
 // fix no flow boundaries
-forAll(dVdt.boundaryField(), patchi)
+forAll(V.boundaryField(), patchi)
 {
-    const word btype = pMesh.boundaryMesh()[patchi].type();
+    const word btype = rMesh.boundaryMesh()[patchi].type();
     const word utype = Uf.boundaryField()[patchi].type();
     if
     (
@@ -171,7 +98,6 @@ forAll(dVdt.boundaryField(), patchi)
     )
     {
         V.boundaryFieldRef()[patchi] == 0;
-        dVdt.boundaryFieldRef()[patchi] == 0;
     }
     else if(utype == "fixedValue")
     {

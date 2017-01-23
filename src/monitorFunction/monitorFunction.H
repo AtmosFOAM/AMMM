@@ -109,6 +109,9 @@ public:
     
     // Member Functions
     
+        //- Access
+        virtual word name() const = 0;
+        
 //        //- The scalarField of the monitor function at a Field of points
 //        virtual tmp<scalarField> map
 //        (

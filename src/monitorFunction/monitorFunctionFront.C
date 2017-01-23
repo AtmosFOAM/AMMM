@@ -48,12 +48,12 @@ monitorFunctionFront::monitorFunctionFront
 :
     monitorFunction(dict),
     p0_(readScalar(dict.lookup("p0"))),
-    alpha_(readScalar(dict.lookup("alpha"))),
-    gamma_(readScalar(dict.lookup("gamma"))),
-    meshperiod_(readScalar(dict.lookup("meshperiod"))),
     m_(readScalar(dict.lookup("m"))),
     resolution_(readScalar(dict.lookup("resolution"))),
-    width_(readScalar(dict.lookup("width")))
+    width_(readScalar(dict.lookup("width"))),
+    alpha_(readScalar(dict.lookup("alpha"))),
+    gamma_(readScalar(dict.lookup("gamma"))),
+    meshperiod_(readScalar(dict.lookup("meshperiod")))
 {}
 
 // * * * * * * * * * * * * * Member Functions * * * * * * * * * * * * * * //
@@ -102,8 +102,6 @@ tmp<volScalarField> monitorFunctionFront::map
     );
     volScalarField& mon = tMon.ref();
     
-
-    scalar dx = newMesh.bounds().span().x();
     scalar t = newMesh.time().value()/meshperiod_;
     
     forAll(mon, cellI)

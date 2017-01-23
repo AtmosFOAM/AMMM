@@ -2,6 +2,7 @@ EXE_INC = \
     -ggdb3 -O0 \
     -Wno-old-style-cast \
     -IlnInclude \
+    -I$(LIB_SRC)/functionObjects/field/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/finiteVolume/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/sampling/lnInclude \
@@ -11,6 +12,7 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lOpenFOAM \
+    -lfieldFunctionObjects \
     -lfiniteVolume \
     -ltriSurface \
     -lsampling -lmeshTools -llapacke

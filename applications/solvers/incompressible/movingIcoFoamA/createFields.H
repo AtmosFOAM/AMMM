@@ -112,26 +112,6 @@ surfaceScalarField meshPhi
     phi
 );
 
-volScalarField div // the divergence
-(
- IOobject("div", runTime.timeName(), pMesh,IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
- fvc::div(u)
-);
-div.write();
-
-
-// surfaceScalarField Ucor
-// (
-//     IOobject
-//     (
-//        "Ucor",
-//         runTime.timeName(),
-//        pMesh,
-//        IOobject::READ_IF_PRESENT,
-//        IOobject::AUTO_WRITE
-//     ),
-//     U
-// );
 
 Info << "Calculating V mass circulation field\n" << endl;
 surfaceScalarField V

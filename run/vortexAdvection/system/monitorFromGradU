@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-1;4205;0c| =========                 |                                                 |
+| =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  1.4                                   |
 |   \\  /    A nd           | Web:      http://www.openfoam.org               |
@@ -17,14 +17,19 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          monitorDict;
+    object          libmonitorFunction;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-m1 m1 [0 0 2 0 0] 10000;
-m2 m2 [0 2 0 0 0] 200;
+type  monitorFromGradU;
+//region pMesh;
+libs   ("libmonitorFunction.so");
+fields
+(
+    Uf
+);
+monScale monScale [0 0 2 0 0] 1e4;
+//nMonSmooth 2;
 
-MArefinement true;
-nSmooth 5;
 // ************************************************************************* //

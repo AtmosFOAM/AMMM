@@ -19,13 +19,14 @@ projection2D XZ;
 
 FieldsToPlot
 (
-    //[none mesh "grey"]
-    [Uf vectors 50 1 "black"]
-    [Ufv vectors 50 1 "blue"]
+    [vorticity filledContours -0.0475 0.0475 0.005 "$GMTU/colours/red_white_blue.cpt"]
+    [none mesh "grey"]
+    [streamFunction contours -2.5e5 2.5e5 2.5e4 "black"]
+    [Uf vectors 20 5 "black"]
 );
 
 //separateLegend true;
-region "-25e3/25e3/0/25e3";
-annotate "minMax -1.2e3 -800";
-boundaryMarks "5e4/2.5e3";
+region "-25e3/25e3/-25e3/25e3";
+//annotate "minMax -7.5e3 -5000";
+boundaryMarks "5e3/5e3";
 

@@ -1,15 +1,11 @@
 // Create the mesh displacement potential, Phi
 volScalarField Phi
 (
-    IOobject("Phi",runTime.timeName(),mesh,
-             IOobject::MUST_READ, IOobject::AUTO_WRITE),
-    mesh
+    IOobject("Phi", runTime.timeName(), mesh),
+    mesh,
+    dimensionedScalar("Phi", dimArea, scalar(0)),
+    "zeroGradient"
 );
-Phi.oldTime();
-
-// Create the perturbation from Phi
-volScalarField phi("phi", Phi);
-phi == dimensionedScalar("phi", dimArea, scalar(0));
 
 // The gradient of Phi on faces
 surfaceVectorField gradPhif("gradPhif", fvc::interpolate(fvc::grad(Phi)));
@@ -39,20 +35,12 @@ volScalarField monitorNew("monitorNew", monitor);
 volScalarField monitorR("monitorR", monitorFunc().map(rMesh, monitor));
 setInternalAndBoundaryValues(monitorNew, monitorR);
 
-// The equidistribution
-volScalarField equiDist("equiDist", monitorR*detHess);
-
-volScalarField PABequi("PABequi", monitorR*detHess);
-
-// The global equidistribution
-dimensionedScalar Vtot = sum(mesh.V());
-dimensionedScalar PABem = fvc::domainIntegrate(equiDist)/Vtot;
-dimensionedScalar PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))
-                         /(Vtot*PABem);
-
 // The mean equidistribution, c
 dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
                                  /fvc::domainIntegrate(1/monitorNew);
 
 // Source term
 volScalarField source("source", detHess - equiDistMean/monitorNew);
+
+// The laplacian of (A,Phi) at the old time
+volScalarField laplacianAPhi("laplacianAPhi", fvc::laplacian(cofacA, Phi));

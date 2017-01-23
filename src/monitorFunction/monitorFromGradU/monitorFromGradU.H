@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,96 +22,80 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::monitorFunctionSech
+    Foam::functionObjects::monitorFromGradU
+
+Group
+    grpFieldFunctionObjects
 
 Description
-    Defintes an analytic form of the monitor function using a sech function
-    following Budd, Russell and Walsh, eqn 4.17
+    Calculates the monitor function from the gradient of the velocity as
+    sqrt(1 + monScale*magSqr(gradU))
+
+See also
+    Foam::functionObjects::fieldExpression
+    Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    monitorFunctionSech.C
+    monitorFromGradU.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef monitorFunctionSech_H
-#define monitorFunctionSech_H
+#ifndef functionObjects_monitorFromGradU_H
+#define functionObjects_monitorFromGradU_H
 
-#include "monitorFunction.H"
-#include "volFieldsFwd.H"
+#include "fieldExpression.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace functionObjects
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class monitorFunctionSech Declaration
+                          Class monitorFromGradU Declaration
 \*---------------------------------------------------------------------------*/
 
-class monitorFunctionSech
+class monitorFromGradU
 :
-    public monitorFunction
+    public fieldExpression
 {
-    // coefficients of the Sech function
-    scalar alpha1_, alpha2_, a_, sqra_;
-    
-    // centre of the radially symmetric feature
-    point centre_;
-    
+    // Private data
+        //- The scaling of the magSqr of gradU
+        const dimensionedScalar monScale_;
+
+    // Private Member Functions
+
+        //- Calculate the monitor function field and return true if successful
+        virtual bool calc();
+
+
 public:
 
     //- Runtime type information
-    TypeName("monitorFunctionSech");
+    TypeName("monitorFromGradU");
+
 
     // Constructors
 
-        //- Construct from components
-        monitorFunctionSech
+        //- Construct from Time and dictionary
+        monitorFromGradU
         (
-            const IOdictionary& dict
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
     //- Destructor
-    virtual ~monitorFunctionSech()
-    {}
-
-
-    // Member Functions
-
-        // Access
-        word name() const { return "monitor";}
-        scalar alpha1() const { return alpha1_;}
-        scalar alpha2() const { return alpha2_;}
-        scalar a()  const { return a_;}
-        scalar sqra()  const { return sqra_;}
-        const point& centre() const { return centre_;}
-
-//        //- The scalarField of the monitor function at a Field of points
-//        tmp<scalarField> map
-//        (
-//            const pointField& pts,
-//            const scalarField& oldMonitor
-//        ) const;
-
-        //- The volScalarField of the monitor Function on the given mesh
-        tmp<volScalarField> map
-        (
-            const fvMesh& newMesh,
-            const volScalarField& oldMonitor
-        ) const;
-
-        tmp<surfaceVectorField> grad
-        (
-            const fvMesh& newMesh,
-            const surfaceVectorField& oldMonitor
-        ) const;
-
+    virtual ~monitorFromGradU();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

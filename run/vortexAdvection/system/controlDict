@@ -31,13 +31,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         2; //50;
+endTime         5000;
 
-deltaT          0.1;
+deltaT          1; //10;
 
 writeControl    runTime;
 
-writeInterval   2;
+writeInterval   100;
 
 purgeWrite      0;
 
@@ -56,6 +56,6 @@ runTimeModifiable yes;
 adjustTimeStep no;
 maxCo          0.5;
 
-libs            ("libfiniteVolumeAtmos.so" "libfiniteVolumeAtmosFOAMtools.so");
+libs            ("libfiniteVolumeAtmos.so" "libfiniteVolumeAtmosFOAMtools.so" "libmonitorFunction.so");
 
 // ************************************************************************* //

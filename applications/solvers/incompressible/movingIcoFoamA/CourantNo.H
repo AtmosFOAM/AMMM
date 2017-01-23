@@ -46,8 +46,7 @@ if (mesh.nInternalFaces())
 
 }
 
-//if (CoNum > 0.95) {
-Info<< "Courant Number mean: " << meanCoNum
-<< " max: " << CoNum << endl; //}
+
+Info<< "Courant Number mean: " << meanCoNum << " max: " << CoNum << endl;
 
 // ************************************************************************* //

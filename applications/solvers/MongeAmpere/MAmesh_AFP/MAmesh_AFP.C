@@ -23,13 +23,8 @@ License
     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 Application
-    AFP
+    MAmesh_AFP
 
-// ************************************************************************* //
-// ****************                               ************************** //
-// ****************   Alternative Linearisation   ************************** //
-// ****************  Hilary's Method with Tristan ************************** //
-// ************************************************************************* //   
 
 
 Description
@@ -61,8 +56,7 @@ int main(int argc, char *argv[])
     (
         Foam::IOobject
         (
-            "rMesh", runTime.timeName(), runTime,
-            IOobject::MUST_READ, IOobject::AUTO_WRITE
+            "rMesh", runTime.timeName(), runTime, IOobject::MUST_READ
         )
     );
 
@@ -75,24 +69,18 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ_IF_MODIFIED
         )
     );
+    const int maxIters = readLabel(controlDict.lookup("maxIters"));
     
     // The monitor funciton
     autoPtr<monitorFunction> monitorFunc(monitorFunction::New(controlDict));
     
-    const dimensionedScalar Gamma(controlDict.lookup("Gamma"));
-    const scalar conv = readScalar(controlDict.lookup("conv"));
-    const int nCorr = readLabel(mesh.solutionDict().lookup("nCorrectors"));
-
     #include "createFields.H"
 
-    Info << "Iteration = " << runTime.timeName()
-         << " PABe = " << PABe.value() << endl;
-
-    // Use time-steps instead of iterations to solve the Monge-Ampere eqn
+    // Outer iterations to solve the Monge-Ampere eqn
     bool converged = false;
-    while (runTime.loop())
+    for(label iter = 0; iter < maxIters && !converged; iter++)
     {
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Monge Ampere iteration = " << iter << endl;
 
         // The matrix of co-factors for linearising the MA eqn
         cofacA = fvc::posDefCof(Hessian + tensor::I);
@@ -101,19 +89,19 @@ int main(int argc, char *argv[])
         source = detHess - equiDistMean/monitorNew;
 
         // Setup and solve the MA equation to find Psi(t+1) 
-        for (int iCorr = 0; iCorr < nCorr; iCorr++)
+        laplacianAPhi = fvc::laplacian(cofacA, Phi);
+        for (int iCorr = 0; iCorr < 2; iCorr++)
         {
             fvScalarMatrix PhiEqn
             (
-                Gamma*fvm::laplacian(cofacA, phi)
+                fvm::laplacian(cofacA, Phi)
+              - laplacianAPhi
               + source
             );
             PhiEqn.setReference(0, scalar(0));
-
-            PhiEqn.solve();
+            solverPerformance sp = PhiEqn.solve();
+            if (iCorr == 0) converged = sp.nIterations() <= 1;
         }
-        Phi += phi;
-        phi == dimensionedScalar("phi", dimArea, scalar(0));
 
         // Calculate gradient of Phi on faces and correct the normal component
         gradPhif = fvc::interpolate(fvc::grad(Phi));
@@ -125,7 +113,7 @@ int main(int argc, char *argv[])
              = fvc::faceToPointReconstruct(fvc::snGrad(Phi));
         rMesh.movePoints(mesh.points() + gradPhiP);
 
-        // finite difference Hessian of phiBar and its determinant
+        // finite difference Hessian of Phi and its determinant
         Hessian = fvc::grad(gradPhif);
         detHess = fvc::det(Hessian + tensor::I);
 
@@ -133,30 +121,18 @@ int main(int argc, char *argv[])
         monitorR = monitorFunc().map(rMesh, monitor);
         setInternalValues(monitorNew, monitorR);
 
-        // The Equidistribution
-        equiDist = monitorR*detHess;
-
         // mean equidistribution, c
         equiDistMean = fvc::domainIntegrate(detHess)
                        /fvc::domainIntegrate(1/monitorNew);
-
-        // The global equidistribution as CV of equidistribution
-        PABem = fvc::domainIntegrate(equiDist)/Vtot;
-        PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))/(Vtot*PABem);
-        converged = PABe.value() < conv; // || sp.nIterations() <= 0;
-
-        Info << "Iteration = " << runTime.timeName()
-             << " PABe = " << PABe.value() << endl;
-
-        if (converged)
-        {
-            Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-                 << nl <<endl;
-            runTime.writeAndEnd();
-        }
-        runTime.write();
     }
     
+    if (!converged)
+    {
+        WarningIn("MAmesh_AFP") << "Not converged in " << maxIters
+            << " iterations" << endl;
+    }
+    runTime.write();
+    rMesh.write();
     Info << "End\n" << endl;
 
     return 0;

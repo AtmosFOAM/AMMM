@@ -14,65 +14,30 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Number of correctors for calculating laplacian(A,Phi) in the MA equation
+// in the mesh initialisation application AFM
+nCorrectors 3;
+
 solvers
 {
-    p
+    "Phi|mmPhi"
+    {
+        solver GAMG;
+        smoother symGaussSeidel;
+        preconditioner   DILU;
+        tolerance        1e-6;
+        relTol           0.01;
+        maxIter          10;
+    };
+    streamFunction
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-6;
-        relTol           0.01;
+        tolerance 1e-7;
+        relTol 0;
+        maxIter 500;
     }
-
-    pFinal
-    {
-        $p;
-        tolerance        1e-6;
-        relTol           0;
-    }
-
-    U          //only for icoFoam
-        {
-            solver          smoothSolver;
-            smoother        symGaussSeidel;
-            tolerance       1e-05;
-            relTol          0;
-        }
-    
-    "mmPhi|mmphi"
-    {
-        solver GAMG; //BICCG;
-        smoother symGaussSeidel;
-        preconditioner   DILU;
-        tolerance        1e-13;
-        relTol           1e-10;
-        maxIter          500;
-        debug 1;
-        DebugSwitch 0;
-    };
 }
-
-nCorrectors 3;
-
-
-iterations
-{
-    nCorrectors      4;
-    nNonOrthogonalCorrectors 0;
-    uPredictor       false;
-}
-
-setReferenceP true;
 
 // ************************************************************************* //
 
-//the following are here to run icoFoam
-
-PISO
-{
-    nCorrectors     2;
-    nNonOrthogonalCorrectors 2;
-    pRefCell        0;
-    pRefValue       0;
-    
-}

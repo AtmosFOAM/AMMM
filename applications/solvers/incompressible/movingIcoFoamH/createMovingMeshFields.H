@@ -1,180 +1,60 @@
-// Open control dictionary
-IOdictionary monitorDict
+Info << "Reading in monitor fucntion controls from monitorFromGradU" << endl;
+
+IOdictionary monDict
 (
- IOobject
- (
-  "monitorDict", runTime.system(), runTime,
-  IOobject::MUST_READ_IF_MODIFIED
-  )
- );
+    IOobject
+    (
+        "monitorFromGradU", mesh.time().system(), mesh,
+        IOobject::MUST_READ, IOobject::NO_WRITE
+    )
+);
 
-// The monitor funciton
-autoPtr<monitorFunction> monitorFunc(monitorFunction::New(monitorDict));
+const dimensionedScalar monScale(monDict.lookup("monScale"));
 
-const scalar conv = readScalar(monitorDict.lookup("conv"));
-const dimensionedScalar Gamma(monitorDict.lookup("Gamma"));
+// The monitor function on the computational mesh
+volScalarField monitor
+(
+    IOobject("monitor", runTime.timeName(), mesh),
+    mesh,
+    dimensionedScalar("monitor", dimless, scalar(1))
+);
+// Set monitor function from the moving mesh
+Info << "Monitor function goes from " << flush;
+setInternalAndBoundaryValues
+(
+   monitor,
+   sqrt(monScale*magSqr(fvc::grad(Uf)) + 1)
+);
+Info << min(monitor).value() << " to " << max(monitor).value() << endl;
 
-
-// Create the mesh displacement potential, Phi
+Info << "Creating in the mesh displacement potential, mmPhi" << endl;
 volScalarField mmPhi
 (
-    IOobject("mmPhi",runTime.timeName(),mesh,
-             IOobject::MUST_READ, IOobject::AUTO_WRITE),
-    mesh
-);
-mmPhi.oldTime();
-
-// Create the perturbation from Phi
-volScalarField mmphi("mmphi", mmPhi);
-//mmphi == dimensionedScalar("mmphi", dimArea, scalar(0));
-
-// Create phiBarLaplacian
-volScalarField mmphiBarLaplacian("mmphiBarLaplacian", fvc::laplacian(mmPhi));
-
-// The gradient of Phi at cell centres
-volVectorField gradmmPhi
-(
-    IOobject("gradmmPhi", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    fvc::grad(mmPhi)
+    IOobject("mmPhi",runTime.timeName(), mesh),
+    mesh,
+    dimensionedScalar("mmPhi", dimArea, scalar(0)),
+    "zeroGradient"
 );
 
 // The gradient of Phi on faces
-surfaceVectorField gradmmPhif
-(
-    IOobject("gradmmPhif", runTime.timeName(), mesh, 
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    fvc::interpolate(gradmmPhi),
-    "calculated"
-);
-gradmmPhif += (fvc::snGrad(mmPhi) - (gradmmPhif & mesh.Sf())/mesh.magSf())
+surfaceVectorField gradPhif("gradPhif", fvc::interpolate(fvc::grad(mmPhi)));
+gradPhif += (fvc::snGrad(mmPhi) - (gradPhif & mesh.Sf())/mesh.magSf())
             *mesh.Sf()/mesh.magSf();
 
 // Hessian of Phi and its determinant
-volTensorField Hessian("Hessian", fvc::grad(gradmmPhif));
-//Hessian*=0;
-volScalarField detHess
-(
-    IOobject("detHess", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    mesh,
-    dimensionedScalar("detHess", dimless, scalar(1))
-);
-forAll(detHess, cellI)
-            {
-                detHess[cellI] = det(tensor::I + Hessian[cellI]);
-            }
+volTensorField Hessian("Hessian", fvc::grad(gradPhif));
+volScalarField detHess("detHess", fvc::det(Hessian + tensor::I));
 
-volScalarField detHessR
-(
-    IOobject("detHessR", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    rMesh,
-    dimensionedScalar("", dimless, scalar(1))
-);
-
-// The matrix A
-volTensorField matrixA
-(
-    IOobject("matrixA", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    mesh,
-    dimensionedTensor("A", dimless, tensor::I)
-);
-//matrixA*=0;
-forAll(matrixA, cellI)
-            {
-                tensor localA (0,0,0,0,0,0,0,0,0);scalar localAew = 0.0;
-                matrixA[cellI] = tensor::I*(1+mmphiBarLaplacian[cellI]) - Hessian[cellI];
-                //matrixA[cellI].yy() = 1.0;
-                localA = matrixA[cellI];
-                localAew = eigenValues(localA)[0];
-                if(localAew <= 0)
-                    {
-                        matrixA[cellI] = localA + (1.0e-5 - localAew)*tensor::I;
-                    }
-                else
-                    {
-                        matrixA[cellI] = localA;
-                    }
-            }
-Info << "createMovingMeshFields.H made matrixA finished" << endl;
-// The original monitor function on the old mesh
-const volScalarField monitor
-(
-    IOobject("monitor", runTime.timeName(), mesh, IOobject::READ_IF_PRESENT),
-    mesh,
-    dimensionedScalar("monitor", dimensionSet(0,0,0,0,0), scalar(1)),
-    wordList(6,"zeroGradient")
-    //
-);
-
-// The monitor function on the old mesh calculated from the new mesh
-volScalarField monitorNew("monitorNew", monitor);
-
-// The monitor function on the new mesh
-volScalarField monitorR
-(
-    IOobject("monitorR", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    monitorFunc().map(rMesh, monitor)
-);
-setInternalAndBoundaryValues(monitorNew, monitorR);
-
-// The equidistribution PAB
-// The equidistribution
-volScalarField equiDist
-(
-    IOobject("equiDist", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    monitorR*detHess
-);
-
-volScalarField PABequi
-(
-    IOobject("PABequi", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    monitorR*detHess
-);
-
-// The global equidistribution
-dimensionedScalar Vtot = sum(mesh.V());
-dimensionedScalar PABem = fvc::domainIntegrate(equiDist)/Vtot;
-dimensionedScalar PABe = sqrt(fvc::domainIntegrate(sqr(equiDist - PABem)))
-                         /(Vtot*PABem);
+// The matrix A of co-factors
+volTensorField cofacA("cofacA", fvc::posDefCof(Hessian + tensor::I));
 
 // The mean equidistribution, c
 dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
-                                 /fvc::domainIntegrate(1/monitorNew);
+                                 /fvc::domainIntegrate(1/monitor);
 
 // Source term
-volScalarField source
-(
-    IOobject("source", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    detHess - equiDistMean/monitorNew
-);
-Info << "createMovingMeshFields.H finished" << endl;
+volScalarField source("source", detHess - equiDistMean/monitor);
 
-pointField meshUpoints = pMesh.points();
-
-
-volScalarField monitorP //the monitor function as calculated on the pMesh
-(
- IOobject("monitorP", runTime.timeName(), pMesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
-    pMesh,
- dimensionedScalar("monitorP", dimensionSet(0,0,0,0,0), scalar(1)),
- wordList(6,"zeroGradient")
-    //
-);
-
-volScalarField monitorM //the monitor function as calculated on the pMesh
-(
- IOobject("monitorM", runTime.timeName(), mesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
-    mesh,
- dimensionedScalar("monitorM", dimensionSet(0,0,0,0,0), scalar(1)),
- wordList(6,"zeroGradient")
-    //
-);
-
+// The laplacian of (A,mmPhi) at the old time
+volScalarField laplacianAPhi("laplacianAPhi", fvc::laplacian(cofacA,mmPhi));
 

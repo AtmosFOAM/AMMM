@@ -1,14 +1,9 @@
-// calculates the monitor function value on the pMesh
+Info << "Monitor function goes from " << flush;
 
-q*= 0.15/max(mag(q)).value();
-monitorP = Foam::sqrt( 1.0 + m1*(q & q) );
-for (int smooth=0; smooth<nSmooth; smooth++)
-    {
-        //Info << "Smoothing iteration " << smooth << " of " << nSmooth << endl;
-        //Info << "min mon = " << min(monitorP) << " max mon = " << max(monitorP) << endl;
-        monitorP += m2*fvc::laplacian(monitorP);
-  
-    }
+setInternalAndBoundaryValues
+(
+    monitor,
+    sqrt(monScale*magSqr(fvc::grad(Uf)) + 1)
+);
 
-
-//Info << "min mon = " << min(monitorP) << " max mon = " << max(monitorP) << endl;
+Info << min(monitor).value() << " to " << max(monitor).value() << endl;

@@ -46,7 +46,8 @@ monitorFunctionMapped::monitorFunctionMapped
     const IOdictionary& dict
 )
 :
-    monitorFunction(dict)
+    monitorFunction(dict),
+    name_(dict.lookup("monitorFieldName"))
 {}
 
 // * * * * * * * * * * * * * Member Functions * * * * * * * * * * * * * * //
@@ -59,14 +60,14 @@ tmp<volScalarField> monitorFunctionMapped::map
 {
     meshToMesh meshMap
     (
-        oldMonitor.mesh(), newMesh, meshToMesh::imCellVolumeWeight, false
+        oldMonitor.mesh(), newMesh, meshToMesh::imCellVolumeWeight, true
     );
     
     tmp<volScalarField> tMon
     (
         new volScalarField
         (
-            IOobject("monitor", newMesh.time().timeName(), newMesh,
+            IOobject(name_, newMesh.time().timeName(), newMesh,
                      IOobject::NO_READ, IOobject::AUTO_WRITE),
             meshMap.mapSrcToTgt(oldMonitor)
         )

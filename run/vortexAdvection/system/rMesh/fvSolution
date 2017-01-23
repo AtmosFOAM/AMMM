@@ -30,13 +30,19 @@ solvers
         tolerance        1e-6;
         relTol           0;
     }
+    streamFunction
+    {
+        solver PCG;
+        preconditioner DIC;
+        tolerance 1e-7;
+        relTol 0;
+    }
 }
 
 iterations
 {
-    nCorrectors      4;
-    nNonOrthogonalCorrectors 0;
-    uPredictor       false;
+    nCorrectors      2;
+    nNonOrthogonalCorrectors 2;
 }
 
 setReferenceP true;

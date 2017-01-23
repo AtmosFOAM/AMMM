@@ -51,6 +51,8 @@ class monitorFunctionMapped
 :
     public monitorFunction
 {
+    // Name of field that holds the monitor function on the computational mesh
+    word name_;
     
 public:
 
@@ -72,6 +74,9 @@ public:
 
 
     // Member Functions
+    
+        // Access
+        word name() const { return name_; }
 
         //- The volScalarField of the monitor Function on the given mesh
         tmp<volScalarField> map

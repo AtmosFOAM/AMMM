@@ -4,5 +4,6 @@ monitorFunctionFront.C
 monitorFunctionSech.C
 monitorFunctionMapped.C
 tensor.C
+monitorFromGradU/monitorFromGradU.C
 
 LIB = $(FOAM_USER_LIBBIN)/libmonitorFunction

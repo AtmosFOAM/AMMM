@@ -10,25 +10,23 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      monitorDict;
+    object      setGaussinasDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-monitorFunctionFrom monitorFunctionSech;
+backgroundValue vorticity [0 0 -1 0 0] 0;
+gaussians 2
+(
+    centre [0 1 0 0 0] (0 0.0 9e3)
+    radius [0 1 0 0 0] 2e3
+    max    [0 0 -1 0 0] 5e-2
 
-// Ring
-//alpha1 10;
-//alpha2 200;
-//a 0.25;
+    centre [0 1 0 0 0] (0 0.0 -9e3)
+    radius [0 1 0 0 0] 2e3
+    max    [0 0 -1 0 0] -5e-2
+);
 
-// Bell
-alpha1 0;
-alpha2 0;
-a 0.0;
+// Background wind
+U0 U0 [0 1 -1 0 0] (10 0 0);
 
-centre (0 0 0);
-Gamma Gamma [0 0 0 0 0] 1;
-Gamma1 Gamma1 [0 0 0 0 0] 1;
-Gamma2 Gamma2 [0 0 0 0 0] 0;
-
-conv 5.0e-9;
+// ************************************************************************* //

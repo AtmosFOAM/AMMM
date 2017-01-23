@@ -17,11 +17,18 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          environmentalProperties;
+    object          libmonitorFunction;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Omega           Omega [0 0 -1 0 0 0 0] (0 0 0);
+type  vorticity2D;
+region rMesh;
+libs   ("libAtmosFoamFieldFunctionObjects.so");
+fields
+(
+    Uf
+);
+vorticityComponent 1;
 
 // ************************************************************************* //

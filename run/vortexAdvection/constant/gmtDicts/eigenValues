@@ -14,18 +14,18 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/19c";
+projection "X18c/18c";
 projection2D XZ;
 
 FieldsToPlot
 (
-    [Ucor filledContours -1e3 1e3 1e2 "$GMTU/colours/red_white_blue.cpt"]
+    [eigsGradUz filledContours 0 0.02 0.002 "$GMTU/colours/white_blue_red.cpt"]
     [none mesh "grey"]
+    [Uf vectors 50 2 "black"]
 );
 
 //separateLegend true;
-region "-25e3/25e3/0/25e3";
-annotate "minMax -1.2e3 -5000";
-//annotate "minMax 0 10000";
-boundaryMarks "5e3/2.5e3";
+//region "-25e3/25e3/0/25e3";
+//annotate "minMax -7.5e3 -5000";
+boundaryMarks "5e3/5e3";
 

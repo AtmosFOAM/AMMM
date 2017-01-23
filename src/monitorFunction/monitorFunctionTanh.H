@@ -83,6 +83,7 @@ public:
     // Member Functions
 
         // Access
+        word name() const { return "monitor";}
         scalar alpha() const { return alpha_;}
         scalar beta()  const { return beta_;}
         scalar gamma() const { return gamma_;}

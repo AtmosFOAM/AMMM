@@ -32,22 +32,21 @@ Description
 scalar CoNum = 0.0;
 scalar meanCoNum = 0.0;
 
-if (mesh.nInternalFaces())
+if (rMesh.nInternalFaces())
 {
     scalarField sumPhi
     (
         fvc::surfaceSum(mag(U))().internalField()
     );
 
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+    CoNum = 0.5*gMax(sumPhi/rMesh.V().field())*runTime.deltaTValue();
 
     meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+        0.5*(gSum(sumPhi)/gSum(rMesh.V().field()))*runTime.deltaTValue();
 
 }
 
-//if (CoNum > 0.95) {
-Info<< "Courant Number mean: " << meanCoNum
-<< " max: " << CoNum << endl; //}
+
+Info<< "Courant Number mean: " << meanCoNum << " max: " << CoNum << endl;
 
 // ************************************************************************* //

@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    Info().precision(16);
     // Create the moving mesh
     fvMesh rMesh
     (
@@ -149,13 +148,12 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        //forAll(meshUpoints,point){
-        //    meshUpoints[point] += dt.value()*constantMeshVelocity.value();
-        //}
         #include "refineMesh.H"
         meshUpoints=rMesh.points();
-        Info << "Total mesh movement = " << sumMag(pMesh.points()-meshUpoints) << endl;
-        Info << "Max mesh movement = " << max(mag(pMesh.points()-meshUpoints)) << endl;
+        Info << "Total mesh movement = " 
+             << sumMag(pMesh.points()-meshUpoints) << endl;
+        Info << "Max mesh movement = "
+             << max(mag(pMesh.points()-meshUpoints)) << endl;
         #include "adjustMovementForCourantNo.H"
         #include "pEqn.H"
 

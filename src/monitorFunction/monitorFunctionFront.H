@@ -25,8 +25,7 @@ Class
     Foam::monitorFunctionFront
 
 Description
-    Defintes an analytic form of the monitor function using a tanh function
-    following Ju and Gunzburger, MWR, 2011, eqn 4
+    Defintes a moving monitor function with a Gaussian disctribution
 
 SourceFiles
     monitorFunctionFront.C
@@ -45,14 +44,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class monitorFunctionTanh Declaration
+                           Class monitorFunctionFront Declaration
 \*---------------------------------------------------------------------------*/
 
 class monitorFunctionFront
 :
     public monitorFunction
 {
-    // coefficients of the tanh function
+    // coefficients of the moving Gaussian function
     scalar p0_, m_, resolution_, width_, alpha_, gamma_, meshperiod_;
     
 public:
@@ -77,6 +76,7 @@ public:
     // Member Functions
 
         // Access
+        word name() const { return "monitor";}
         scalar p0() const { return p0_;}
         scalar gamma() const { return gamma_;}
         scalar alpha() const { return alpha_;}
