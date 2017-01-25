@@ -64,6 +64,9 @@ class monitorFromGradU
     // Private data
         //- The scaling of the magSqr of gradU
         const dimensionedScalar monScale_;
+        
+        //- Number of iterations of laplacian smoothing
+        const label nMonSmooth_;
 
     // Private Member Functions
 

@@ -23,13 +23,13 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 type  monitorFromGradU;
-//region pMesh;
+region rMesh;
 libs   ("libmonitorFunction.so");
 fields
 (
     Uf
 );
 monScale monScale [0 0 2 0 0] 1e4;
-//nMonSmooth 2;
+nMonSmooth 0;
 
 // ************************************************************************* //

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-1;4205;0c| =========                 |                                                 |
+| =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  1.4                                   |
 |   \\  /    A nd           | Web:      http://www.openfoam.org               |
@@ -17,45 +17,51 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          controlDict;
+    object          fvSchemes;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application buoyantFoam;
+ddtSchemes
+{
+    default Euler;
+}
+offCentre 0.6;
 
-startFrom       startTime;
-//startFrom       latestTime;
+gradSchemes
+{
+    default         Gauss linear;
+}
 
-startTime       0;
+divSchemes
+{
+    default none;
+    div(U,u)   Gauss linearUpwind linearUpwind;
+}
 
-stopAt          endTime;
+laplacianSchemes
+{
+    default         none;
+    laplacian(streamFunction) Gauss linear corrected;
+    laplacian(deltaT,p)       Gauss linear uncorrected;
+}
 
-endTime         5000;
+interpolationSchemes
+{
+    default         linear;
+}
 
-deltaT          1; //10;
+snGradSchemes
+{
+    default         none;
+    snGrad(p)       uncorrected;
+}
 
-writeControl    runTime;
+fluxRequired
+{
+    default         no;
+    p;
+}
 
-writeInterval   100;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  6;
-
-writeCompression uncompressed;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep no;
-maxCo          0.5;
-
-libs            ("libfiniteVolumeAtmos.so" "libfiniteVolumeAtmosFOAMtools.so" "libmonitorFunction.so");
 
 // ************************************************************************* //

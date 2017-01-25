@@ -26,6 +26,10 @@ volScalarField p
 // Uf with component in direction H.delta corrected
 surfaceVectorField Ufv("Ufv", Uf);
 
+// Volumes associated with faces
+surfaceScalarField faceVol("faceVol", 1/3.*(H.delta() & rMesh.Sf()));
+faceVol.oldTime();
+
 // fixed flux boundary conditions
 wordList VuBCs(rMesh.boundaryMesh().size(), "calculated");
 wordList uBCs(rMesh.boundaryMesh().size(), "zeroGradient");
@@ -54,15 +58,6 @@ volVectorField u
     uBCs
 );
 u.write();
-u.oldTime();
-
-Info<< "Calculating face flux field U" << endl;
-surfaceScalarField U
-(
-    IOobject("U", runTime.timeName(), rMesh),
-    Uf & rMesh.Sf()
-);
-U.oldTime();
 
 Info << "Calculating the mesh flux, meshPhi" << endl;
 surfaceScalarField meshPhi
@@ -70,7 +65,13 @@ surfaceScalarField meshPhi
     IOobject("meshPhi", runTime.timeName(), rMesh),
     fvc::meshPhi(u)
 );
-meshPhi.oldTime();
+
+Info<< "Initialising the absolute face flux, U" << endl;
+surfaceScalarField U
+(
+    IOobject("U", runTime.timeName(), rMesh),
+    Uf & rMesh.Sf()
+);
 
 Info << "Calculating V mass circulation field" << endl;
 surfaceScalarField V
@@ -82,6 +83,17 @@ surfaceScalarField V
     ),
     Uf & H.delta(),
     VuBCs
+);
+
+Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
+surfaceScalarField dVdt
+(
+    "dVdt",
+    H.delta() & 
+    (
+        fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
+      //+ 2*(Omega^(Uf - Ug))
+    )
 );
 
 Info << "Storing the old value of V, V0 on the new mesh" << endl;

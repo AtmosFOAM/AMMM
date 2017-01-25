@@ -25,6 +25,7 @@ License
 
 #include "monitorFromGradU.H"
 #include "fvcCurl.H"
+#include "fvcLaplacian.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -53,11 +54,23 @@ bool Foam::functionObjects::monitorFromGradU::calc()
     {
         const surfaceVectorField& Uf
             = lookupObject<surfaceVectorField>(fieldName_);
-        return store
+        const fvMesh& mesh = Uf.mesh();
+        tmp<volScalarField> tmonitor
         (
-            resultName_,
-            sqrt(monScale_*magSqr(fvc::grad(Uf)) + 1)
+            new volScalarField
+            (
+                IOobject(resultName_, Uf.instance(), mesh),
+                sqrt(monScale_*magSqr(fvc::grad(Uf)) + 1)
+            )
         );
+        volScalarField& monitor = tmonitor.ref();
+        // Smooth the monitor function
+        for(int iSmooth = 0; iSmooth < nMonSmooth_; iSmooth++)
+        {
+            monitor += 0.25*fvc::laplacian(1/sqr(mesh.deltaCoeffs()), monitor);
+        }
+
+        return store(resultName_, tmonitor);
     }
     else
     {
@@ -78,7 +91,8 @@ Foam::functionObjects::monitorFromGradU::monitorFromGradU
 )
 :
     fieldExpression(name, runTime, dict, "Uf"),
-    monScale_(dict.lookup("monScale"))
+    monScale_(dict.lookup("monScale")),
+    nMonSmooth_(readLabel(dict.lookup("nMonSmooth")))
 {
     setResultName(typeName, "Uf");
 }

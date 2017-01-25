@@ -10,6 +10,7 @@ IOdictionary monDict
 );
 
 const dimensionedScalar monScale(monDict.lookup("monScale"));
+const int nMonSmooth = readLabel(monDict.lookup("nMonSmooth"));
 
 // The monitor function on the computational mesh
 volScalarField monitor

@@ -19,13 +19,13 @@ projection2D XZ;
 
 FieldsToPlot
 (
-    [vorticity2D filledContours -0.0475 0.0475 0.005 "$GMTU/colours/red_white_blue.cpt"]
-    [Uf vectors 20 5 "black"]
+    [monitorFromGradU filledContours 1 3 0.25 "$GMTU/colours/white_blue_red.cpt"]
     [none mesh "grey"]
+    [Uf vectors 50 2 "black"]
 );
 
 //separateLegend true;
-region "-25e3/25e3/-25e3/25e3";
+//region "-25e3/25e3/0/25e3";
 //annotate "minMax -7.5e3 -5000";
-boundaryMarks "5e3/5e3";
+//boundaryMarks "5e3/5e3";
 
