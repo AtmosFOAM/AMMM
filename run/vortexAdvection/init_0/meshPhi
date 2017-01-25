@@ -9,24 +9,47 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      setGaussinasDict;
+    class       surfaceScalarField;
+    location    "0";
+    object      meshPhi;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-backgroundValue vorticity [0 0 -1 0 0] 0;
-gaussians 2
-(
-    centre [0 1 0 0 0] (0 0.0 9e3)
-    radius [0 1 0 0 0] 2e3
-    max    [0 0 -1 0 0] 5e-2
+dimensions      [0 3 -1 0 0 0 0];
 
-    centre [0 1 0 0 0] (0 0.0 -9e3)
-    radius [0 1 0 0 0] 2e3
-    max    [0 0 -1 0 0] -5e-2
-);
+internalField   uniform 0;
 
-// Background wind
-U0 U0 [0 1 -1 0 0] (10 0 0);
+boundaryField
+{
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    top
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    inlet
+    {
+        type            cyclic;
+        value           uniform 0;
+    }
+    outlet
+    {
+        type            cyclic;
+        value           uniform 0;
+    }
+    front
+        {
+            type empty;
+        }
+    back
+        {
+            type empty;
+        }
+}
+
 
 // ************************************************************************* //

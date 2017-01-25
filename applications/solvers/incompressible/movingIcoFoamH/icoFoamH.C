@@ -85,10 +85,10 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        //#include "monitorCalc.H"
-        //#include "refineMesh.H"
-        pointField newPoints = rMesh.points();
-        rMesh.movePoints(newPoints);
+        #include "monitorCalc.H"
+        #include "refineMesh.H"
+        //pointField newPoints = rMesh.points();
+        //rMesh.movePoints(newPoints);
         #include "fluidEqns.H"
         
         runTime.write();

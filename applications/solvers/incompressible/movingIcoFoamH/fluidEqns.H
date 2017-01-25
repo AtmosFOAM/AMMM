@@ -14,14 +14,11 @@ for (int corr=0; corr<nCorr; corr++)
 {
     // Make the flux relative
     U -= meshPhi;
-    if (corr == 0)
-    {
-        #include "CourantNo.H"
-    }
+    #include "CourantNo.H"
     
     // Explicit part of momentum without Coriolis (or pressure gradient)
     dVdt = -H.delta() & fvc::interpolate(fvc::div(U, u));
-    V = V0 - offCentre*dt*dVdt;
+    V = V0 + offCentre*dt*dVdt;
     
     // Solve pressure equation to project V and U to be divergence free
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)

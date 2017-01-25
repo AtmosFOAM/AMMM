@@ -89,12 +89,13 @@ Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
 surfaceScalarField dVdt
 (
     "dVdt",
-    H.delta() & 
+    -H.delta() & 
     (
         fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
       //+ 2*(Omega^(Uf - Ug))
     )
 );
+dVdt.oldTime();
 
 Info << "Storing the old value of V, V0 on the new mesh" << endl;
 surfaceScalarField V0("V", V);

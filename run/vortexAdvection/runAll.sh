@@ -25,7 +25,7 @@ gmtFoam -time 0 -region rMesh streamFunctionVorticity
 gv 0/streamFunctionVorticity.pdf &
 
 # Solve incompressible Euler equations on a moving mesh
-movingIcoFoamH >& log & sleep 0.1; tail -f log
+movingIcoFoamH >& log & sleep 0.01; tail -f log
 
 # What to plot and when
 time=5000
@@ -33,7 +33,7 @@ field=vorticity2D
 field=monitorFromGradU
 
 # Calculate the field
-postProcess -field Uf -func $field -time $time -region rMesh
+postProcess -field Uf -func rMesh/$field -time $time -region rMesh
 
 # Plot field $field at time $time
 gmtFoam -time $time $field -region rMesh

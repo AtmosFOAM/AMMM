@@ -9,35 +9,45 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      fvSolution;
+    class       surfaceVectorField;
+    object      Uf;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Number of correctors for calculating laplacian(A,Phi) in the MA equation
-// in the mesh initialisation application AFM
-nCorrectors 3;
+dimensions      [0 1 -1 0 0 0 0];
 
-solvers
+internalField   uniform (0 0 0);
+
+boundaryField
 {
-    "Phi|mmPhi"
+    ground
     {
-        solver GAMG;
-        smoother symGaussSeidel;
-        preconditioner   DILU;
-        tolerance        1e-6;
-        relTol           0.01;
-        maxIter          10;
-    };
-    streamFunction
-    {
-        solver PCG;
-        preconditioner DIC;
-        tolerance 1e-7;
-        relTol 0;
-        maxIter 500;
+        type            calculated;
+        value           uniform (0 0 0);
     }
+    top
+    {
+        type            calculated;
+        value           uniform (0 0 0);
+    }
+    inlet
+    {
+        type            cyclic;
+        value           uniform (0 0 0);
+    }
+    outlet
+    {
+        type            cyclic;
+        value           uniform (0 0 0);
+    }
+        front
+        {
+            type empty;
+        }
+    back
+        {
+            type empty;
+        }
 }
 
 // ************************************************************************* //
-

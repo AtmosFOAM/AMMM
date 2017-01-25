@@ -22,13 +22,13 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type  vorticity2D;
-region rMesh;
-libs   ("libAtmosFoamFieldFunctionObjects.so");
+type  monitorFromGradU;
+libs   ("libmonitorFunction.so");
 fields
 (
     Uf
 );
-vorticityComponent 1;
+monScale monScale [0 0 2 0 0] 1e4;
+nMonSmooth 0;
 
 // ************************************************************************* //
