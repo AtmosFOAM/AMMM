@@ -9,7 +9,6 @@ V0 = faceVol.oldTime()/faceVol*
     (H.delta() & Ufv) + (1-offCentre)*dt*dVdt.oldTime()
 );
 
-
 for (int corr=0; corr<nCorr; corr++)
 {
     // Make the flux relative
@@ -62,3 +61,4 @@ dVdt = -H.delta() &
     fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
   //+ 2*(Omega^(Uf - Ug))
 );
+vorticity = fvc::curl(Uf) & meshNormal;

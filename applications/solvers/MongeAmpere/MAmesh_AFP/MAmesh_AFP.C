@@ -48,6 +48,12 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     argList::noParallel();
+    Foam::argList::addOption
+    (
+        "dict",
+        "dictionaryName",
+        "specify a non-default dictionary to read input from"
+    );
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
@@ -61,15 +67,19 @@ int main(int argc, char *argv[])
     );
 
     // Open control dictionary
+    const word dictName = args.optionFound("dict") ?
+                          args.optionRead<word>("dict") : 
+                          args.executable() + "Dict";
     IOdictionary controlDict
     (
         IOobject
         (
-            args.executable() + "Dict", runTime.system(), runTime,
-            IOobject::MUST_READ_IF_MODIFIED
+            dictName, runTime.system(), runTime,
+            IOobject::MUST_READ
         )
     );
-    const int maxIters = readLabel(controlDict.lookup("maxIters"));
+    const dictionary& MAdict = controlDict.subDict("MongeAmpere");
+    const int maxIters = readLabel(MAdict.lookup("maxIters"));
     
     // The monitor funciton
     autoPtr<monitorFunction> monitorFunc(monitorFunction::New(controlDict));
@@ -131,7 +141,7 @@ int main(int argc, char *argv[])
         WarningIn("MAmesh_AFP") << "Not converged in " << maxIters
             << " iterations" << endl;
     }
-    runTime.write();
+    Phi.write();
     rMesh.write();
     Info << "End\n" << endl;
 

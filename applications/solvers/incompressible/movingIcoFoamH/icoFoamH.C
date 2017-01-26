@@ -34,14 +34,13 @@ Description
 
 #include "HodgeOps.H"
 #include "fvCFD.H"
-//#include "meshToMesh0.H"
-//#include "monitorFunction.H"
 #include "faceToPointReconstruct.H"
 #include "setInternalValues.H"
 #include "fvMesh.H"
 #include "fvcMeshPhi.H"
 #include "fvcDet.H"
 #include "fvcPosDefCof.H"
+#include "fvcCurlf.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,7 +63,8 @@ int main(int argc, char *argv[])
     );
 
     Info << "Mesh has normal direction" << flush;
-    const vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
+    vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
+    meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
     Info << meshNormal << endl;
 
     // Read in and create fields

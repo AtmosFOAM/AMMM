@@ -10,9 +10,16 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      setGaussinasDict;
+    object      initDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+MongeAmpere
+{
+    maxIters 50;
+}
+
+monitorFunctionFrom monitorFunctionSumGaussians;
 
 backgroundValue vorticity [0 0 -1 0 0] 0;
 gaussians 2
@@ -28,5 +35,8 @@ gaussians 2
 
 // Background wind
 U0 U0 [0 1 -1 0 0] (10 0 0);
+
+monScale monScale [0 0 1 0 0] 150;
+nMonSmooth 2;
 
 // ************************************************************************* //

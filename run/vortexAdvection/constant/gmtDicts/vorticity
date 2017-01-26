@@ -19,8 +19,8 @@ projection2D XZ;
 
 FieldsToPlot
 (
-    [vorticity2D filledContours -0.0475 0.0475 0.005 "$GMTU/colours/red_white_blue.cpt"]
-    [Uf vectors 20 5 "black"]
+    [vorticity filledContours -0.0475 0.0475 0.005 "$GMTU/colours/red_white_blue.cpt"]
+    [Uf vectors 20 1 "black"]
     [none mesh "grey"]
 );
 

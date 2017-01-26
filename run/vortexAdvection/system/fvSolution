@@ -14,10 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Number of correctors for calculating laplacian(A,Phi) in the MA equation
-// in the mesh initialisation application AFM
-nCorrectors 3;
-
 solvers
 {
     "Phi|mmPhi"
@@ -25,7 +21,7 @@ solvers
         solver GAMG;
         smoother symGaussSeidel;
         preconditioner   DILU;
-        tolerance        1e-6;
+        tolerance        1e-4;
         relTol           0.01;
         maxIter          10;
     };

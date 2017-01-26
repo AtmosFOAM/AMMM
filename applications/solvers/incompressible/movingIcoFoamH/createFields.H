@@ -91,7 +91,7 @@ surfaceScalarField dVdt
     "dVdt",
     -H.delta() & 
     (
-        fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
+        fvc::interpolate(fvc::div(U, u))
       //+ 2*(Omega^(Uf - Ug))
     )
 );
@@ -118,3 +118,13 @@ forAll(V.boundaryField(), patchi)
     }
 }
 
+// Vorticity (for the monitor function)
+volScalarField vorticity
+(
+    IOobject
+    (
+        "vorticity", runTime.timeName(), rMesh,
+        IOobject::NO_READ, IOobject::AUTO_WRITE
+    ),
+    fvc::curl(Uf) & meshNormal
+);

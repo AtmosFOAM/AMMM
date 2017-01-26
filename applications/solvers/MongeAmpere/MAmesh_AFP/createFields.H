@@ -1,7 +1,11 @@
 // Create the mesh displacement potential, Phi
 volScalarField Phi
 (
-    IOobject("Phi", runTime.timeName(), mesh),
+    IOobject
+    (
+        "mmPhi", runTime.timeName(), mesh,
+        IOobject::READ_IF_PRESENT
+    ),
     mesh,
     dimensionedScalar("Phi", dimArea, scalar(0)),
     "zeroGradient"

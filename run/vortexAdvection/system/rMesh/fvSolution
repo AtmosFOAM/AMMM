@@ -20,14 +20,13 @@ solvers
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-6;
+        tolerance        1e-8;
         relTol           0.01;
     }
 
     pFinal
     {
         $p;
-        tolerance        1e-6;
         relTol           0;
     }
     streamFunction
@@ -42,7 +41,7 @@ solvers
 iterations
 {
     nCorrectors      4;
-    nNonOrthogonalCorrectors 1;
+    nNonOrthogonalCorrectors 2;
 }
 
 setReferenceP true;

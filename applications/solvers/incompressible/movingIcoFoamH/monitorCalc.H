@@ -3,7 +3,7 @@ Info << "Monitor function goes from " << flush;
 setInternalAndBoundaryValues
 (
     monitor,
-    sqrt(monScale*magSqr(fvc::grad(Uf)) + 1)
+    sqrt(1 + magSqr(monScale*vorticity))
 );
 
 for(int iSmooth = 0; iSmooth < nMonSmooth; iSmooth++)

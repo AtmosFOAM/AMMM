@@ -1,10 +1,10 @@
-Info << "Reading in monitor fucntion controls from monitorFromGradU" << endl;
+Info << "Reading in monitor fucntion controls from initDict" << endl;
 
 IOdictionary monDict
 (
     IOobject
     (
-        "monitorFromGradU", mesh.time().system(), mesh,
+        "initDict", mesh.time().system(), mesh,
         IOobject::MUST_READ, IOobject::NO_WRITE
     )
 );
@@ -19,19 +19,12 @@ volScalarField monitor
     mesh,
     dimensionedScalar("monitor", dimless, scalar(1))
 );
-// Set monitor function from the moving mesh
-Info << "Monitor function goes from " << flush;
-setInternalAndBoundaryValues
-(
-   monitor,
-   sqrt(monScale*magSqr(fvc::grad(Uf)) + 1)
-);
-Info << min(monitor).value() << " to " << max(monitor).value() << endl;
+#include "monitorCalc.H"
 
 Info << "Creating in the mesh displacement potential, mmPhi" << endl;
 volScalarField mmPhi
 (
-    IOobject("mmPhi",runTime.timeName(), mesh),
+    IOobject("mmPhi",runTime.timeName(), mesh, IOobject::READ_IF_PRESENT),
     mesh,
     dimensionedScalar("mmPhi", dimArea, scalar(0)),
     "zeroGradient"

@@ -2,6 +2,7 @@ monitorFunction.C
 monitorFunctionTanh.C
 monitorFunctionFront.C
 monitorFunctionSech.C
+monitorFunctionSumGaussians.C
 monitorFunctionMapped.C
 tensor.C
 monitorFromGradU/monitorFromGradU.C
