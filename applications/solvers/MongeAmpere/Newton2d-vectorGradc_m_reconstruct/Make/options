@@ -13,5 +13,6 @@ EXE_INC = -I.\
 
 EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
-    -lfiniteVolume -ltriSurface -lmeshTools -lsampling -lmonitorFunction -lHodgeOps
+    -lfiniteVolume -ltriSurface -lmeshTools -lsampling -lmonitorFunction \
+    -lHodgeOps -lfiniteVolumeAtmosFOAMtools
 

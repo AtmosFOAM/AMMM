@@ -13,6 +13,6 @@ EXE_LIBS = \
     -lmeshTools \
     -lsampling \
     -lfiniteVolume \
-    -L$(FOAM_USER_LIBBIN) -lmeshTools -lorography -lmonitorFunction -lsampling \
-    -lgdal
+    -L$(FOAM_USER_LIBBIN) -lmeshTools -lorography -lmonitorFunction -lsampling\
+    -lgdal -lfiniteVolumeAtmosFOAMtools
 

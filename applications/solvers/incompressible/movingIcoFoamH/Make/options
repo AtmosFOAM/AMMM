@@ -17,5 +17,6 @@ EXE_LIBS = \
     -lmeshTools \
     -lfiniteVolumeAtmos \
     -lfiniteVolume \
-    -lfiniteVolumeAtmosFOAMtools
+    -lfiniteVolumeAtmosFOAMtools \
+    -lmonitorFunction
 

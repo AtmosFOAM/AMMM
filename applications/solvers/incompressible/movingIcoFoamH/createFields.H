@@ -62,7 +62,11 @@ u.write();
 Info << "Calculating the mesh flux, meshPhi" << endl;
 surfaceScalarField meshPhi
 (
-    IOobject("meshPhi", runTime.timeName(), rMesh),
+    IOobject
+    (
+        "meshPhi", runTime.timeName(), rMesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
+    ),
     fvc::meshPhi(u)
 );
 
@@ -91,7 +95,7 @@ surfaceScalarField dVdt
     "dVdt",
     -H.delta() & 
     (
-        fvc::interpolate(fvc::div(U, u))
+        fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
       //+ 2*(Omega^(Uf - Ug))
     )
 );

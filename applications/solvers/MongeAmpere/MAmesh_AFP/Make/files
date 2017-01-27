@@ -1,3 +1,0 @@
-MAmesh_AFP.C
-
-EXE = $(FOAM_USER_APPBIN)/MAmesh_AFP

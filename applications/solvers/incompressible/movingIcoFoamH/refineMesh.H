@@ -23,7 +23,7 @@ for(int nMAit = 0; nMAit < 10 && !converged; nMAit++)
         );
         mmPhiEqn.setReference(0, scalar(0));
         solverPerformance sp = mmPhiEqn.solve();
-        if (iCorr == 0) converged = sp.nIterations() <= 1;
+        if (iCorr == 0) converged = sp.nIterations() <= 2;
     }
 
     // Calculate gradient of Phi on faces and correct the normal component

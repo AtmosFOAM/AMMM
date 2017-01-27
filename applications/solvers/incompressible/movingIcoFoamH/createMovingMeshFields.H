@@ -9,17 +9,28 @@ IOdictionary monDict
     )
 );
 
-const dimensionedScalar monScale(monDict.lookup("monScale"));
-const int nMonSmooth = readLabel(monDict.lookup("nMonSmooth"));
+// The monitor funciton
+autoPtr<monitorFunctionFrom> monitorFunc(monitorFunctionFrom::New(monDict));
 
-// The monitor function on the computational mesh
+// The monitor function on both meshes
 volScalarField monitor
 (
     IOobject("monitor", runTime.timeName(), mesh),
     mesh,
     dimensionedScalar("monitor", dimless, scalar(1))
 );
+volScalarField monitorR
+(
+    IOobject
+    (
+        "monitor", runTime.timeName(), rMesh,
+        IOobject::NO_READ, IOobject::AUTO_WRITE
+    ),
+    rMesh,
+    dimensionedScalar("monitor", dimless, scalar(1))
+);
 #include "monitorCalc.H"
+monitorR.write();
 
 Info << "Creating in the mesh displacement potential, mmPhi" << endl;
 volScalarField mmPhi
@@ -51,4 +62,16 @@ volScalarField source("source", detHess - equiDistMean/monitor);
 
 // The laplacian of (A,mmPhi) at the old time
 volScalarField laplacianAPhi("laplacianAPhi", fvc::laplacian(cofacA,mmPhi));
+
+// The mesh flux (although this mesh in not moving)
+volVectorField gradPhi("gradPhi", fvc::grad(mmPhi));
+surfaceScalarField meshPhiZero
+(
+    IOobject
+    (
+        "meshPhi", runTime.timeName(), mesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
+    ),
+    fvc::meshPhi(gradPhi)
+);
 

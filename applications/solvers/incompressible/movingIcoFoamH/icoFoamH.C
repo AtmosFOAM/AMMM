@@ -41,17 +41,23 @@ Description
 #include "fvcDet.H"
 #include "fvcPosDefCof.H"
 #include "fvcCurlf.H"
+#include "monitorFunctionFrom.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
+using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
+    argList::addBoolOption("fixedMesh", "run on rMesh and do not modify");
     #include "setRootCase.H"
     #include "createTime.H"
     #define dt runTime.deltaT()
     #include "createMesh.H"
     
+    const Switch reMeshOnly = args.optionFound("reMeshOnly");
+    const Switch fixedMesh = args.optionFound("fixedMesh");
+
     // Create the moving mesh
     fvMesh rMesh
     (
@@ -71,6 +77,15 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createMovingMeshFields.H"
     
+    if (reMeshOnly)
+    {
+        #include "refineMesh.H"
+        rMesh.write();
+        mmPhi.write();
+        Info << "Created new rMesh. End\n" << endl;
+        return 0;
+    }
+    
     // Read in solver options
     const dictionary& itsDict = rMesh.solutionDict().subDict("iterations");
     const int nCorr = readLabel(itsDict.lookup("nCorrectors"));;
@@ -85,10 +100,16 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        #include "monitorCalc.H"
-        #include "refineMesh.H"
-        //pointField newPoints = rMesh.points();
-        //rMesh.movePoints(newPoints);
+        if (!fixedMesh)
+        {
+            #include "monitorCalc.H"
+            #include "refineMesh.H"
+        }
+        else
+        {
+            pointField newPoints = rMesh.points();
+            rMesh.movePoints(newPoints);
+        }
         #include "fluidEqns.H"
         
         runTime.write();

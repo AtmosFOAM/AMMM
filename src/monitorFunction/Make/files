@@ -5,6 +5,8 @@ monitorFunctionSech.C
 monitorFunctionSumGaussians.C
 monitorFunctionMapped.C
 tensor.C
-monitorFromGradU/monitorFromGradU.C
+monitorFunctionFrom/monitorFunctionFrom.C
+monitorFunctionFrom/monitorFunctionFromGradU.C
+monitorFunctionFrom/monitorFunctionFromVorticity.C
 
 LIB = $(FOAM_USER_LIBBIN)/libmonitorFunction
