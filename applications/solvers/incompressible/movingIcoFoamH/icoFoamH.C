@@ -73,7 +73,9 @@ int main(int argc, char *argv[])
     meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
     Info << meshNormal << endl;
 
-    // Read in and create fields
+    // Read in and create variables and fields
+    HodgeOps H(rMesh);
+    #include "readEnvironmentalProperties.H"
     #include "createFields.H"
     #include "createMovingMeshFields.H"
     
@@ -104,6 +106,9 @@ int main(int argc, char *argv[])
         {
             #include "monitorCalc.H"
             #include "refineMesh.H"
+            // Update Coriolis fields
+            twoOmegaf = (f0 + beta * rMesh.Cf().component(1))*OmegaHat;
+            two_dxOmega = H.delta() ^ twoOmegaf;
         }
         else
         {

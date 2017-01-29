@@ -23,8 +23,7 @@ for (int corr=0; corr<nCorr; corr++)
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
     {
         // In this loop, U is NOT relative
-        U = H.ddirToFlux(V)
-          //- offCentre*dt*2*(SfxOmega & Uf)
+        U = H.ddirToFlux(V - offCentre*dt*(two_dxOmega & (Uf-Ug)))
           - H.ddirToFluxCorr(dt*fvc::snGrad(p)*H.magd());
         fvScalarMatrix pEqn
         (
@@ -45,8 +44,8 @@ for (int corr=0; corr<nCorr; corr++)
         if (nonOrth == nNonOrthCorr)
         {
             U += pEqn.flux();
-            V -= dt*fvc::snGrad(p)*H.magd();
-               //+ ((offCentre*dt*2*(Omega ^ Uf)) & H.delta());
+            V -= offCentre*dt*(two_dxOmega & (Uf - Ug))
+               + dt*fvc::snGrad(p)*H.magd();
             u = H.reconstructd(V);
             //Uf = fvc::interpolate(u);
         }
@@ -56,9 +55,7 @@ for (int corr=0; corr<nCorr; corr++)
 // Updates for next time step
 Uf = fvc::interpolate(u);
 Ufv = Uf - ((Uf & H.delta()) - V)*H.delta()/magSqr(H.delta());
-dVdt = -H.delta() & 
-(
-    fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
-  //+ 2*(Omega^(Uf - Ug))
-);
+dVdt = -(H.delta() & fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)")))
+     - (two_dxOmega & (Uf - Ug));
 vorticity = fvc::curl(Uf) & meshNormal;
+

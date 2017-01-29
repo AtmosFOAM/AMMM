@@ -37,7 +37,7 @@ done
 cp 0/meshPhi 0/rMesh
 
 # Solve incompressible Euler equations on a moving mesh
-movingIcoFoamH >& log & sleep 0.01; tail -f log
+movingIcoFoamH -fixedMesh >& log & sleep 0.01; tail -f log
 #movingIcoFoamH |&  tee log
 
 # What to plot and when

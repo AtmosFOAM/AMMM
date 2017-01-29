@@ -8,5 +8,6 @@ tensor.C
 monitorFunctionFrom/monitorFunctionFrom.C
 monitorFunctionFrom/monitorFunctionFromGradU.C
 monitorFunctionFrom/monitorFunctionFromVorticity.C
+monitorFunctionFrom/monitorFunctionFromNone.C
 
 LIB = $(FOAM_USER_LIBBIN)/libmonitorFunction

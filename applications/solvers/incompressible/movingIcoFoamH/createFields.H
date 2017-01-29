@@ -1,5 +1,3 @@
-HodgeOps H(rMesh);
-
 // Uf is the velocity on the faces of the moving mesh
 Info<< "Reading field Uf" << endl;
 surfaceVectorField Uf
