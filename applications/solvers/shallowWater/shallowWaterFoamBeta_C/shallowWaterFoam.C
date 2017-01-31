@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 1991-2009 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 1991-2004 OpenCFD Ltd.
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -20,15 +20,16 @@ License
 
     You should have received a copy of the GNU General Public License
     along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 Application
-    movingIcoFoamH
+    movingshallowWaterFoamH
 
 Description
-    C-grid solver for incompressible Euler equations using Hodge operator
-    for curl-free pressure gradients on a moving mesh. Mesh calculated
-    using optimal transport. Note, Coriolis force not yet implemented
+    Transient semi-implicit solver for inviscid shallow-water equations in
+    flux form with rotation on moving mesh. Uses the beta plane approximation and a C-grid.
+    The mesh movement is solving by the Monge-Ampere equation
+
 
 \*---------------------------------------------------------------------------*/
 
@@ -93,7 +94,6 @@ int main(int argc, char *argv[])
     const int nCorr = readLabel(itsDict.lookup("nCorrectors"));;
     const int nNonOrthCorr = readLabel(itsDict.lookup("nNonOrthogonalCorrectors"));
     const scalar offCentre = readScalar(rMesh.schemesDict().lookup("offCentre"));
-    const Switch setReferenceP = rMesh.solutionDict().lookup("setReferenceP");
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

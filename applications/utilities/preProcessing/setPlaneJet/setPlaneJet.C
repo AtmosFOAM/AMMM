@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "initialConditions",
-            mesh.time().constant(),
+            mesh.time().system(),
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "environmentalProperties",
-            mesh.time().constant(),
+            mesh.time().system(),
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

@@ -2,4 +2,4 @@ evalOrography.C
 calcTerrainFollowingHeight.C
 pointsToTerrainFollowing.C
 
-LIB = $(FOAM_USER_LIBBIN)/liborography
+LIB = $(FOAM_USER_LIBBIN)/libMMorography

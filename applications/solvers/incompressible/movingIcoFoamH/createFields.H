@@ -1,5 +1,4 @@
-// Uf is the velocity on the faces of the moving mesh
-Info<< "Reading field Uf" << endl;
+Info<< "Reading field Uf, velocity on the faces of the moving mesh" << endl;
 surfaceVectorField Uf
 (
     IOobject
@@ -9,6 +8,9 @@ surfaceVectorField Uf
     ),
     rMesh
 );
+
+// Uf with component in direction H.delta corrected
+surfaceVectorField Ufv("Ufv", Uf);
 
 Info<< "Reading pressure, p" << endl;
 volScalarField p
@@ -20,9 +22,6 @@ volScalarField p
     ),
     rMesh
 );
-
-// Uf with component in direction H.delta corrected
-surfaceVectorField Ufv("Ufv", Uf);
 
 // Volumes associated with faces
 surfaceScalarField faceVol("faceVol", 1/3.*(H.delta() & rMesh.Sf()));
@@ -120,7 +119,7 @@ forAll(V.boundaryField(), patchi)
     }
 }
 
-// Vorticity (for the monitor function)
+// Vorticity (for post-processing)
 volScalarField vorticity
 (
     IOobject

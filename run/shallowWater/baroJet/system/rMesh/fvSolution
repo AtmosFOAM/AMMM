@@ -16,23 +16,27 @@ FoamFile
 
 solvers
 {
-    "Phi|mmPhi"
-    {
-        solver GAMG;
-        smoother symGaussSeidel;
-        preconditioner   DILU;
-        tolerance        1e-4;
-        relTol           0.01;
-        maxIter          10;
-    };
-    streamFunction
+    h
     {
         solver PCG;
         preconditioner DIC;
-        tolerance 1e-7;
-        relTol 0;
-        maxIter 500;
+        tolerance        1e-8;
+        relTol           0.1;
+    }
+    hFinal
+    {
+        solver PCG;
+        preconditioner DIC;
+        tolerance        1e-8;
+        relTol           0;
     }
 }
+
+iterations
+{
+    nCorrectors      2;
+    nNonOrthogonalCorrectors 2;
+}
+
 
 // ************************************************************************* //

@@ -1,185 +1,153 @@
-Info<< "Reading field h\n" << endl;
+Info<< "Reading field Uf, velocity on the faces of the moving mesh" << endl;
+surfaceVectorField Uf
+(
+    IOobject
+    (
+        "Uf", runTime.timeName(), rMesh,
+        IOobject::MUST_READ, IOobject::AUTO_WRITE
+    ),
+    rMesh
+);
+
+Info<< "Reading field h" << endl;
 volScalarField h
 (
     IOobject
     (
-        "h",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
+        "h", runTime.timeName(), rMesh,
+        IOobject::MUST_READ, IOobject::AUTO_WRITE
     ),
-    mesh
+    rMesh
 );
 
 // h interpolated on to faces
 surfaceScalarField hf
 (
-    IOobject("hf", runTime.timeName(), mesh),
+    IOobject("hf", runTime.timeName(), rMesh),
     fvc::interpolate(h)
 );
 
-// h0 is defined to be the orography
-Info<< "Reading field h0 if present (the orography)\n" << endl;
+// hUf with component in direction H.delta corrected
+surfaceVectorField hUf("hUf", hf*Uf);
+
+Info<< "Reading field h0 if present (the orography) on the fixed mesh\n" << endl;
 volScalarField h0
 (
     IOobject
     (
-        "h0",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT
+        "h0", runTime.timeName(), mesh, IOobject::READ_IF_PRESENT
     ),
-    mesh//,
-    //dimensionedScalar("h0", dimLength, 0.0)
+    mesh,
+    dimensionedScalar("h0", dimLength, 0.0)
 );
-Info<< "Read h0: max = " << max(h0) << endl;
-
 // The gradient of the orography is assumed not to change
-const surfaceScalarField gsnGradh0 = mesh.magSf()*g*fvc::snGrad(h0);
+//const surfaceScalarField gsnGradh0 = mesh.magSf()*g*fvc::snGrad(h0);
 
+// Volumes associated with faces
+surfaceScalarField faceVol("faceVol", 1/3.*(H.delta() & rMesh.Sf()));
+faceVol.oldTime();
 
-// The cell centre velocity
-volVectorField U
-(
-    IOobject
-    (
-        "U",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
-Info<< "calculating field Uf - the velocity on the face\n" << endl;
-surfaceVectorField Uf
-(
-    IOobject
-    (
-        "Uf",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    fvc::interpolate(U)
-    //    dimensionedVector("Uf", dimVelocity, vector(0 0 0))
-);
-
-
-Info<< "Reading/calculating face flux field\n" << endl;
-
-surfaceScalarField flux
-(
-    IOobject
-    (
-        "flux",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    hf*(Uf & mesh.Sf())
-);
-flux.oldTime();
-
-
-Info<< "Creating field hTotal for post processing\n" << endl;
-volScalarField hTotal
-(
-   IOobject
-   (
-       "hTotal",
-       runTime.timeName(),
-       mesh,
-       IOobject::READ_IF_PRESENT,
-       IOobject::AUTO_WRITE
-   ),
-   h+h0
-);
-hTotal.write();
-
-Info<< "Creating Coriolis Force on the face, f (Sf x k)" << endl;
-const surfaceVectorField fSfxk
-(
-    "fSfxk",
-    beta*mesh.Cf().component(vector::Y)*(mesh.Sf() ^ vector(0.,0.,1.))
-);
-
-// Rate of change of flux
-surfaceScalarField dFluxdt = -hf*(gsnGradh0 + g*fvc::snGrad(h)*mesh.magSf())
-                          - (fvc::interpolate(fvc::div(flux,U)) & mesh.Sf());
-Info<< "before rotating in createfields\n" << endl;
-if (rotating) dFluxdt -= hf*(fSfxk & Uf);
-dFluxdt.oldTime();
-
-// Courant numbers
-
-surfaceScalarField CoNum = mesh.surfaceInterpolation::deltaCoeffs()*mag(flux)
-                         / (fvc::interpolate(h)*mesh.magSf())*runTime.deltaT();
-
-surfaceScalarField waveCoNum = scalar(0.5)
-                               *mesh.surfaceInterpolation::deltaCoeffs()
-                               *sqrt(mag(fvc::interpolate(h)))
-                               *sqrt(g)*runTime.deltaT();
-
-//fluxU with boundaries to ensure correct flow over boundaries
-wordList fluxUBCs(mesh.boundaryMesh().size(), "calculated");
-forAll(mesh.boundaryMesh(), patchi)
+// fixed flux boundary conditions
+wordList VuBCs(rMesh.boundaryMesh().size(), "calculated");
+wordList uBCs(rMesh.boundaryMesh().size(), "zeroGradient");
+forAll(rMesh.boundaryMesh(), patchi)
 {
-    const word btype = mesh.boundaryMesh()[patchi].type();
-    const word htype = h.boundaryField()[patchi].type();
-    if
-    (
-        btype == "wall" || btype == "symmetryPlane" || btype == "empty"
-     || htype == "geostrophicZeroFlux" || htype == "zeroGradient"
-    )
+    const word btype = rMesh.boundaryMesh()[patchi].type();
+    const word utype = Uf.boundaryField()[patchi].type();
+    if (btype == "wall" || btype == "symmetryPlane" || btype == "empty")
     {
-        fluxUBCs[patchi] = "fixedValue";
+        VuBCs[patchi] = "fixedValue";
+        uBCs[patchi] = "slip";
+    }
+    else if (utype == "fixedValue")
+    {
+        VuBCs[patchi] = "fixedValue";
+        uBCs[patchi] = "fixedValue";
     }
 }
 
-surfaceScalarField fluxU
+Info << "Calculating the cell centre velocity, u" << endl;
+volVectorField u
 (
-    IOobject("fluxU", runTime.timeName(), mesh),
-    flux,
-    fluxUBCs
+    IOobject("u", runTime.timeName(), rMesh,
+             IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),
+    H.reconstruct(Uf & rMesh.Sf()),
+    uBCs
 );
+u.write();
 
-forAll(fluxU.boundaryField(), patchi)
-{
-    const word btype = mesh.boundaryMesh()[patchi].type();
-    const word htype = h.boundaryField()[patchi].type();
-    if
-    (
-        btype == "wall" || btype == "symmetryPlane" || btype == "empty"
-     || htype == "geostrophicZeroFlux"
-    )
-    {
-        static_cast<Foam::fvsPatchField<double>>(fluxU.boundaryField()[patchi]) == 0;
-    }
-}
-
-
-//#include "faceToPointReconstruct.H"
-// The mesh velocity
-volVectorField meshU
+Info << "Calculating the mesh flux, meshPhi" << endl;
+surfaceScalarField meshPhi
 (
     IOobject
     (
-        "meshU",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
+        "meshPhi", runTime.timeName(), rMesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
     ),
-    mesh
+    fvc::meshPhi(h, u)
 );
 
+Info<< "Initialising the absolute face flux, U" << endl;
+surfaceScalarField U
+(
+    IOobject("U", runTime.timeName(), rMesh),
+    hf * (Uf & rMesh.Sf())
+);
 
-pointVectorField meshUpoints = fvc::faceToPointReconstruct(
-              ((fvc::interpolate(meshU)       //interpolate to faces
-                & mesh.Sf())/mesh.magSf())     // get surface normal component
-                                               );
+Info << "Calculating V mass circulation field" << endl;
+surfaceScalarField V
+(
+    IOobject
+    (
+        "V", runTime.timeName(), rMesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
+    ),
+    hf * (Uf & H.delta()),
+    VuBCs
+);
+
+//Info<< "Creating field hTotal for post processing\n" << endl;
+//volScalarField hTotal
+//(
+//   IOobject
+//   (
+//       "hTotal", runTime.timeName(), mesh,
+//       IOobject::NO_READ_IF_PRESENT, IOobject::AUTO_WRITE
+//   ),
+//   h+h0
+//);
+//hTotal.write();
+
+Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
+surfaceScalarField dVdt
+(
+    "dVdt",
+  - (H.delta() & fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"), "Uf"))
+  - (two_dxOmega & hUf)
+  - g*hf*fvc::snGrad(h)*H.magd()
+);
+dVdt.oldTime();
+
+Info << "Storing the old value of V, V0 on the new mesh" << endl;
+surfaceScalarField V0("V", V);
+
+// Flux divergence at old time-step for time-stepping
+volScalarField divUold("divUold", fvc::div(U));
+
+// fix no flow boundaries
+forAll(V.boundaryField(), patchi)
+{
+    const word btype = rMesh.boundaryMesh()[patchi].type();
+    const word utype = Uf.boundaryField()[patchi].type();
+    if
+    (
+        btype == "wall" || btype == "symmetryPlane" || btype == "empty"
+    )
+    {
+        V.boundaryFieldRef()[patchi] == 0;
+    }
+    else if(utype == "fixedValue")
+    {
+        u.boundaryFieldRef()[patchi] == Uf.boundaryField()[patchi];
+    }
+}
