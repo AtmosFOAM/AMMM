@@ -54,7 +54,9 @@ forAll(rMesh.boundaryMesh(), patchi)
 {
     const word btype = rMesh.boundaryMesh()[patchi].type();
     const word utype = Uf.boundaryField()[patchi].type();
-    if (btype == "wall" || btype == "symmetryPlane" || btype == "empty")
+    const word htype = h.boundaryField()[patchi].type();
+    if (btype == "wall" || btype == "symmetryPlane" || btype == "empty"
+     || htype == "geostrophicZeroFlux")
     {
         VuBCs[patchi] = "fixedValue";
         uBCs[patchi] = "slip";
@@ -76,23 +78,17 @@ volVectorField u
 );
 u.write();
 
-Info << "Calculating the mesh flux, meshPhi" << endl;
-surfaceScalarField meshPhi
-(
-    IOobject
-    (
-        "meshPhi", runTime.timeName(), rMesh,
-        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
-    ),
-    fvc::meshPhi(h, u)
-);
-
 Info<< "Initialising the absolute face flux, U" << endl;
 surfaceScalarField U
 (
-    IOobject("U", runTime.timeName(), rMesh),
+    IOobject
+    (
+        "U", runTime.timeName(), rMesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
+    ),
     hf * (Uf & rMesh.Sf())
 );
+U.write();
 
 Info << "Calculating V mass circulation field" << endl;
 surfaceScalarField V
@@ -121,15 +117,16 @@ surfaceScalarField V
 Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
 surfaceScalarField dVdt
 (
-    "dVdt",
-  - (H.delta() & fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"), "Uf"))
+    IOobject("dVdt", runTime.timeName(), rMesh),
+  - (H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "Uf"))
   - (two_dxOmega & hUf)
-  - g*hf*fvc::snGrad(h)*H.magd()
+  - g*hf*fvc::snGrad(h)*H.magd(),
+    VuBCs
 );
 dVdt.oldTime();
 
 Info << "Storing the old value of V, V0 on the new mesh" << endl;
-surfaceScalarField V0("V", V);
+surfaceScalarField V0("V0", V);
 
 // Flux divergence at old time-step for time-stepping
 volScalarField divUold("divUold", fvc::div(U));
@@ -139,12 +136,16 @@ forAll(V.boundaryField(), patchi)
 {
     const word btype = rMesh.boundaryMesh()[patchi].type();
     const word utype = Uf.boundaryField()[patchi].type();
+    const word htype = h.boundaryField()[patchi].type();
     if
     (
         btype == "wall" || btype == "symmetryPlane" || btype == "empty"
+     || utype == "slip" || htype == "geostrophicZeroFlux"
     )
     {
         V.boundaryFieldRef()[patchi] == 0;
+        V0.boundaryFieldRef()[patchi] == 0;
+        dVdt.boundaryFieldRef()[patchi] == 0;
     }
     else if(utype == "fixedValue")
     {

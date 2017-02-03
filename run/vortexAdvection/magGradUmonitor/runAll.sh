@@ -2,8 +2,10 @@
 #
 set -o pipefail
 
+# Create the case, run and post-process
+
 # clear out old stuff
-rm -rf [0-9]* constant/*/polyMesh core log legends gmt.history
+rm -rf [0-9]* constant/polyMesh constant/*/polyMesh core log* legends gmt.history *.dat
 
 cp -r init_0 0
 

@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
         #include "refineMesh.H"
         rMesh.write();
         mmPhi.write();
+        monitorR.write();
         Info << "Created new rMesh. End\n" << endl;
         return 0;
     }
@@ -106,9 +107,12 @@ int main(int argc, char *argv[])
         {
             #include "monitorCalc.H"
             #include "refineMesh.H"
-            // Update Coriolis fields
-            twoOmegaf = (f0 + beta * rMesh.Cf().component(1))*OmegaHat;
+            // Update Coriolis fields and geometry things
+            twoOmegaf = beta * rMesh.Cf().component(1)*OmegaHat;
             two_dxOmega = H.delta() ^ twoOmegaf;
+            // Extra geometry for Hodge operators on the new mesh
+            HodgeOps H(rMesh);
+            faceVol = 1/3.*(H.delta() & rMesh.Sf());
         }
         else
         {

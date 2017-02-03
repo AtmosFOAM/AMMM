@@ -18,9 +18,6 @@ Info << "Reading in the direction of the rotation vector for the Coriolis, "
      << "OmegaHat" << endl;
 const vector OmegaHat(envProperties.lookup("OmegaHat"));
 
-Info << "Reading in the magnitude of the Coriolis at y=0, f0" << endl;
-const dimensionedScalar f0(envProperties.lookup("f0"));
-
 Info << "Reading in the variation of Coriolis with y, beta" << endl;
 const dimensionedScalar beta(envProperties.lookup("beta"));
 
@@ -37,7 +34,7 @@ const dimensionedVector Ug
 surfaceVectorField twoOmegaf
 (
     IOobject("twoOmegaf", runTime.timeName(), rMesh),
-    (f0 + beta * rMesh.Cf().component(1))*OmegaHat
+    beta * rMesh.Cf().component(1)*OmegaHat
 );
 twoOmegaf.write();
 
