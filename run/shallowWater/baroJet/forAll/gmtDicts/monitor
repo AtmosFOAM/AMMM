@@ -20,7 +20,7 @@ plotBoundaryDots false;
 
 FieldsToPlot
 (
-    [monitor filledContours 0 0 0 "$GMTU/colours/white_blue_red.cpt"]
+    [monitor filledContours 1 4 0.25 "$GMTU/colours/white_blue_red.cpt"]
     [none mesh "grey"]
     [Uf vectors 1e4 11 "black"]
 );

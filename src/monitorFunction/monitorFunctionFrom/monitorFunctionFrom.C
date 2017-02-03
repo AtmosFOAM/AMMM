@@ -45,7 +45,9 @@ monitorFunctionFrom::monitorFunctionFrom
 )
 :
     IOdictionary(dict),
-    monScale_(dict.lookup("monScale")),
+    monBaseMin_(dict.lookup("monitorBaseMin")),
+    monBaseMax_(dict.lookup("monitorBaseMax")),
+    monitorMax_(readScalar(dict.lookup("monitorMax"))),
     nMonSmooth_(readLabel(dict.lookup("nMonSmooth")))
 {}
 
@@ -101,7 +103,7 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFrom::evaluate
         new volScalarField
         (
             IOobject(name(), Uf.instance(), mesh),
-            sqrt(sqr(monScale_)*monitorFunc(Uf) + 1)
+            baseToMonitor(monitorBase(Uf))
         )
     );
     volScalarField& monitor = tmonitor.ref();

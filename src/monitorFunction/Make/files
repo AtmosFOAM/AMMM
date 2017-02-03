@@ -7,7 +7,14 @@ monitorFunctionMapped.C
 tensor.C
 monitorFunctionFrom/monitorFunctionFrom.C
 monitorFunctionFrom/monitorFunctionFromGradU.C
+monitorFunctionFrom/monitorFunctionFromTanhGradU.C
+monitorFunctionFrom/monitorFunctionFromLinGradU.C
 monitorFunctionFrom/monitorFunctionFromVorticity.C
+monitorFunctionFrom/monitorFunctionFromTanhVorticity.C
+monitorFunctionFrom/monitorFunctionFromTanhQ.C
+monitorFunctionFrom/monitorFunctionFromTanhDiscriminant.C
+monitorFunctionFrom/monitorFunctionFromTanhAntiSym.C
+monitorFunctionFrom/monitorFunctionFromLinQ.C
 monitorFunctionFrom/monitorFunctionFromNone.C
 
 LIB = $(FOAM_USER_LIBBIN)/libmonitorFunction

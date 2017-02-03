@@ -39,7 +39,7 @@ addToRunTimeSelectionTable(monitorFunctionFrom, monitorFunctionFromGradU, dictio
 
 // * * * * * * * * * Protected Member Functions * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromGradU::monitorFunc
+Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromGradU::monitorBase
 (
     const surfaceVectorField& Uf
 ) const
@@ -53,6 +53,26 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromGradU::monitorFunc
             magSqr(fvc::grad(Uf))
         )
     );
+
+    return tmonitor;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromGradU::baseToMonitor
+(
+    const volScalarField& b
+) const
+{
+    const fvMesh& mesh = b.mesh();
+    tmp<volScalarField> tmonitor
+    (
+        new volScalarField
+        (
+            IOobject(name(), b.instance(), mesh),
+            sqrt(b/sqr(monBaseMax() - monBaseMin()) + 1)
+        )
+    );
+    tmonitor.ref() = min(tmonitor.ref(), monitorMax());
 
     return tmonitor;
 }

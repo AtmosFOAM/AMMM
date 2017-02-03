@@ -43,6 +43,9 @@ evince $time/hMesh.pdf &
 gmtFoam hU -region rMesh
 eps2gif hU.gif 0/hU.pdf [1-9]00000/hU.pdf 1e+06/hU.pdf &
 
+gmtFoam monitor -region rMesh
+eps2gif monitor.gif 0/monitor.pdf [1-9]00000/monitor.pdf
+
 # Plot change between initial and final solutions
 time=1e+06
 sumFields $time hDiff $time h 0 h -scale0 1 -scale1 -1

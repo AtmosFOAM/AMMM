@@ -2,11 +2,7 @@ Info << "Reading in monitor fucntion controls from initDict" << endl;
 
 IOdictionary monDict
 (
-    IOobject
-    (
-        "initDict", mesh.time().system(), mesh,
-        IOobject::MUST_READ, IOobject::AUTO_WRITE
-    )
+    IOobject("initDict", mesh.time().system(), mesh, IOobject::MUST_READ)
 );
 
 // The monitor funciton

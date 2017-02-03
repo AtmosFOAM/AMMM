@@ -40,7 +40,7 @@ addToRunTimeSelectionTable(monitorFunctionFrom, monitorFunctionFromVorticity, di
 
 // * * * * * * * * * Protected Member Functions * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromVorticity::monitorFunc
+Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromVorticity::monitorBase
 (
     const surfaceVectorField& Uf
 ) const
@@ -54,6 +54,29 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromVorticity::monitorFunc
             magSqr(fvc::curl(Uf))
         )
     );
+
+    return tmonitor;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromVorticity::baseToMonitor
+(
+    const volScalarField& b
+) const
+{
+    const dimensionedScalar monBaseScale = 1/(monBaseMax() - monBaseMin());
+    //const dimensionedScalar monBaseMid = 0.5*(monBaseMin() + monBaseMax());
+
+    const fvMesh& mesh = b.mesh();
+    tmp<volScalarField> tmonitor
+    (
+        new volScalarField
+        (
+            IOobject(name(), b.instance(), mesh),
+            sqrt(sqr(monBaseScale)*b + 1)
+        )
+    );
+    tmonitor.ref() = min(tmonitor.ref(), monitorMax());
 
     return tmonitor;
 }

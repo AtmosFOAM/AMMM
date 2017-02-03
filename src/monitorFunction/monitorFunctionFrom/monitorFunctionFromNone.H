@@ -54,7 +54,10 @@ protected:
     // Protected Member functions
     
         //- The function used to create the basis of the monitor function
-        tmp<volScalarField> monitorFunc(const surfaceVectorField& Uf) const;
+        tmp<volScalarField> monitorBase(const surfaceVectorField& Uf) const;
+
+        //- The function used to convert the base function into the monitor
+        tmp<volScalarField> baseToMonitor(const volScalarField& b) const;
 
 public:
 

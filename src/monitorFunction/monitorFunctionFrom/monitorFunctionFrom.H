@@ -59,8 +59,14 @@ class monitorFunctionFrom
 {
 private:
     // Private data
-        //- The scaling of the magSqr of monitorFunc
-        const dimensionedScalar monScale_;
+        //- A low value of the base monitor function (for coarse resolution)
+        const dimensionedScalar monBaseMin_;
+        
+        //- A high value of the base monitor function (for fine resolution)
+        const dimensionedScalar monBaseMax_;
+        
+        //- The maximum allowable monitor function (1 is the minumum)
+        const scalar monitorMax_;
         
         //- Number of iterations of laplacian smoothing
         const label nMonSmooth_;
@@ -76,7 +82,11 @@ private:
 protected:
 
         //- The function used to create the basis of the monitor function
-        virtual tmp<volScalarField> monitorFunc(const surfaceVectorField& Uf)
+        virtual tmp<volScalarField> monitorBase(const surfaceVectorField& Uf)
+            const = 0;
+
+        //- The function used to convert the base function into the monitor
+        virtual tmp<volScalarField> baseToMonitor(const volScalarField& b)
             const = 0;
 
 public:
@@ -119,6 +129,18 @@ public:
     
         //- Access
         virtual word name() const = 0;
+
+        //- A low value of the base monitor function (for coarse resolution)
+          const dimensionedScalar& monBaseMin() const {return monBaseMin_;}
+            
+        //- A high value of the base monitor function (for fine resolution)
+          const dimensionedScalar& monBaseMax() const {return monBaseMax_;}
+            
+          //- The maximum allowable monitor function (1 is the minumum)
+          scalar monitorMax() const { return monitorMax_;}
+            
+          //- Number of iterations of laplacian smoothing
+          label nMonSmooth() const {return nMonSmooth_;}
     
         //- The volScalarField of the monitor Function on the given mesh
         //- with smoothing

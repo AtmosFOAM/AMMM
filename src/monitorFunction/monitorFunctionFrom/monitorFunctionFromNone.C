@@ -39,7 +39,7 @@ addToRunTimeSelectionTable(monitorFunctionFrom, monitorFunctionFromNone, diction
 
 // * * * * * * * * * Protected Member Functions * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromNone::monitorFunc
+Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromNone::monitorBase
 (
     const surfaceVectorField& Uf
 ) const
@@ -50,6 +50,25 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromNone::monitorFunc
         new volScalarField
         (
             IOobject(name(), Uf.instance(), mesh),
+            mesh,
+            dimensionedScalar("ones", dimless, scalar(1))
+        )
+    );
+
+    return tmonitor;
+}
+
+Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromNone::baseToMonitor
+(
+    const volScalarField& b
+) const
+{
+    const fvMesh& mesh = b.mesh();
+    tmp<volScalarField> tmonitor
+    (
+        new volScalarField
+        (
+            IOobject(name(), b.instance(), mesh),
             mesh,
             dimensionedScalar("ones", dimless, scalar(1))
         )
