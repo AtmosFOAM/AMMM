@@ -78,6 +78,17 @@ volVectorField u
 );
 u.write();
 
+Info << "Calculating the mesh flux, meshPhi" << endl;
+surfaceScalarField meshPhi
+(
+    IOobject
+    (
+        "meshPhi", runTime.timeName(), rMesh,
+        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
+    ),
+    fvc::meshPhi(u)
+);
+
 Info<< "Initialising the absolute face flux, U" << endl;
 surfaceScalarField U
 (
@@ -118,7 +129,7 @@ Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
 surfaceScalarField dVdt
 (
     IOobject("dVdt", runTime.timeName(), rMesh),
-  - (H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "Uf"))
+  - (H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "divuu"))
   - (two_dxOmega & hUf)
   - g*hf*fvc::snGrad(h)*H.magd(),
     VuBCs

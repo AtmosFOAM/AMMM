@@ -1,0 +1,28 @@
+FoamFile
+{
+    version         1.4;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "constant";
+    local           "";
+
+    class           dictionary;
+    object          gmtDict;
+}
+
+// How to plot
+// Compulsory inputs
+projection "X18c/6c";
+projection2D XY;
+
+FieldsToPlot
+(
+    [h filledContours 0 0 0 "$GMTU/colours/white_colour_white.cpt"]
+    [Uf vectors 1e4 11 "black"]
+);
+
+plotBoundaryDots false;
+annotate "minMax 0 -38000";
+

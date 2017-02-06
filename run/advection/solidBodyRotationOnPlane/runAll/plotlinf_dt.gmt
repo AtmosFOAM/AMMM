@@ -1,0 +1,41 @@
+inputFiles=(runAll/data/orthogonal_100x100_errorNorms.dat
+            runAll/data/nonOrthog_100x100_errorNorms.dat
+            Yumeng/solid_orthogonal_T5_100x100.dat
+            Yumeng/solid_Vshape_T5_100x100.dat)
+
+outFile=plots/linferrors_dt.eps
+col=(3 3 3 3)
+colx=(1 1 1 1)
+legends=("multi d orthogonal"
+         "multi d non-orthogonal"
+         "split orthogonal"
+         "split non-orthogonal")
+
+pens=("1p,blue" "1p,blue,6_6:0"
+      "1p,red"  "1p,red,6_6:0"
+      "1p,black,1_3:0" "1p,black,1_3:0" "1p,black,1_3:0")
+symbols=('c8p' 'x10p' 
+         'c8p' 'x10p'
+         'x0.1p' 'x0.1p' 'x0.1p')
+spens=("1p,blue" "1p,blue"
+      "1p,red"  "1p,red"
+       "0p,black" "0p,black" "0p,black")
+
+xlabel='@~D@~t (s)'
+#ylabel='l@-inf@- error'
+xmin=0.1
+xmax=11
+dx=2
+ddx=2
+dxg=10
+ymin=0.001
+ymax=1
+dy=2
+ddy=2
+dyg=10
+xscale=*1
+yscale=*1
+legPos=x0.1/9.5
+projection=X10cl/10cl
+gv=1
+

@@ -1,8 +1,3 @@
-// Extra geometry for Hodge operators on the new mesh
-HodgeOps H(rMesh);
-faceVol = 1/3.*(H.delta() & rMesh.Sf());
-meshPhi = fvc::meshPhi(u);
-
 // Calculate old V on the new mesh, including updates from old time-level
 V0 = faceVol.oldTime()/faceVol*
 (
@@ -12,14 +7,17 @@ V0 = faceVol.oldTime()/faceVol*
 for (int corr=0; corr<nCorr; corr++)
 {
     // Make the flux relative
-    U -= meshPhi;
-    #include "CourantNo.H"
+    fvc::makeRelative(U, u);
+    if (corr == 0)
+    {
+        #include "CourantNo.H"
+    }
     
     // Explicit part of momentum without Coriolis (or pressure gradient)
-    dVdt = -H.delta() & fvc::interpolate(fvc::div(U, u));
+    dVdt = -H.delta() & fvc::interpolate(fvc::div(U, u), "divuu");
     V = V0 + offCentre*dt*dVdt;
     
-    // Solve pressure equation to project V and U to be divergence free
+    // Solve pressure equation
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
     {
         // In this loop, U is NOT relative
@@ -47,15 +45,20 @@ for (int corr=0; corr<nCorr; corr++)
             V -= offCentre*dt*(two_dxOmega & (Uf - Ug))
                + dt*fvc::snGrad(p)*H.magd();
             u = H.reconstructd(V);
-            //Uf = fvc::interpolate(u);
+            Uf = fvc::interpolate(u, "Uf");
         }
     }
 }
 
 // Updates for next time step
-Uf = fvc::interpolate(u);
 Ufv = Uf - ((Uf & H.delta()) - V)*H.delta()/magSqr(H.delta());
-dVdt = -(H.delta() & fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)")))
-     - (two_dxOmega & (Uf - Ug));
-vorticity = fvc::curl(Uf) & meshNormal;
+dVdt =
+   -(
+        H.delta() & fvc::interpolate
+       (
+           fvc::div(fvc::relative(U,u), u, "div(U,u)"),
+           "divuu"
+       )
+    )
+  - (two_dxOmega & (Uf - Ug));
 

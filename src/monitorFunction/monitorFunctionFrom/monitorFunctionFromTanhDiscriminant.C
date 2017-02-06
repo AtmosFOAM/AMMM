@@ -62,8 +62,6 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromTanhDiscriminant::monit
         D[cellI] = pow(1/3.*invariantII(gradU[cellI]), 3)
                  + sqr(0.5*invariantIII(gradU[cellI]));
     }
-    Info << "D goes from " << min(D.internalField()).value() << " to "
-         << max(D.internalField()).value() << endl;
     
     return tmonitor;
 }

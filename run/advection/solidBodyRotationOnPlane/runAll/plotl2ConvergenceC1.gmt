@@ -1,0 +1,40 @@
+inputFiles=(orthogonal/errorNorms_c1.dat
+            nonOrthog/errorNorms_c1.dat
+      Yumeng/solid_orthogonal_T5_errorNorms_c1.dat
+      Yumeng/solid_Vshape_T5_errorNorms_c1.dat
+            runAll/data/1stOrder.dat
+            runAll/data/2ndOrder.dat
+            runAll/data/3rdOrder.dat)
+outFile=plots/l2errorsC1.eps
+col=(2 2  2 2  2 2 2)
+legends=("multi d orthog" "multi d non"
+         "split orthog" "split non"
+         "1st/2nd/3rd order")
+pens=("1p,blue" "1p,blue,6_6:0" 
+      "1p,red"  "1p,red,6_6:0"
+      "1p,black,1_3:0" "1p,black,1_3:0" "1p,black,1_3:0")
+symbols=('c8p' 'x10p' 
+         'c8p' 'x10p'
+         'x0.1p' 'x0.1p' 'x0.1p')
+spens=("1p,blue" "1p,blue" 
+      "1p,red" "1p,red"
+       "0p,black" "0p,black" "0p,black")
+xlabel='@~D@~x (m)'
+#ylabel='l@-2@- error'
+xmin=20
+xmax=210
+dx=2
+ddx=3
+dxg=2
+ymin=5e-5
+#ymax=0.23
+ymax=5
+dy=10
+ddy=3
+dyg=10
+xscale=*1
+yscale=*1
+#legPos=x0.1/8
+legPos=x6.1/3
+projection=X10cl/8cl
+gv=1

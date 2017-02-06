@@ -1,0 +1,41 @@
+// The FOAM Project // File: fvSchemes
+/*
+-------------------------------------------------------------------------------
+ =========         | dictionary
+ \\      /         |
+  \\    /          | Name:   fvSchemes
+   \\  /           | Family: FoamX configuration file
+    \\/            |
+    F ield         | FOAM version: 2.3
+    O peration     | Product of Nabla Ltd.
+    A and          |
+    M anipulation  | Email: Enquiries@Nabla.co.uk
+-------------------------------------------------------------------------------
+*/
+// FoamX Case Dictionary.
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "constant";
+    local           "";
+
+    class           dictionary;
+    object          solidBodyRotationOnPlaneSetupDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rotationCentre rotationCentre [0 1 0 0 0] (5e3 5e3 500);
+spinSpeed spinSpeed [0 0 -1 0 0] 5.235987756e-3; //0.00314159265;
+initTracerDist initTracerDist [0 1 0 0 0] 2500;
+tracerInitAngle tracerInitAngle [0 0 0 0 0] 90;
+tracerRadius tracerRadius [0 1 0 0 0] 500;
+
+// ************************************************************************* //
+
+

@@ -96,19 +96,19 @@ int main(int argc, char *argv[])
     const int nNonOrthCorr = readLabel(itsDict.lookup("nNonOrthogonalCorrectors"));
     const scalar offCentre = readScalar(rMesh.schemesDict().lookup("offCentre"));
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
     {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.timeName() << endl;
 
         if (!fixedMesh)
         {
             #include "monitorCalc.H"
             #include "refineMesh.H"
             // Update Coriolis fields and geometry things
-            twoOmegaf = beta * rMesh.Cf().component(1)*OmegaHat;
+            twoOmegaf = (f0 + beta * rMesh.Cf().component(1))*OmegaHat;
             two_dxOmega = H.delta() ^ twoOmegaf;
             // Extra geometry for Hodge operators on the new mesh
             HodgeOps H(rMesh);
@@ -119,6 +119,7 @@ int main(int argc, char *argv[])
             pointField newPoints = rMesh.points();
             rMesh.movePoints(newPoints);
         }
+
         #include "fluidEqns.H"
         
         runTime.write();

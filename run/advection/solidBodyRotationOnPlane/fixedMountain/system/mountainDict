@@ -1,0 +1,18 @@
+FoamFile {
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      mountainDict;
+}
+
+type btf;
+domainHeight 1000;
+mountain
+{
+    type coneMountain;
+    peakHeight peakHeight [0 1 0 0 0] 500;
+    mountainCentre (2.5e3 5e3 0);
+    mountainRadius mountainRadius [0 1 0 0 0] 1e3;
+}
+

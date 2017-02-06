@@ -62,8 +62,6 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromTanhAntiSym::monitorBas
         tensor W = 0.5*(gradU[cellI] - gradU[cellI].T());
         m[cellI] = magSqr(W);
     }
-    Info << "m goes from " << min(m.internalField()).value() << " to "
-         << max(m.internalField()).value() << endl;
     
     return tmonitor;
 }

@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      initDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Inputs for setGaussians
+backgroundValue vorticity [0 0 -1 0 0] 0;
+gaussians 2
+(
+    centre [0 1 0 0 0] (10e6 9e6 0)
+    radius [0 1 0 0 0] 1e6
+    max    [0 0 -1 0 0] 1e-4
+
+    centre [0 1 0 0 0] (10e6 5e6 0)
+    radius [0 1 0 0 0] 5e5
+    max    [0 0 -1 0 0] -1e-4
+);
+
+// Input for invertVorticity
+// Background wind
+U0 U0 [0 1 -1 0 0] (0 0 0);
+
+// Input for movingshallowWaterFoamH
+monitorFunctionDynamic monitorFunctionFromNone;
+monitorMax 0;
+nMonSmooth 0;
+monitorBaseMin monitorBaseMin [0 0 0 0 0] 0;
+monitorBaseMax monitorBaseMax [0 0 0 0 0] 0;
+
+// ************************************************************************* //

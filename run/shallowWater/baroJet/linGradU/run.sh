@@ -10,30 +10,13 @@ blockMesh
 mkdir -p constant/rMesh
 cp -r constant/polyMesh constant/rMesh
 
-# Createt initial conditions on the rMesh and plot h and the mesh
+# Createt initial conditions on the rMesh and plot
 time=0
 cp -r init0 0
 setPlaneJet -region rMesh
 gmtFoam -time $time -region rMesh hMesh
 evince $time/hMesh.pdf &
 
-# Iterate, creating an adapted mesh and initial conditions on the mesh
-meshIter=0
-until [ $meshIter -ge 5 ]; do
-    echo Mesh generation iteration $meshIter
-    
-    # Calculate the rMesh based on the monitor function derived from Uf
-    movingshallowWaterFoamH -reMeshOnly
-
-    # Re-create the initial conditions and re-plot
-    setPlaneJet -region rMesh
-    gmtFoam -time $time -region rMesh hMesh
-
-    gmtFoam -time $time -region rMesh monitor
-    evince $time/monitor.pdf &
-    
-    let meshIter+=1
-done
 
 # Solve the shallow water equations
 movingshallowWaterFoamH >& log & sleep 0.01; tail -f log
@@ -77,4 +60,16 @@ time=1e+06
 postProcess -func rMesh/vorticity2D -time $time -region rMesh
 gmtFoam -time $time vorticity -region rMesh
 evince $time/vorticity.pdf &
+
+# animation of the vorticity
+postProcess -func rMesh/vorticity2D -region rMesh
+gmtFoam vorticity -region rMesh
+eps2gif vorticity.gif 0/vorticity.pdf ?????/vorticity.pdf ??????/vorticity.pdf \
+        ???????/vorticity.pdf
+
+# animation of various fields
+field=monitor
+field=mesh
+eps2gif $field.gif ?/$field.pdf ?????/$field.pdf ??????/$field.pdf \
+        ???????/$field.pdf
 

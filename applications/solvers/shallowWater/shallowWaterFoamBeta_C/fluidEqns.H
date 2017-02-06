@@ -8,10 +8,13 @@ for (int corr=0; corr<nCorr; corr++)
 {
     // Make the flux relative
     fvc::makeRelative(U, h, u);
-    #include "CourantNo.H"
+    if (corr == 0)
+    {
+        #include "CourantNo.H"
+    }
     
     // Explicit part of momentum without Coriolis (or pressure gradient)
-    dVdt = -H.delta() & fvc::interpolate(fvc::div(U, u), "Uf");
+    dVdt = -H.delta() & fvc::interpolate(fvc::div(U, u), "divuu");
     V = V0 + offCentre*dt*dVdt;
     
     // Solve pressure equation
@@ -55,7 +58,7 @@ for (int corr=0; corr<nCorr; corr++)
 
 // Updates for next time step
 hUf = hUf - ((hUf & H.delta()) - V)*H.delta()/magSqr(H.delta());
-dVdt = -(H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "Uf"))
+dVdt = -(H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "divuu"))
      - (two_dxOmega & hUf)
      - g*hf*fvc::snGrad(h)*H.magd();
 divUold = fvc::div(U);

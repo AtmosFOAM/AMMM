@@ -89,17 +89,16 @@ surfaceScalarField V
 Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
 surfaceScalarField dVdt
 (
-    "dVdt",
-    -H.delta() & 
-    (
-        fvc::interpolate(fvc::div(U-meshPhi, u, "div(U,u)"))
-      //+ 2*(Omega^(Uf - Ug))
-    )
+    IOobject("dVdt", runTime.timeName(), rMesh),
+  - H.delta() &
+    fvc::interpolate(fvc::div(fvc::relative(U,u), u, "div(U,u)"), "divuu"),
+  //- two_dxOmega & Uf) - fvc::snGrad(p)*H.magd(),
+    VuBCs
 );
 dVdt.oldTime();
 
 Info << "Storing the old value of V, V0 on the new mesh" << endl;
-surfaceScalarField V0("V", V);
+surfaceScalarField V0("V0", V);
 
 // fix no flow boundaries
 forAll(V.boundaryField(), patchi)
@@ -112,20 +111,11 @@ forAll(V.boundaryField(), patchi)
     )
     {
         V.boundaryFieldRef()[patchi] == 0;
+        V0.boundaryFieldRef()[patchi] == 0;
+        dVdt.boundaryFieldRef()[patchi] == 0;
     }
     else if(utype == "fixedValue")
     {
         u.boundaryFieldRef()[patchi] == Uf.boundaryField()[patchi];
     }
 }
-
-// Vorticity (for post-processing)
-volScalarField vorticity
-(
-    IOobject
-    (
-        "vorticity", runTime.timeName(), rMesh,
-        IOobject::NO_READ, IOobject::AUTO_WRITE
-    ),
-    fvc::curl(Uf) & meshNormal
-);

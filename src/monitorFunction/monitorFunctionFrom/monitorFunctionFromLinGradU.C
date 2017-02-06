@@ -55,8 +55,6 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromLinGradU::monitorBase
         )
     );
     volScalarField& b = tmonitor.ref();
-    Info << "magGradU goes from " << min(b.internalField()).value() << " to "
-         << max(b.internalField()).value() << ", " << flush;
 
     return tmonitor;
 }
@@ -83,12 +81,6 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromLinGradU::baseToMonitor
         if (b[cellI] < monBaseMin().value()) m[cellI] = 1;
         else if(b[cellI] > monBaseMax().value()) m[cellI] = monitorMax();
     }
-    
-    Info << "\nb goes from " << min(b.internalField()).value() << " to "
-         << max(b.internalField()).value()
-         << " monitor goes from "
-         << min(tmonitor.ref().internalField()).value() << " to "
-         << max(tmonitor.ref().internalField()).value() << endl;
 
     return tmonitor;
 }

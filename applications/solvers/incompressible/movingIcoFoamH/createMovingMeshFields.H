@@ -2,11 +2,7 @@ Info << "Reading in monitor fucntion controls from initDict" << endl;
 
 IOdictionary monDict
 (
-    IOobject
-    (
-        "initDict", mesh.time().system(), mesh,
-        IOobject::MUST_READ, IOobject::NO_WRITE
-    )
+    IOobject("initDict", mesh.time().system(), mesh, IOobject::MUST_READ)
 );
 
 // The monitor funciton
@@ -35,10 +31,12 @@ monitorR.write();
 Info << "Creating in the mesh displacement potential, mmPhi" << endl;
 volScalarField mmPhi
 (
-    IOobject("mmPhi",runTime.timeName(), mesh, IOobject::READ_IF_PRESENT),
-    mesh,
-    dimensionedScalar("mmPhi", dimArea, scalar(0)),
-    "zeroGradient"
+    IOobject
+    (
+        "mmPhi",runTime.timeName(), mesh,
+        IOobject::MUST_READ, IOobject::AUTO_WRITE
+    ),
+    mesh
 );
 
 // The gradient of Phi on faces
@@ -62,16 +60,3 @@ volScalarField source("source", detHess - equiDistMean/monitor);
 
 // The laplacian of (A,mmPhi) at the old time
 volScalarField laplacianAPhi("laplacianAPhi", fvc::laplacian(cofacA,mmPhi));
-
-// The mesh flux (although this mesh in not moving)
-volVectorField gradPhi("gradPhi", fvc::grad(mmPhi));
-surfaceScalarField meshPhiZero
-(
-    IOobject
-    (
-        "meshPhi", runTime.timeName(), mesh,
-        IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
-    ),
-    fvc::meshPhi(gradPhi)
-);
-

@@ -61,9 +61,6 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromTanhQ::monitorBase
     {
         Q[cellI] = invariantII(gradU[cellI]);
     }
-    
-    Info << "Q goes from " << min(Q.internalField()).value() << " to "
-         << max(Q.internalField()).value() << ", " << flush;
 
     return tmonitor;
 }
@@ -87,13 +84,6 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromTanhQ::baseToMonitor
           + 0.5*(monitorMax()-1)*tanh(monBaseScale*(b - monBaseMid))
         )
     );
-    
-    Info << "\nb goes from " << min(b.internalField()).value() << " to "
-         << max(b.internalField()).value() << " monitorMax = " << monitorMax()
-         << " monBaseScale = " << monBaseScale << " monBaseMid = "
-         << monBaseMid << " monitor goes from "
-         << min(tmonitor.ref().internalField()).value() << " to "
-         << max(tmonitor.ref().internalField()).value() << endl;
 
     return tmonitor;
 }
