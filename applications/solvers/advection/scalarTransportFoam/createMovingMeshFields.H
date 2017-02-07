@@ -4,6 +4,7 @@ IOdictionary monDict
 (
     IOobject("initDict", mesh.time().system(), mesh, IOobject::MUST_READ)
 );
+const int nMonSmooth = readLabel(monDict.lookup("nMonSmooth"));
 
 // The monitor funciton
 autoPtr<monitorFunctionFrom> monitorFunc(monitorFunctionFrom::New(monDict));

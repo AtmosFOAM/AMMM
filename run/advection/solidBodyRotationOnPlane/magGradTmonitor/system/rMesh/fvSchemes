@@ -24,7 +24,7 @@ FoamFile
 
 ddtSchemes
 {
-    default Euler;
+    default Euler; //CrankNicolson 1;
 }
 offCentre 0.5;
 

@@ -12,7 +12,7 @@ volScalarField T
     ),
     rMesh
 );
-
+volScalarField Told("Told", T);
 
 Info<< "Reading field phi\n" << endl;
 
@@ -35,7 +35,7 @@ volVectorField U
         runTime.timeName(),
         rMesh,
         IOobject::READ_IF_PRESENT,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     ),
     fvc::reconstruct(phi)
 );
@@ -57,14 +57,6 @@ surfaceVectorField Uf
 Uf += (phi - (Uf & rMesh.Sf()))*rMesh.Sf()/sqr(rMesh.magSf());
 Uf.write();
 
-// Store div(phi,T) for time-stepping
-volScalarField divPhiT = fvc::div(phi, T);
-divPhiT.oldTime();
-
-// Calculate divU for checking divergence free
-volScalarField divU("divU", fvc::div(phi));
-divU.write();
-
 Info << "Calculating the rMesh flux, meshPhi" << endl;
 surfaceScalarField meshPhi
 (
@@ -76,14 +68,21 @@ surfaceScalarField meshPhi
     fvc::meshPhi(U)
 );
 
-// Gradient of T for the monitor function
-surfaceVectorField gradT
+// The change in volume per time-step
+volScalarField volRatio
 (
-    IOobject
-    (
-        "gradT", runTime.timeName(), rMesh,
-        IOobject::NO_READ, IOobject::AUTO_WRITE
-    ),
-    fvc::interpolate(fvc::grad(T, "gradT"), "gradT")
+    IOobject("volRatio", runTime.timeName(), rMesh),
+    rMesh,
+    dimensionedScalar("volRatio", dimless, scalar(1))
 );
 
+// Also advect a uniform tracer
+volScalarField uniT
+(
+    IOobject("uniT", runTime.timeName(), rMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    rMesh,
+    dimensionedScalar("uniT", dimless, scalar(0.5)),
+    T.boundaryField().types()
+);
+volScalarField uniTold("uniTold", uniT);

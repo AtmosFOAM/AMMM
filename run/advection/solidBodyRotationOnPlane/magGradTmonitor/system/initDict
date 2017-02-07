@@ -16,10 +16,10 @@ FoamFile
 
 
 // Input for movingScalarTransportFoam
-monitorFunctionDynamic monitorFunctionFromNone;
-monitorBaseMin  monitorBaseMin [ 0 0 -1 0 0 ] 0;
-monitorBaseMax  monitorBaseMax [ 0 0 -1 0 0 ] 0;
-monitorMax      1;
-nMonSmooth      0;
+monitorFunctionDynamic monitorFunctionFromGradU;
+monitorBaseMin  monitorBaseMin [ 0 -2 0 0 0 ] 0;
+monitorBaseMax  monitorBaseMax [ 0 -2 0 0 0 ] 3e-7;
+monitorMax      16;
+nMonSmooth      4;
 
 // ************************************************************************* //

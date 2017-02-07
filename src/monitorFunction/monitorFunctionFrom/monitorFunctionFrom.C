@@ -107,16 +107,16 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFrom::evaluate
         )
     );
     volScalarField& monitor = tmonitor.ref();
-    // Smooth the monitor function
-    for(int iSmooth = 0; iSmooth < nMonSmooth_; iSmooth++)
-    {
-        monitor += 0.25*fvc::laplacian
-        (
-            1/sqr(mesh.deltaCoeffs()),
-            monitor,
-            "laplacian(monitor)"
-        );
-    }
+//    // Smooth the monitor function
+//    for(int iSmooth = 0; iSmooth < nMonSmooth_; iSmooth++)
+//    {
+//        monitor += 0.25*fvc::laplacian
+//        (
+//            1/sqr(mesh.deltaCoeffs()),
+//            monitor,
+//            "laplacian(monitor)"
+//        );
+//    }
 
     return tmonitor;
 }

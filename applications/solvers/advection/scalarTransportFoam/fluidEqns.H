@@ -1,32 +1,18 @@
+// Make the flux relative
+#include "CourantNo.H"
+
+fvc::makeRelative(phi, U);
+
+// First parts of Crank-Nicolson time-stepping
+Told == volRatio*T
+      - dt*(1-offCentre)*fvc::div(phi, T, "div(phi,T)");
+uniTold == volRatio*uniT
+         - dt*(1-offCentre)*fvc::div(phi, uniT, "div(phi,T)");
+
 // Fixed number of iterations per time-step
 for (int corr = 0; corr < nRKstages; corr++)
 {
-    // Make the flux relative
-    fvc::makeRelative(phi, U);
-    if (corr == 0)
-    {
-        #include "CourantNo.H"
-    }
-
-    fvScalarMatrix TEqn
-    (
-        fvm::ddt(T)
-      + fvc::div(phi, T)
-    );
-    TEqn.solve();
-
-//    // Time-stepping by hand to check both approaches
-//    divPhiT = fvc::div(phi, T)*mesh.V();
-//    T = 
-//    (
-//        T.oldTime().mesh.V0() - dt*
-//        (
-//            (1-offCentre)*divPhiT.oldTime()
-//          + offCentre*divPhiT
-//        )
-//    )/mesh.V();
+    T    == Told    - dt*offCentre*fvc::div(phi, T);
+    uniT == uniTold - dt*offCentre*fvc::div(phi, uniT, "div(phi,T)");
 }
 
-
-// Gradient of T for the monitor function
-gradT = fvc::interpolate(fvc::grad(T, "gradT"), "gradT");

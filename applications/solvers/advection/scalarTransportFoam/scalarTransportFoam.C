@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
     {
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "\nTime = " << runTime.timeName() << endl;
 
         if (!fixedMesh)
         {
@@ -106,6 +106,8 @@ int main(int argc, char *argv[])
 
             // Update fluxes for the new mesh
             v->applyTo(phi);
+            U = fvc::reconstruct(phi);
+            volRatio.field() = rMesh.V0()/rMesh.V();
         }
         else
         {
