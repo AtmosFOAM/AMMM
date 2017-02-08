@@ -17,13 +17,9 @@ cp -r init_0 0
 setGaussians initDict -region rMesh
 # Invert to find the wind field
 invertVorticity -time $time initDict -region rMesh
-gmtFoam -time $time vorticity -region rMesh
-evince $time/vorticity.pdf &
 
 # Calculate the height in balance and plot
 setBalancedHeight -region rMesh
-gmtFoam -time $time hU -region rMesh
-evince $time/hU.pdf &
 
 # Iterate, creating an adapted mesh and initial conditions on the mesh
 meshIter=0
@@ -38,15 +34,20 @@ until [ $meshIter -ge 5 ]; do
     # Invert to find the wind field
     invertVorticity -time $time initDict -region rMesh
 
-    # Calculate the height in balance and plot
-    setBalancedHeight -region rMesh
-    
     let meshIter+=1
 done
-gmtFoam -time $time mesh -region rMesh
-evince $time/mesh.pdf &
-gmtFoam -time $time vorticity -region rMesh
+# Calculate the height in balance and plot
+setBalancedHeight -region rMesh
 gmtFoam -time $time hU -region rMesh
+evince $time/hU.pdf &
+
+postProcess -func rMesh/vorticity2D -region rMesh -time $time
+rm $time/rMesh/vorticity
+gmtFoam -time $time vorticity -region rMesh
+evince $time/vorticity.pdf &
+
+gmtFoam -time $time monitor -region rMesh
+evince $time/monitor.pdf &
 
 # Solve the SWE
 movingshallowWaterFoamH >& log & sleep 0.01; tail -f log

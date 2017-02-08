@@ -17,47 +17,44 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          fvSchemes;
+    object          controlDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default         none;
-}
+application buoyantFoam;
 
-gradSchemes
-{
-    default         Gauss linear;
-}
+startFrom       latestTime;
 
-divSchemes
-{
-    default none;
-}
+startTime       0;
 
-laplacianSchemes
-{
-    default         Gauss linear uncorrected;
-}
+stopAt          endTime;
 
-interpolationSchemes
-{
-    default         linear;
-}
+endTime         10e5;
 
-snGradSchemes
-{
-    default         none;
-    snGrad(Phi)     uncorrected;
-    snGrad(mmPhi)   uncorrected;
-}
+deltaT          200;
 
-fluxRequired
-{
-    default         no;
-}
+writeControl    runTime;
 
+writeInterval   1e5;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable no;
+
+adjustTimeStep no;
+maxCo          1;
+
+libs            ("libshallowWater.so");
 
 // ************************************************************************* //

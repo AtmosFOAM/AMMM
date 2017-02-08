@@ -67,7 +67,7 @@ mkdir -p animategraphics
 ln -s ../0/UT.pdf animategraphics/T_0.pdf
 for field in T mesh uniT; do
     for time in [0-9]*; do
-        t=`echo $time | awk {'print $1*4'}`
+        t=`echo $time | awk {'print $1/50'}`
         ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
     done
 done

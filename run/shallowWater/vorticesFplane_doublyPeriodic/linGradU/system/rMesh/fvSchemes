@@ -26,7 +26,7 @@ ddtSchemes
 {
     default Euler;
 }
-offCentre 0.6;
+offCentre 1;
 
 gradSchemes
 {
@@ -38,8 +38,8 @@ gradSchemes
 
 divSchemes
 {
-    default none;
-    div(U,u)   Gauss linearUpwind linearUpwind;
+    default     none;
+    div(U,u)    Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
@@ -55,8 +55,8 @@ interpolationSchemes
     default         none;
     interpolate(h)  linear;
     H               linear;
-    Uf linear;
-    divuu linear;
+    Uf              linear;
+    divuu           linear;
 }
 
 snGradSchemes

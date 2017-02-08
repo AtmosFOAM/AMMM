@@ -4,6 +4,7 @@ IOdictionary monDict
 (
     IOobject("initDict", mesh.time().system(), mesh, IOobject::MUST_READ)
 );
+const int nMonSmooth = readLabel(monDict.lookup("nMonSmooth"));
 
 // The monitor funciton
 autoPtr<monitorFunctionFrom> monitorFunc(monitorFunctionFrom::New(monDict));
@@ -11,7 +12,7 @@ autoPtr<monitorFunctionFrom> monitorFunc(monitorFunctionFrom::New(monDict));
 // The monitor function on both meshes
 volScalarField monitor
 (
-    IOobject("monitor", runTime.timeName(), mesh),
+    IOobject("monitor", runTime.timeName(), mesh, IOobject::NO_READ, IOobject::AUTO_WRITE),
     mesh,
     dimensionedScalar("monitor", dimless, scalar(1))
 );
@@ -60,4 +61,3 @@ volScalarField source("source", detHess - equiDistMean/monitor);
 
 // The laplacian of (A,mmPhi) at the old time
 volScalarField laplacianAPhi("laplacianAPhi", fvc::laplacian(cofacA,mmPhi));
-
