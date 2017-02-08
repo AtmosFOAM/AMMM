@@ -39,6 +39,7 @@ Description
 #include "fvcPosDefCof.H"
 #include "monitorFunctionFrom.H"
 #include "velocityField.H"
+#include "terrainFollowingTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 using namespace Foam;
@@ -64,29 +65,41 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ, IOobject::AUTO_WRITE
         )
     );
+    // Create the mesh which includes orography
+    fvMesh pMesh
+    (
+        Foam::IOobject
+        (
+            "pMesh", runTime.timeName(), runTime,
+            IOobject::MUST_READ, IOobject::AUTO_WRITE
+        )
+    );
 
     #include "createFields.H"
     #include "createMovingMeshFields.H"
+    #include "createMountain.H"
     
     if (reMeshOnly)
     {
         #include "refineMesh.H"
+        #include "raiseOrography.H"
         rMesh.write();
+        pMesh.write();
         mmPhi.write();
-        monitorR.write();
-        Info << "Created new rMesh. End\n" << endl;
+        monitorP.write();
+        Info << "Created new rMesh and pMesh. End\n" << endl;
         return 0;
     }
     // Read the number of iterations each time-step
-    const int nRKstages = readLabel(rMesh.solutionDict().lookup("nRKstages"));
+    const int nRKstages = readLabel(pMesh.solutionDict().lookup("nRKstages"));
     // The off-centering of the time-stepping scheme
-    const scalar offCentre = readScalar(rMesh.schemesDict().lookup("offCentre"));
+    const scalar offCentre = readScalar(pMesh.schemesDict().lookup("offCentre"));
 
     IOdictionary dict
     (
         IOobject
         (
-            "advectionDict", rMesh.time().system(), rMesh,
+            "advectionDict", pMesh.time().system(), pMesh,
             IOobject::READ_IF_PRESENT, IOobject::NO_WRITE
         )
     );
@@ -103,16 +116,18 @@ int main(int argc, char *argv[])
         {
             #include "monitorCalc.H"
             #include "refineMesh.H"
+            #include "raiseOrography.H"
 
             // Update fluxes for the new mesh
-            v->applyTo(phi);
+            v->applyTo(phiR);
+            setInternalAndBoundaryValues(phi, phiR);
             U = fvc::reconstruct(phi);
-            volRatio.field() = rMesh.V0()/rMesh.V();
+            volRatio.field() = pMesh.V0()/pMesh.V();
         }
         else
         {
-            pointField newPoints = rMesh.points();
-            rMesh.movePoints(newPoints);
+            pointField newPoints = pMesh.points();
+            pMesh.movePoints(newPoints);
         }
 
         #include "fluidEqns.H"

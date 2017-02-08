@@ -2,8 +2,8 @@ surfaceVectorField gradT = fvc::interpolate(fvc::grad(T, "gradT"), "gradT");
 
 Info << "Monitor function goes from " << flush;
 
-monitorR = monitorFunc().evaluate(gradT);
-setInternalAndBoundaryValues(monitor, monitorR);
+monitorP = monitorFunc().evaluate(gradT);
+setInternalAndBoundaryValues(monitor, monitorP);
 
 // Smoothing of the monitor function on the computational mesh
 for(int iSmooth = 0; iSmooth < nMonSmooth; iSmooth++)

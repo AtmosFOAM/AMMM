@@ -16,3 +16,5 @@ for (int corr = 0; corr < nRKstages; corr++)
     uniT == uniTold - dt*offCentre*fvc::div(phi, uniT, "div(phi,T)");
 }
 
+fvc::makeAbsolute(phi, U);
+

@@ -9,47 +9,45 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       surfaceVectorField;
+    class       surfaceScalarField;
     location    "0";
-    object      Uf;
+    object      phiR;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 3 -1 0 0 0 0];
 
-internalField  uniform (0 0 0);
+internalField  uniform 0;
 
 boundaryField
 {
     south
     {
-        type            calculated;
-        value           uniform (0 0 0);
+        type            cyclic;
+        value           uniform 0;
     }
     north
     {
-        type            calculated;
-        value           uniform (0 0 0);
+        type            cyclic;
+        value           uniform 0;
     }
     east
     {
-        type            calculated;
-        value           uniform (0 0 0);
+        type            cyclic;
+        value           uniform 0;
     }
     west
     {
-        type            calculated;
-        value           uniform (0 0 0);
+        type            cyclic;
+        value           uniform 0;
     }
     top
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            empty;
     }
     ground
     {
-        type            calculated;
-        value           uniform (0 0 0);
+        type            empty;
     }
 }
 

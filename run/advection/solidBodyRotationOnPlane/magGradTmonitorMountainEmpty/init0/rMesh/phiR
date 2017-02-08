@@ -9,13 +9,13 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
+    class       surfaceScalarField;
     location    "0";
-    object      T;
+    object      phiR;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 3 -1 0 0 0 0];
 
 internalField  uniform 0;
 
@@ -23,31 +23,31 @@ boundaryField
 {
     south
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            cyclic;
+        value           uniform 0;
     }
     north
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            cyclic;
+        value           uniform 0;
     }
     east
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            cyclic;
+        value           uniform 0;
     }
     west
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            cyclic;
+        value           uniform 0;
     }
     top
     {
-        type            zeroGradient;
+        type            empty;
     }
     ground
     {
-        type            zeroGradient;
+        type            empty;
     }
 }
 

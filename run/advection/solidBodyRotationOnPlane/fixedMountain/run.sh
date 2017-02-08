@@ -16,6 +16,7 @@ terrainFollowingMesh
 # Write out cell volumes for post-processing
 time=0
 postProcess -func writeCellVolumes -time $time
+gmtFoam -time 0 mountainOver
 
 rm 0/U 0/Uf
 
@@ -29,6 +30,16 @@ for time in [1-9]*; do
     ln -s ../0/V $time/V
 done
 
-gmtFoam UT
+gmtFoam UT -time 0
+gmtFoam T
 eps2gif UT.gif 0/UT.pdf ??/UT.pdf ???/UT.pdf
+
+# Make links for animategraphics
+field=T
+mkdir -p animategraphics
+ln -s ../0/UT.pdf animategraphics/T_0.pdf
+for time in [1-9]*; do
+    let t=$time/50
+    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
+done
 

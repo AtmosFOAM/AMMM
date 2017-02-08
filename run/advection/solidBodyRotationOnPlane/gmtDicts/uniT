@@ -18,12 +18,13 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [uniT filledContours 0 0 0 "$GMTU/colours/white_blue_red.cpt"]
+    [uniT filledContours 0.489 0.511 0.002 "$GMTU/colours/red_white_blue.cpt"]
 );
 
 // options
 //region "3e3/7e3/7e3/10e3";
-boundaryMarks "a1e3/a1e3";
+//boundaryMarks "a1e3/a1e3";
 //separateLegend true;
 //overlay true;
 plotBoundaryDots false;
+annotate "minMax 2000 500";

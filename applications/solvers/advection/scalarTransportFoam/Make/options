@@ -6,6 +6,7 @@ EXE_INC = \
     -I$(ATMOSFOAM_TOOLS_SRC)/sampling/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/finiteVolume/lnInclude \
     -I$(ATMOSFOAM_SRC)/prescribedFields/lnInclude \
+    -I$(ATMOSFOAM_SRC)/orography/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/morePrescribedFields/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/geometry/lnInclude \
     -I$(AMMM_SRC)/shallowWater/lnInclude \

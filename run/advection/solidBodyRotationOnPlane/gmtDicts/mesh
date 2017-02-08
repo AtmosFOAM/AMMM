@@ -18,12 +18,12 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [V    contours 5e6 9e6 1e6 "black"]
+    [V    contours 5e6 9e6 1e6 "2pt,red"]
     [none mesh      "black"]
 );
 
 // options
 //region "0/100/0/100";
-boundaryMarks "a1e3/a1e3";
+//boundaryMarks "a1e3/a1e3";
 separateLegend true;
 plotBoundaryDots false;

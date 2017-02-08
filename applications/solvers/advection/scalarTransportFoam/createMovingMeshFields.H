@@ -16,18 +16,18 @@ volScalarField monitor
     mesh,
     dimensionedScalar("monitor", dimless, scalar(1))
 );
-volScalarField monitorR
+volScalarField monitorP
 (
     IOobject
     (
-        "monitor", runTime.timeName(), rMesh,
+        "monitor", runTime.timeName(), pMesh,
         IOobject::NO_READ, IOobject::AUTO_WRITE
     ),
-    rMesh,
+    pMesh,
     dimensionedScalar("monitor", dimless, scalar(1))
 );
 #include "monitorCalc.H"
-monitorR.write();
+monitorP.write();
 
 Info << "Creating in the mesh displacement potential, mmPhi" << endl;
 volScalarField mmPhi

@@ -6,11 +6,11 @@ volScalarField T
     (
         "T",
         runTime.timeName(),
-        rMesh,
+        pMesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
     ),
-    rMesh
+    pMesh
 );
 volScalarField Told("Told", T);
 
@@ -20,10 +20,10 @@ surfaceScalarField phi
 (
     IOobject
     (
-        "phi", runTime.timeName(), rMesh,
+        "phi", runTime.timeName(), pMesh,
         IOobject::MUST_READ, IOobject::AUTO_WRITE
     ),
-    rMesh
+    pMesh
 );
 
 // Read U if present, otherwise create and write (not used)
@@ -33,7 +33,7 @@ volVectorField U
     (
         "U",
         runTime.timeName(),
-        rMesh,
+        pMesh,
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
@@ -48,21 +48,21 @@ surfaceVectorField Uf
     (
         "Uf",
         runTime.timeName(),
-        rMesh,
+        pMesh,
         IOobject::READ_IF_PRESENT,
         IOobject::NO_WRITE
     ),
     linearInterpolate(fvc::reconstruct(phi))
 );
-Uf += (phi - (Uf & rMesh.Sf()))*rMesh.Sf()/sqr(rMesh.magSf());
+Uf += (phi - (Uf & pMesh.Sf()))*pMesh.Sf()/sqr(pMesh.magSf());
 Uf.write();
 
-Info << "Calculating the rMesh flux, meshPhi" << endl;
+Info << "Calculating the pMesh flux, meshPhi" << endl;
 surfaceScalarField meshPhi
 (
     IOobject
     (
-        "meshPhi", runTime.timeName(), rMesh,
+        "meshPhi", runTime.timeName(), pMesh,
         IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE
     ),
     fvc::meshPhi(U)
@@ -71,18 +71,27 @@ surfaceScalarField meshPhi
 // The change in volume per time-step
 volScalarField volRatio
 (
-    IOobject("volRatio", runTime.timeName(), rMesh),
-    rMesh,
+    IOobject("volRatio", runTime.timeName(), pMesh),
+    pMesh,
     dimensionedScalar("volRatio", dimless, scalar(1))
 );
 
 // Also advect a uniform tracer
 volScalarField uniT
 (
-    IOobject("uniT", runTime.timeName(), rMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    rMesh,
-    dimensionedScalar("uniT", dimless, scalar(0.5)),
-    T.boundaryField().types()
+    IOobject("uniT", runTime.timeName(), pMesh,
+             IOobject::MUST_READ, IOobject::AUTO_WRITE),
+    pMesh
 );
 volScalarField uniTold("uniTold", uniT);
+
+// Fluxes on the rMesh
+surfaceScalarField phiR
+(
+    IOobject
+    (
+        "phiR", runTime.timeName(), rMesh, IOobject::MUST_READ
+    ),
+    rMesh
+);
+

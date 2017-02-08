@@ -11,7 +11,7 @@ FoamFile
     format      ascii;
     class       surfaceScalarField;
     location    "0";
-    object      phi;
+    object      phiR;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -23,33 +23,31 @@ boundaryField
 {
     south
     {
-        type            calculated;
+        type            cyclic;
         value           uniform 0;
     }
     north
     {
-        type            calculated;
+        type            cyclic;
         value           uniform 0;
     }
     east
     {
-        type            calculated;
+        type            cyclic;
         value           uniform 0;
     }
     west
     {
-        type            calculated;
+        type            cyclic;
         value           uniform 0;
     }
     top
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            empty;
     }
     ground
     {
-        type            calculated;
-        value           uniform 0;
+        type            empty;
     }
 }
 
