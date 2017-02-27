@@ -20,16 +20,27 @@ evince 0/hMesh.pdf &
 movingshallowWaterFoamH -fixedMesh >& log & sleep 0.01; tail -f log
 
 # Plot the final solutions
-time=1e+06
+time=1000000
 gmtFoam -time $time hU -region rMesh
 evince $time/hU.pdf &
 
 # Plot animation of solutions
-gmtFoam hU -region rMesh
-eps2gif hU.gif 0/hU.pdf [1-9]00000/hU.pdf 1e+06/hU.pdf &
+field=vorticity
+postProcess -func rMesh/vorticity2D -region rMesh
+gmtFoam vorticity -region rMesh
+#eps2gif hU.gif 0/hU.pdf [1-9]00000/hU.pdf 1e+06/hU.pdf &
+
+# links for latex animations
+mkdir -p animategraphics
+#ln -s ../0/UT.pdf animategraphics/T_0.pdf
+for time in [0-9]*; do
+    let t=$time/100000
+    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
+done
+
 
 # Plot change between initial and final solutions
-time=1e+06
+time=1000000
 sumFields $time hDiff $time h 0 h -scale0 1 -scale1 -1
 sumFields $time UDiff $time U 0 U -scale0 1 -scale1 -1
 gmtFoam -time $time hUDiff
@@ -51,7 +62,7 @@ awk '{if ($1 == 1*$1) print $1, $2/'$l1', $3/'$l2', $4/'$li'}' \
     globalSumhDiff.dat >> hErrors.dat
 
 # Calculate and plot the vorticity
-time=1e+06
+time=100000
 postProcess -func rMesh/vorticity2D -time $time -region rMesh
 gmtFoam -time $time vorticity -region rMesh
 evince $time/vorticity.pdf &

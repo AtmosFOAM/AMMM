@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       dictionary;
+    location    "system";
+    object      initDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+/*// Wide jet
+u0 u0 [0 1 -1 0 0 0 0] 80;
+jetCentre jetCentre [0 1  0 0 0 0 0] 6e6;
+jetHalfWidth jetHalfWidth [0 1 0 0 0] 96e6;
+h0 h0 [0 1 0 0 0] 10e3;
+*/
+// Barotropically unstable jet
+Umax Umax [0 1 -1 0 0 0 0] 80;
+jetCentre jetCentre [0 1  0 0 0 0 0] 6e6;
+jetHalfWidth jetHalfWidth [0 1 0 0 0] 1.5e6;
+h0 h0 [0 1 0 0 0] 10e3;
+
+bumpHeight bumpHeight [0 1 0 0 0] 60;
+bumpCentre bumpCentre [0 1 0 0 0] (18e6 6e6 0);
+bumpWidth bumpWidth [0 1 0 0 0] (1.5e6 2e6 0);
+
+monitorFunctionDynamic monitorFunctionFromLinGradU;
+monitorBaseMin  monitorBaseMin [ 0 0 -1 0 0 ] 0;
+monitorBaseMax  monitorBaseMax [ 0 0 -1 0 0 ] 2e-4;
+monitorMax      4;
+nMonSmooth      8;
+
+// ************************************************************************* //
