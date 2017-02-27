@@ -1,3 +1,0 @@
-setupLinear_advection.C
-
-EXE = $(FOAM_USER_APPBIN)/setupLinear_advection

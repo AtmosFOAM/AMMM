@@ -1,3 +1,0 @@
-ringSetFlow.C
-
-EXE = $(FOAM_USER_APPBIN)/ringSetFlow

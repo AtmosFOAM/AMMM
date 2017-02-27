@@ -15,4 +15,4 @@ wmake $makeType icoFoam
 wmake $makeType orography
 wmake $makeType ringMesh
 wmake $makeType monitorFunction
-wmake $makeType shallowWater
+
