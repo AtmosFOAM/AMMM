@@ -26,7 +26,7 @@ ddtSchemes
 {
     default Euler;
 }
-offCentre 1;
+offCentre 0.6;
 
 gradSchemes
 {
@@ -34,6 +34,7 @@ gradSchemes
     linearUpwind Gauss linear;
     grad(streamFunction) Gauss linear;
     curl((streamFunction*(0,0,1))) Gauss linear;
+    grad(h) Gauss linear;
 }
 
 divSchemes
@@ -57,6 +58,9 @@ interpolationSchemes
     H               linear;
     Uf              linear;
     divuu           linear;
+    interpolate(reconstructd((Ufone&delta))) linear;
+    interpolate(volIntegrate((Ufone&S))) linear;
+    interpolate(grad(h)) linear;
 }
 
 snGradSchemes

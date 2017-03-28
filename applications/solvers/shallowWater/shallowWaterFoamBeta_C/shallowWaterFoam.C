@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         else
         {
             pointField newPoints = rMesh.points();
-            rMesh.movePoints(newPoints);
+            //rMesh.movePoints(newPoints);
         }
 
         #include "fluidEqns.H"

@@ -72,3 +72,9 @@ postProcess -func rMesh/vorticity2D -region rMesh
 gmtFoam vorticity -region rMesh
 eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
 
+# Test the Hodge reconstruction operator
+time=0
+testHodgeRecon -time $time -region rMesh
+gmtFoam -time $time -region rMesh UfDiff
+gv $time/UfDiff.pdf &
+

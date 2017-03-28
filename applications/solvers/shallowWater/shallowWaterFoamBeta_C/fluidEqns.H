@@ -1,7 +1,7 @@
 // Calculate old V on the new mesh, including updates from old time-level
 V0 = faceVol.oldTime()/faceVol*
 (
-    (H.delta() & hUf) + (1-offCentre)*dt*dVdt.oldTime()
+    (hUf + (1-offCentre)*dt*dhudt.oldTime()) & H.delta()
 );
 
 for (int corr=0; corr<nCorr; corr++)
@@ -14,14 +14,14 @@ for (int corr=0; corr<nCorr; corr++)
     }
     
     // Explicit part of momentum without Coriolis (or pressure gradient)
-    dVdt = -H.delta() & fvc::interpolate(fvc::div(U, u), "divuu");
+    dVdt = -(H.delta() & fvc::interpolate(fvc::div(U, u), "divuu"));
     V = V0 + offCentre*dt*dVdt;
     
     // Solve pressure equation
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
     {
         // In this loop, U is NOT relative
-        U = H.ddirToFlux(V - offCentre*dt*(two_dxOmega & hUf))
+        U = H.ddirToFlux(V - offCentre*dt*hf*(two_dxOmega & Uf))
             //H.ddirToFlux(V - offCentre*dt*((twoOmegaf ^ hUf) & H.delta()))
           - H.ddirToFluxCorr(dt*g*hf*fvc::snGrad(h)*H.magd());
 
@@ -33,7 +33,7 @@ for (int corr=0; corr<nCorr; corr++)
           + offCentre*fvc::div(U)
           - fvm::laplacian(dt*sqr(offCentre)*g*hf, h, "h")
         );
-        
+
         if(nonOrth == nNonOrthCorr && corr == nCorr-1)
         {
             hEqn.solve(rMesh.solver(h.name() + "Final"));
@@ -42,7 +42,7 @@ for (int corr=0; corr<nCorr; corr++)
         {
             hEqn.solve(rMesh.solver(h.name()));
         }
-
+        
         if (nonOrth == nNonOrthCorr)
         {
             U += hEqn.flux()/offCentre;
@@ -58,9 +58,9 @@ for (int corr=0; corr<nCorr; corr++)
 
 // Updates for next time step
 hUf = hUf - ((hUf & H.delta()) - V)*H.delta()/magSqr(H.delta());
-dVdt = -(H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "divuu"))
-     - (two_dxOmega & hUf)
-     - g*hf*fvc::snGrad(h)*H.magd();
+dVdt -= (two_dxOmega & hUf) + g*hf*fvc::snGrad(h)*H.magd();
+dhudt = fvc::interpolate(H.reconstructd(dVdt));
+dhudt += (dVdt - (dhudt & H.delta()))*H.delta()/sqr(H.magd());
 divUold = fvc::div(U);
 //hTotal = h + h0;
 

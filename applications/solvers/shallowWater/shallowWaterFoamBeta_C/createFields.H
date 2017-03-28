@@ -19,6 +19,7 @@ volScalarField h
     ),
     rMesh
 );
+h.correctBoundaryConditions();
 
 // h interpolated on to faces
 surfaceScalarField hf
@@ -125,16 +126,17 @@ surfaceScalarField V
 //);
 //hTotal.write();
 
-Info << "Initialising dVdt for trapezoidal implicit time-stepping" << endl;
+
+Info << "Initialising dhudt and dVdt for trapezoidal implicit time-stepping" << endl;
+
 surfaceScalarField dVdt
 (
     IOobject("dVdt", runTime.timeName(), rMesh),
-  - (H.delta() & fvc::interpolate(fvc::div(fvc::relative(U,h,u), u, "div(U,u)"), "divuu"))
-  - (two_dxOmega & hUf)
-  - g*hf*fvc::snGrad(h)*H.magd(),
+    -(H.delta() & fvc::interpolate(fvc::div(U,u), "Uf"))
+    -hf*(two_dxOmega & Uf)
+    -g*hf*fvc::snGrad(h)*H.magd(),
     VuBCs
 );
-dVdt.oldTime();
 
 Info << "Storing the old value of V, V0 on the new mesh" << endl;
 surfaceScalarField V0("V0", V);
@@ -163,3 +165,12 @@ forAll(V.boundaryField(), patchi)
         u.boundaryFieldRef()[patchi] == Uf.boundaryField()[patchi];
     }
 }
+
+surfaceVectorField dhudt
+(
+    IOobject("dhudt", runTime.timeName(), rMesh),
+    fvc::interpolate(H.reconstructd(dVdt))
+);
+dhudt += (dVdt - (dhudt & H.delta()))*H.delta()/sqr(H.magd());
+dhudt.oldTime();
+

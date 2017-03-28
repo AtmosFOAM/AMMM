@@ -26,39 +26,36 @@ ddtSchemes
 {
     default Euler;
 }
-offCentre 0.6;
+offCentre 0.5;
 
 gradSchemes
 {
     default         none;
-    linearUpwind    Gauss linear;
-    grad(streamFunction) Gauss linear;
-    curl((streamFunction*(0,0,1))) Gauss linear;
+    linearUpwind    leastSquares;
     grad(h)         Gauss linear;
 }
 
 divSchemes
 {
-    default none;
-    div(U,u)   Gauss linearUpwind linearUpwind;
+    default             none;
+    div(U,u)            Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
 {
     default         none;
-    laplacian(streamFunction) Gauss linear corrected;
-    h                         Gauss linear uncorrected;
-    laplacian(monitor)        Gauss linear uncorrected;
+    h Gauss linear uncorrected;
 }
 
 interpolationSchemes
 {
-    default         none;
-    interpolate(h)  linear;
-    H               linear;
+    default        none;
+    interpolate(h) linear;
     Uf linear;
-    divuu linear;
+    H  linear;
     interpolate(grad(h)) linear;
+    divuu          linear;
+    interpolate(reconstructd(dVdt)) linear;
 }
 
 snGradSchemes
