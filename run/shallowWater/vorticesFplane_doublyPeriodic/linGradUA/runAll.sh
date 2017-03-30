@@ -50,14 +50,17 @@ gmtFoam -time $time monitor -region rMesh
 evince $time/monitor.pdf &
 
 # Solve the SWE
-movingshallowWaterFoamH >& log & sleep 0.01; tail -f log
+movingshallowWaterFoamA >& log & sleep 0.01; tail -f log
 
 # Post process
 time=700000
 gmtFoam -time $time hU -region rMesh
 evince $time/hU.pdf &
 
-postProcess -func rMesh/vorticity2D -time $time -region rMesh
+rm $time/rMesh/U
+ln -s u $time/rMesh/U
+postProcess -func vorticity -time $time -region rMesh
+writeuvw -time $time -region rMesh vorticity
 gmtFoam -time $time vorticity -region rMesh
 evince $time/vorticity.pdf &
 
@@ -70,5 +73,6 @@ gmtFoam vorticity -region rMesh -time $time':'
 # Animation of vorticity
 postProcess -func rMesh/vorticity2D -region rMesh
 gmtFoam vorticity -region rMesh
-eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
+eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf \
+        ???????/vorticity.pdf
 

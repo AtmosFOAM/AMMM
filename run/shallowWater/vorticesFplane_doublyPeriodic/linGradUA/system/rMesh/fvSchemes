@@ -32,9 +32,10 @@ gradSchemes
 {
     default         none;
     linearUpwind    leastSquares;
-    grad(streamFunction) leastSquares;
-    curl((streamFunction*(0,0,1))) leastSquares
-    grad(h)         Gauss midPoint;
+    grad(streamFunction) Gauss linear;
+    curl((streamFunction*(0,0,1))) Gauss linear;
+    grad(h)         Gauss linear;
+    curl(U)         Gauss linear;
 }
 
 divSchemes
@@ -46,21 +47,21 @@ divSchemes
 laplacianSchemes
 {
     default         none;
-    h                         Gauss midPoint uncorrected;
-    laplacian(streamFunction) Gauss midPoint corrected;
-    laplacian(monitor)        Gauss midPoint uncorrected;
+    h               Gauss linear uncorrected;
+    laplacian(streamFunction) Gauss linear corrected;
+    laplacian(monitor)        Gauss linear uncorrected;
 }
 
 interpolationSchemes
 {
-    default         none;
-    interpolate(h)  midPoint;
-    H               midPoint;
-    Uf              midPoint;
-    H               midPoint;
-    interpolate(grad(h)) midPoint;
-    divuu           midPoint;
-    interpolate(reconstructd(dVdt)) midPoint;
+    default         linear;
+    interpolate(h)  linear;
+    H               linear;
+    Uf linear;
+    H  linear;
+    interpolate(grad(h)) linear;
+    divuu          linear;
+    interpolate(reconstructd(dVdt)) linear;
 }
 
 snGradSchemes

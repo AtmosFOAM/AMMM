@@ -20,7 +20,7 @@ projection2D XY;
 FieldsToPlot
 (
     [h filledContours 8000 11000 250 "$GMTU/colours/red_white_blue.cpt"]
-    [Uf vectors 1e4 5 "black"]
+    [u vectors 1e4 5 "black"]
 );
 
 plotBoundaryDots false;

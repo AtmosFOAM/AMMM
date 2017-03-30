@@ -19,10 +19,11 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [h filledContours 8000 11000 250 "$GMTU/colours/red_white_blue.cpt"]
-    [Uf vectors 1e4 5 "black"]
+    [monitor filledContours 1 4 0.25 "$GMTU/colours/white_blue_red.cpt"]
+    [none mesh "black"]
 );
 
+// Options
+annotate "minMax 0 -50000";
 plotBoundaryDots false;
-annotate "minMax 0 -38000";
 
