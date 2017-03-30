@@ -80,6 +80,16 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createMovingMeshFields.H"
     
+    // Read in mesh solver options
+    const int maxMAiters = !reMeshOnly ? 
+                           readLabel(mesh.solutionDict().lookup("maxMAiters"))
+                         : 100;
+    const dimensionedScalar maxMeshVelocity
+    (
+        mesh.solutionDict().lookup("maxMeshVelocity")
+    );
+    const dimensionedScalar maxMeshMovement = maxMeshVelocity*dt;
+    
     if (reMeshOnly)
     {
         #include "refineMesh.H"

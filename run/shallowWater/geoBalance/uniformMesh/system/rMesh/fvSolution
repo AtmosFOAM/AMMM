@@ -20,14 +20,14 @@ solvers
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-8;
+        tolerance        1e-10;
         relTol           0.01;
     }
     hFinal
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-8;
+        tolerance        1e-10;
         relTol           0;
     }
 }
@@ -39,6 +39,8 @@ iterations
 }
 
 initialisation
-{}
+{
+    maxIters 200;
+}
 
 // ************************************************************************* //

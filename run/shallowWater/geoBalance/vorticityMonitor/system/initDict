@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       dictionary;
+    location    "system";
+    object      initDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+monitorFunctionDynamic monitorFunctionFromVorticity;
+monScale        monScale [ 0 0 1 0 0 ] 1e4;
+nMonSmooth      0;
+monitorBaseMin monitorBaseMin [0 0 -1 0 0] 0;
+monitorBaseMax monitorBaseMax [0 0 -1 0 0] 1e-4;
+monitorMax 1;
+
+
+
+// ************************************************************************* //

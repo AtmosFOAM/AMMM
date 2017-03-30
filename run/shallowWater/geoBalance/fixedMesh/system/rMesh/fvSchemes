@@ -44,13 +44,14 @@ divSchemes
 laplacianSchemes
 {
     default         none;
-    h Gauss linear uncorrected;
+    h               Gauss linear uncorrected;
 }
 
 interpolationSchemes
 {
-    default        none;
-    interpolate(h) linear;
+    default         none;
+    interpolate(h)  linear;
+    H               linear;
     Uf linear;
     H  linear;
     interpolate(grad(h)) linear;

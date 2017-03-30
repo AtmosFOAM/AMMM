@@ -20,7 +20,7 @@ evince 0/hMesh.pdf &
 movingshallowWaterFoamH -fixedMesh >& log & sleep 0.01; tail -f log
 
 # Difference between solutions
-time=500
+time=10000
 sumFields $time UDiff $time Uf 0 Uf -scale1 -1 -region rMesh
 sumFields $time hDiff  $time h  0 h  -scale1 -1 -region rMesh
 gmtFoam -time $time -region rMesh hUDiff

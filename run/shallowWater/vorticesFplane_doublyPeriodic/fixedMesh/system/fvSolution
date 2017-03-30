@@ -35,4 +35,7 @@ solvers
     }
 }
 
+maxMAiters 0;
+maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 0;
+
 // ************************************************************************* //

@@ -23,7 +23,7 @@ FieldsToPlot
     [vorticity filledContours -1.05e-4 1.05e-4 1e-5 "$GMTU/colours/red_white_blue.cpt"]
     //[vorticity filledContours 0 0 0 "$GMTU/colours/red_white_blue.cpt"]
     [vorticity2D filledContours -1.05e-4 1.05e-4 1e-5 "$GMTU/colours/red_white_blue.cpt"]
-    [Uf vectors 1e4 5 "black"]
+    //[Uf vectors 1e4 5 "black"]
 );
 
 //separateLegend true;

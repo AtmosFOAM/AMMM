@@ -55,6 +55,7 @@ interpolationSchemes
     H  linear;
     interpolate(grad(h)) linear;
     divuu          linear;
+    interpolate(reconstructd(dVdt)) linear;
 }
 
 snGradSchemes

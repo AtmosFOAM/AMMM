@@ -20,10 +20,9 @@ solvers
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-8;
+        tolerance        1e-10;
         relTol           0.01;
     }
-
     hFinal
     {
         $h;
@@ -33,20 +32,20 @@ solvers
     {
         solver PCG;
         preconditioner DIC;
-        tolerance 1e-7;
-        relTol 0;
+        tolerance        1e-10;
+        relTol           0;
     }
 }
 
 iterations
 {
-    nCorrectors      3;
-    nNonOrthogonalCorrectors 0;
+    nCorrectors      2;
+    nNonOrthogonalCorrectors 2;
 }
 
 initialisation
 {
-    iterations 20;
+    maxIters 200;
 }
 
 // ************************************************************************* //
