@@ -27,7 +27,6 @@ gmtFoam -time $time vorticity -region rMesh
 evince $time/vorticity.pdf &
 
 # Solve the incompressibe Euler equations
-
 movingIcoFoamH -fixedMesh >& log & sleep 0.01; tail -f log
 
 # Post process
@@ -48,5 +47,5 @@ gmtFoam vorticity -region rMesh -time $time':'
 # Animation of vorticity
 postProcess -func rMesh/vorticity2D -region rMesh
 gmtFoam vorticity -region rMesh
-eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
+eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
 

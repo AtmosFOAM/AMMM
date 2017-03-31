@@ -34,12 +34,14 @@ evince $time/vorticity.pdf &
 
 # Only re-calcualte and re-plot recent times
 time=200000
-postProcess -func rMesh/vorticity2D -region rMesh -time $time':'
-gmtFoam vorticity -region rMesh -time $time':'
+postProcess -func vorticity -time $time':'
+writeuvw vorticity -time $time':'
+gmtFoam vorticity -time $time':'
 
 
 # Animation of vorticity
-postProcess -func rMesh/vorticity2D -region rMesh
-gmtFoam vorticity -region rMesh
-eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
+postProcess -func vorticity
+writeuvw vorticity
+gmtFoam vorticity
+eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
 

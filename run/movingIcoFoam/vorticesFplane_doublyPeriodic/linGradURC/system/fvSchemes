@@ -24,26 +24,22 @@ FoamFile
 
 ddtSchemes
 {
-    default CrankNicolson 1;
+    ddt(gradPhi)    Euler;
 }
 
 gradSchemes
 {
     default         Gauss linear;
-    grad(p)         Gauss linear;
 }
 
 divSchemes
 {
     default none;
-    div(phi,U)   Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
 {
-    default         none;
-    laplacian(nu,U) Gauss linear uncorrected;
-    laplacian((1|A(U)),p) Gauss linear corrected;
+    default         Gauss linear uncorrected;
 }
 
 interpolationSchemes
@@ -54,13 +50,13 @@ interpolationSchemes
 snGradSchemes
 {
     default         none;
-    snGrad(p)       corrected;
+    snGrad(Phi)     uncorrected;
+    snGrad(mmPhi)   uncorrected;
 }
 
 fluxRequired
 {
     default         no;
-    p;
 }
 
 
