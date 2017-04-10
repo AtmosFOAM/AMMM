@@ -40,3 +40,12 @@ writeuvw vorticity
 gmtFoam vorticity
 eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
 
+# Make links for animategraphics
+field=vorticity
+DT=100000
+mkdir -p animategraphics
+for time in [0-9]*; do
+    let t=$time/$DT
+    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
+done
+

@@ -10,7 +10,6 @@ EXE_INC = \
     -I$(ATMOSFOAM_TOOLS_SRC)/geometry/lnInclude \
     -I$(AMMM_SRC)/shallowWater/lnInclude \
     -I$(AMMM_SRC)/monitorFunction/lnInclude
-    
 
 EXE_LIBS = \
     -lfiniteVolume \
@@ -25,4 +24,3 @@ EXE_LIBS = \
     -lmorePrescribedFields \
     -lgeometry \
     -lorography -lgdal
-

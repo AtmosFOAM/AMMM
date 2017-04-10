@@ -67,4 +67,3 @@ for time in [1-9]*; do
     let t=$time/50
     ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
 done
-

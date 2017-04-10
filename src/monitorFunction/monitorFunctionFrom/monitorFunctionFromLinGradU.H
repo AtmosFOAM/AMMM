@@ -55,15 +55,26 @@ class monitorFunctionFromLinGradU
 :
     public monitorFunctionFrom
 {
+private:
+    // Private data
+        //- A low value of the base monitor function (for coarse resolution)
+        const dimensionedScalar monBaseMin_;
+        
+        //- A high value of the base monitor function (for fine resolution)
+        const dimensionedScalar monBaseMax_;
+        
+        //- The maximum allowable monitor function (1 is the minumum)
+        const scalar monitorMax_;
+
 protected:
     // Protected Member functions
     
         //- The function used to create the basis of the monitor function
-        //- In this case the Q invariant of the velocity gradient
         tmp<volScalarField> monitorBase(const surfaceVectorField& Uf) const;
 
         //- The function used to convert the base function into the monitor
         tmp<volScalarField> baseToMonitor(const volScalarField& b) const;
+
 public:
 
     //- Runtime type information
@@ -72,7 +83,7 @@ public:
 
     // Constructors
 
-        //- Construct from Time and dictionary
+        //- Construct from dictionary
         monitorFunctionFromLinGradU
         (
             const IOdictionary& dict
@@ -86,6 +97,15 @@ public:
     
         //- Access
         word name() const { return "monitorFunctionFromLinGradU"; }
+
+        //- A low value of the base monitor function (for coarse resolution)
+          const dimensionedScalar& monBaseMin() const {return monBaseMin_;}
+            
+        //- A high value of the base monitor function (for fine resolution)
+          const dimensionedScalar& monBaseMax() const {return monBaseMax_;}
+            
+          //- The maximum allowable monitor function (1 is the minumum)
+          scalar monitorMax() const { return monitorMax_;}
 };
 
 

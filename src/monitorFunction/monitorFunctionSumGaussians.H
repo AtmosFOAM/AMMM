@@ -65,6 +65,9 @@ class monitorFunctionSumGaussians
         //- Scaling to apply to the square of the sum of the Gaussians
         dimensionedScalar monScale_;
         
+        //- Maximum value of the monitor function
+        const dimensionedScalar monMax_;
+
         //- Number of applications of laplacian smoothing to the monitor
         label nMonSmooth_;
     
@@ -101,6 +104,9 @@ public:
              
         //- Scaling to apply to the square of the sum of the Gaussians
         const dimensionedScalar& monScale() const { return monScale_; }
+        
+        //- Maximum value of the monitor function
+        const dimensionedScalar& monMax() const { return monMax_; }
         
         //- Number of applications of laplacian smoothing to the monitor
         label nMonSmooth() { return nMonSmooth_; }

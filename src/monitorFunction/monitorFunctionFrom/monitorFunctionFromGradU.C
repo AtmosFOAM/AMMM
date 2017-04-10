@@ -84,7 +84,10 @@ Foam::monitorFunctionFromGradU::monitorFunctionFromGradU
     const IOdictionary& dict
 )
 :
-    monitorFunctionFrom(dict)
+    monitorFunctionFrom(dict),
+    monBaseMin_(dict.lookup("monitorBaseMin")),
+    monBaseMax_(dict.lookup("monitorBaseMax")),
+    monitorMax_(readScalar(dict.lookup("monitorMax")))
 {}
 
 

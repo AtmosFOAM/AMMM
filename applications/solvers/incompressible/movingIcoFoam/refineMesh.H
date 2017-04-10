@@ -1,6 +1,10 @@
 bool converged = false;
 for(int nMAit = 0; nMAit < 10 && !converged; nMAit++)
 {
+    // Update Hessian and its determinant
+    Hessian = fvc::grad(gradPhif);
+    detHess = fvc::det(Hessian + tensor::I);
+
     // mean equidistribution, c
     equiDistMean = fvc::domainIntegrate(detHess)
         /fvc::domainIntegrate(1/monitor);
@@ -30,10 +34,6 @@ for(int nMAit = 0; nMAit < 10 && !converged; nMAit++)
     gradPhif = fvc::interpolate(fvc::grad(mmPhi));
     gradPhif += (fvc::snGrad(mmPhi) - (gradPhif & mesh.Sf())/mesh.magSf())
                 *mesh.Sf()/mesh.magSf();
-
-    // Update Hessian and its determinant
-    Hessian = fvc::grad(gradPhif);
-    detHess = fvc::det(Hessian + tensor::I);
 }
 
 // Map gradPhi onto vertices in order to create the new mesh

@@ -1,24 +1,15 @@
 // Calculate absolute flux from the mapped surface velocity
 phi = rMesh.Sf() & Uf;
 
-//CorrectPhi
-//(
-//    U, phi, p, dimensionedScalar("rAUf", dimTime, 1), geometricZeroField(),
-//    piso
-//);
-
 // Make the flux relative to the mesh motion
 fvc::makeRelative(phi, U);
 
-//MRF.correctBoundaryVelocity(U);
-
 // Momentum predictor
-tmp<fvVectorMatrix> tUEqn
+fvVectorMatrix UEqn
 (
     fvm::ddt(U)
   + fvm::div(phi, U)
 );
-fvVectorMatrix& UEqn = tUEqn.ref();
 
 if (piso.momentumPredictor())
 {
@@ -37,41 +28,13 @@ while (piso.correct())
       + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
     );
 
-//    MRF.makeRelative(phiHbyA);
-
-//    if (p.needReference())
-//    {
-//        fvc::makeRelative(phiHbyA, U);
-//        adjustPhi(phiHbyA, U, p);
-//        fvc::makeAbsolute(phiHbyA, U);
-//    }
-
-    tmp<volScalarField> rAtU(rAU);
-
-//    if (piso.consistent())
-//    {
-//        rAtU = 1.0/max(1.0/rAU - UEqn.H1(), 0.1/rAU);
-//        phiHbyA +=
-//            fvc::interpolate(rAtU() - rAU)*fvc::snGrad(p)*mesh.magSf();
-//        HbyA -= (rAU - rAtU())*fvc::grad(p);
-//    }
-
-    if (piso.nCorrPISO() <= 1)
-    {
-        tUEqn.clear();
-    }
-
-//    // Update the pressure BCs to ensure flux consistency
-//    constrainPressure(p, U, phiHbyA, rAtU(), MRF);
-
     // Non-orthogonal pressure corrector loop
     while (piso.correctNonOrthogonal())
     {
         // Pressure corrector
-
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
+            fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
         );
 
         pEqn.setReference(pRefCell, pRefValue);
@@ -84,7 +47,7 @@ while (piso.correct())
         }
     }
 
-    U = HbyA - rAtU*fvc::grad(p);
+    U = HbyA - rAU*fvc::grad(p);
     U.correctBoundaryConditions();
 
     {

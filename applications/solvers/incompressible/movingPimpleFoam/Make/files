@@ -1,0 +1,3 @@
+movingPimpleFoam.C
+
+EXE = $(FOAM_APPBIN)/movingPimpleFoam

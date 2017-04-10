@@ -51,6 +51,17 @@ class monitorFunctionFromVorticity
 :
     public monitorFunctionFrom
 {
+private:
+    // Private data
+        //- A low value of the base monitor function (for coarse resolution)
+        const dimensionedScalar monBaseMin_;
+        
+        //- A high value of the base monitor function (for fine resolution)
+        const dimensionedScalar monBaseMax_;
+        
+        //- The maximum allowable monitor function (1 is the minumum)
+        const scalar monitorMax_;
+
 protected:
     // Protected Member functions
     
@@ -81,6 +92,16 @@ public:
     
         //- Access
         word name() const { return "monitorFunctionFromVorticity"; }
+
+        //- A low value of the base monitor function (for coarse resolution)
+          const dimensionedScalar& monBaseMin() const {return monBaseMin_;}
+            
+        //- A high value of the base monitor function (for fine resolution)
+          const dimensionedScalar& monBaseMax() const {return monBaseMax_;}
+            
+          //- The maximum allowable monitor function (1 is the minumum)
+          scalar monitorMax() const { return monitorMax_;}
+            
 };
 
 

@@ -51,6 +51,7 @@ monitorFunctionSumGaussians::monitorFunctionSumGaussians
     backgroundValue_(dict.lookup("backgroundValue")),
     gaussians_(dict.lookup("gaussians")),
     monScale_(dict.lookup("monScale")),
+    monMax_(dict.lookup("monMax")),
     nMonSmooth_(readLabel(dict.lookup("nMonSmooth")))
 {}
 
@@ -78,7 +79,7 @@ tmp<volScalarField> monitorFunctionSumGaussians::map
         mon += monScale_*gaussians_[ig].field(newMesh);
     }
     
-    mon = sqrt(1 + sqr(mon));
+    mon = min(mon, monMax());
     
     // Apply laplacian smoothing
     for(label i = 0; i < nMonSmooth_; i++)

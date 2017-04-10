@@ -59,15 +59,6 @@ class monitorFunctionFrom
 {
 private:
     // Private data
-        //- A low value of the base monitor function (for coarse resolution)
-        const dimensionedScalar monBaseMin_;
-        
-        //- A high value of the base monitor function (for fine resolution)
-        const dimensionedScalar monBaseMax_;
-        
-        //- The maximum allowable monitor function (1 is the minumum)
-        const scalar monitorMax_;
-        
         //- Number of iterations of laplacian smoothing
         const label nMonSmooth_;
 
@@ -130,15 +121,6 @@ public:
         //- Access
         virtual word name() const = 0;
 
-        //- A low value of the base monitor function (for coarse resolution)
-          const dimensionedScalar& monBaseMin() const {return monBaseMin_;}
-            
-        //- A high value of the base monitor function (for fine resolution)
-          const dimensionedScalar& monBaseMax() const {return monBaseMax_;}
-            
-          //- The maximum allowable monitor function (1 is the minumum)
-          scalar monitorMax() const { return monitorMax_;}
-            
           //- Number of iterations of laplacian smoothing
           label nMonSmooth() const {return nMonSmooth_;}
     

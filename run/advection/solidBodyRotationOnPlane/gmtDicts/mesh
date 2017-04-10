@@ -18,7 +18,6 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [V    contours 5e6 9e6 1e6 "2pt,red"]
     [none mesh      "black"]
 );
 

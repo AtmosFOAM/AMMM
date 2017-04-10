@@ -67,10 +67,19 @@ gmtFoam vorticity -time $time':'
 # Animation of vorticity
 postProcess -func vorticity -region rMesh
 writeuvw vorticity -region rMesh
-gmtFoam vorticity -region rMesh
-eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
+gmtFoam vorticityMesh -region rMesh
+eps2gif vorticityMesh.gif 0/vorticityMesh.pdf ??????/vorticityMesh.pdf ???????/vorticityMesh.pdf
 
 # Animation of the mesh
 gmtFoam -region rMesh mesh
 eps2gif mesh.gif 0/mesh.pdf ??????/mesh.pdf ???????/mesh.pdf
+
+# Make links for animategraphics
+field=vorticityMesh
+DT=100000
+mkdir -p animategraphics
+for time in [0-9]*; do
+    let t=$time/$DT
+    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
+done
 

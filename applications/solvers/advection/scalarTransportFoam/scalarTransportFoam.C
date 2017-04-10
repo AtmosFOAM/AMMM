@@ -79,6 +79,12 @@ int main(int argc, char *argv[])
     #include "createMovingMeshFields.H"
     #include "createMountain.H"
     
+    const dimensionedScalar maxMeshVelocity
+    (
+        mesh.solutionDict().lookup("maxMeshVelocity")
+    );
+    const dimensionedScalar maxMeshMovement = maxMeshVelocity*dt;
+
     if (reMeshOnly)
     {
         #include "refineMesh.H"

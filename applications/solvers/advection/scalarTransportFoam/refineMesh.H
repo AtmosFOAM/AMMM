@@ -23,7 +23,7 @@ for(int nMAit = 0; nMAit < 10 && !converged; nMAit++)
         );
         mmPhiEqn.setReference(0, scalar(0));
         solverPerformance sp = mmPhiEqn.solve();
-        if (iCorr == 0) converged = sp.nIterations() <= 2;
+        if (iCorr == 0) converged = sp.nIterations() <= 1;
     }
 
     // Calculate gradient of Phi on faces and correct the normal component
@@ -38,5 +38,23 @@ for(int nMAit = 0; nMAit < 10 && !converged; nMAit++)
 
 // Map gradPhi onto vertices in order to create the new mesh
 pointVectorField gradPhiP = fvc::faceToPointReconstruct(fvc::snGrad(mmPhi));
-rMesh.movePoints(mesh.points() + gradPhiP);
+
+// Control the mesh velocity
+pointField oldPoints = rMesh.points();
+pointField newPoints = mesh.points() + gradPhiP;
+vectorField meshMovement = newPoints - oldPoints;
+
+// Scale meshMovement so that mesh doesn't move more than maxMeshMovement
+if (!reMeshOnly)
+{
+    dimensionedScalar maxMM = max(mag(meshMovement));
+    if (maxMM > maxMeshMovement)
+    {
+        meshMovement *= maxMeshMovement.value()/maxMM.value();
+        Info << "Scaling mesh movement from maximum of " << maxMM.value()
+             << " to " << maxMeshMovement.value() << endl;
+    }
+}
+
+rMesh.movePoints(oldPoints + meshMovement);
 

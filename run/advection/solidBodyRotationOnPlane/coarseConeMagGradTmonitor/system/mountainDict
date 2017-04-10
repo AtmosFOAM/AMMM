@@ -1,0 +1,30 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      mountainDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Specify the mountain
+type btf;
+domainHeight 1000;
+mountain
+{
+    type coneMountain;
+    peakHeight peakHeight [0 1 0 0 0] 0; //500;
+    mountainCentre (2.5e3 5e3 0);
+    mountainRadius mountainRadius [0 1 0 0 0] 1e3;
+}
+

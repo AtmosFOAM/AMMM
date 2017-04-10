@@ -1,0 +1,32 @@
+FoamFile
+{
+    version         1.4;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "constant";
+    local           "";
+
+    class           dictionary;
+    object          gmtDict;
+}
+
+// How to plot
+// Compulsory inputs
+projection "X18c/18c";
+projection2D XY;
+plotBoundaryDots false;
+
+FieldsToPlot
+(
+    [vorticityz filledContours -1.05e-4 1.05e-4 1e-5 "$GMTU/colours/red_white_blue.cpt"]
+    [none mesh "black"]
+);
+
+//separateLegend true;
+//region "-25e3/25e3/0/25e3";
+annotate "minMax 0 -38000";
+//boundaryMarks "5e3/5e3";
+
+

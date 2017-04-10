@@ -1,0 +1,122 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "";
+    local           "";
+
+    class           dictionary;
+    object          blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1000;
+
+a 5;
+twoa 10;
+am 5;
+ap 5;
+squeeze 1;
+expand  1;
+
+nx 13;
+ny 13;
+
+vertices
+(
+    (0 0 0)
+    ($a 0 0)
+    ($twoa 0 0)
+    (0 $ap 0)
+    ($a $am 0)
+    ($twoa $ap 0)
+    (0 $twoa 0)
+    ($a $twoa 0)
+    ($twoa $twoa 0)
+    (0 0 1)
+    ($a 0 1)
+    ($twoa 0 1)
+    (0 $ap 1)
+    ($a $am 1)
+    ($twoa $ap 1)
+    (0 $twoa 1)
+    ($a $twoa 1)
+    ($twoa $twoa 1)
+);
+
+blocks
+(
+	hex (0 1 4 3 9 10 13 12) ($nx $ny 1)
+	    edgeGrading (1 1 1 1 $squeeze $expand $expand $squeeze 1 1 1 1)
+	hex (1 2 5 4 10 11 14 13) ($nx $ny 1)
+	    edgeGrading (1 1 1 1 $expand $squeeze $squeeze $expand 1 1 1 1)
+	hex (3 4 7 6 12 13 16 15) ($nx $ny 1)
+	    edgeGrading (1 1 1 1 $squeeze $expand $expand $squeeze 1 1 1 1)
+	hex (4 5 8 7 13 14 17 16) ($nx $ny 1)
+	    edgeGrading (1 1 1 1 $expand $squeeze $squeeze $expand 1 1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    south
+    {
+        type            cyclic;
+        neighbourPatch  north;
+        matchTolerance 1;
+        faces           ((0 1 10 9) (1 2 11 10));
+    }
+    north
+    {
+        type            cyclic;
+        neighbourPatch  south;
+        matchTolerance 1;
+        faces           ((15 16 7 6) (16 17 8 7));
+    }
+    east
+    {
+        type            cyclic;
+        neighbourPatch  west;
+        matchTolerance 1;
+        faces           ((9 12 3 0) (12 15 6 3));
+    }
+    west
+    {
+        type            cyclic;
+        neighbourPatch  east;
+        matchTolerance 1;
+        faces           ((2 5 14 11) (5 8 17 14));
+    }
+    top
+    {
+        type            empty;
+        faces           ((9 10 13 12) (10 11 14 13)
+                         (12 13 16 15) (13 14 17 16));
+    }
+    ground
+    {
+        type            empty;
+        faces           ((0 3 4 1) (1 4 5 2) (3 6 7 4) (4 7 8 5));
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
