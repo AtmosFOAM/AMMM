@@ -1,0 +1,3 @@
+pimpleOTFoam.C
+
+EXE = $(FOAM_APPBIN)/pimpleOTFoam

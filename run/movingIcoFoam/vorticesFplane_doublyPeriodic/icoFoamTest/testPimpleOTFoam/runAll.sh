@@ -9,9 +9,11 @@ cp ../0/rMesh/polyMesh/points 0/polyMesh
 cp ../0/mmPhi 0/cMesh/meshPot
 cp ../0/rMesh/p ../0/rMesh/U 0
 ln -sf ../system/dynamicMeshDict constant/dynamicMeshDict
+ln -sf ../system/transportProperties constant/transportProperties
+ln -sf ../system/turbulenceProperties constant/turbulenceProperties
 
 # Solve the incompressible Euler
-movingIcoFoamNew >& log &
+pimpleOTFoam >& log &
 tail -f log
 
 # Compare with a saved solution
@@ -35,4 +37,11 @@ for var in detHess laplacianAPhi source gradPhif ; do
     echo That was differences for $var at time $time. 
     read -p "Press return to continue"
 done
+
+# Calculate and plot the vorticity
+time=100000
+postProcess -func vorticity -time $time
+writeuvw -time $time vorticity
+gmtFoam -time $time vorticity
+evince $time/vorticity.pdf &
 

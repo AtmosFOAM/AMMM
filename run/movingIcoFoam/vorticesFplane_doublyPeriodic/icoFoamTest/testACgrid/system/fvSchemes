@@ -31,18 +31,20 @@ gradSchemes
 {
     default         none;
     grad(p)         Gauss linear;
-    grad(pcorr)     Gauss linear;
+    //grad(pcorr)     Gauss linear;
     linearUpwind    leastSquares;
     grad(streamFunction) Gauss linear;
     curl((streamFunction*(0,0,1))) Gauss linear;
     curl(U)         Gauss linear;
     grad(curl(Uf))  leastSquares;
+    grad(U)         Gauss linear;
 }
 
 divSchemes
 {
     default         none;
     div(phi,U)      Gauss linearUpwind linearUpwind;
+    //div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
@@ -51,6 +53,7 @@ laplacianSchemes
     laplacian((1|A(U)),p) Gauss linear corrected;
     laplacian(rAUf,pcorr) Gauss linear corrected;
     laplacian(streamFunction) Gauss linear corrected;
+    //laplacian(nuEff,U) Gauss linear uncorrected;
 }
 
 interpolationSchemes

@@ -22,101 +22,42 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    movingPimpleFoam.C
+    icoOTFoam
 
 Description
-    Transient solver for incompressible, turbulent flow of Newtonian fluids
-    on a moving mesh. Mesh calculated using optimal transport
-
-    Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
+    Transient solver for incompressible, laminar flow of Newtonian fluids on a moving mesh.
+    Mesh calculated using optimal transport.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "singlePhaseTransportModel.H"
-#include "turbulentTransportModel.H"
-#include "pimpleControl.H"
+#include "pisoControl.H"
 #include "CorrectPhi.H"
-#include "fvOptions.H"
-#include "faceToPointReconstruct.H"
-#include "setInternalValues.H"
-#include "fvMesh.H"
-#include "fvcMeshPhi.H"
-#include "fvcDet.H"
-#include "fvcPosDefCof.H"
-#include "fvcCurlf.H"
-#include "monitorFunctionFrom.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    #include "postProcess.H"
-
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
-    #include "createControls.H"
     #include "createFields.H"
-    #include "createUf.H"
-    #include "createFvOptions.H"
     #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
 
-    turbulence->validate();
+    pisoControl piso(mesh);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.run())
+    while (runTime.loop())
     {
-        #include "readControls.H"
+        Info<< "Time = " << runTime.timeName() << nl << endl;
         #include "CourantNo.H"
 
-        #include "setDeltaT.H"
-
-        runTime++;
-
-        Info<< "Time = " << runTime.timeName() << nl << endl;
-
         mesh.update();
-
-        // Calculate absolute flux from the mapped surface velocity
-        phi = mesh.Sf() & Uf;
-
-        if (mesh.changing() && correctPhi)
-        {
-            #include "correctPhi.H"
-        }
-
-        // Make the flux relative to the mesh motion
-        fvc::makeRelative(phi, U);
-
-        if (mesh.changing() && checkMeshCourantNo)
-        {
-            #include "meshCourantNo.H"
-        }
-
-        // --- Pressure-velocity PIMPLE corrector loop
-        while (pimple.loop())
-        {
-            #include "UEqn.H"
-
-            // --- Pressure corrector loop
-            while (pimple.correct())
-            {
-                #include "pEqn.H"
-            }
-
-            if (pimple.turbCorr())
-            {
-                laminarTransport.correct();
-                turbulence->correct();
-            }
-        }
+        #include "fluidEqns.H"
 
         runTime.write();
 
