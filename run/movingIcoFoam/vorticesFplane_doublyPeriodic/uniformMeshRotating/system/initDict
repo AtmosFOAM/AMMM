@@ -9,43 +9,31 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      h;
+    class       dictionary;
+    object      initDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 -1 0 0 0 0];
+// Inputs for setGaussians
+backgroundValue vorticity [0 0 -1 0 0] 0;
+gaussians 3
+(
+    centre [0 1 0 0 0] (6e6 9e6 0)
+    radius [0 1 0 0 0] 1e6
+    max    [0 0 -1 0 0] 1e-4
 
-internalField   uniform 0;
+    centre [0 1 0 0 0] (6e6 5e6 0)
+    radius [0 1 0 0 0] 5e5
+    max    [0 0 -1 0 0] -1e-4
 
-boundaryField
-{
-    equator
-    {
-        type            cyclic;
-    }
-    pole
-    {
-        type            cyclic;
-    }
-    inlet
-    {
-        type            cyclic;
-    }
-    outlet
-    {
-        type            cyclic;
-    }
-    front
-    {
-        type empty;
-    }
-    back
-    {
-        type empty;
-    }
-}
+    centre [0 1 0 0 0] (12e6 14e6 0)
+    radius [0 1 0 0 0] 5e5
+    max    [0 0 -1 0 0] -1e-4
+);
 
+// Input for invertVorticity (not used if specified in streamFunction BCs)
+// Background wind
+U0 U0 [0 1 -1 0 0] (0 0 0);
+setStreamFunctionReference true;
 
 // ************************************************************************* //

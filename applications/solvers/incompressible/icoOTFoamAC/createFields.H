@@ -28,6 +28,7 @@ volVectorField U
     ),
     mesh
 );
+U.oldTime();
 
 surfaceVectorField Uf
 (

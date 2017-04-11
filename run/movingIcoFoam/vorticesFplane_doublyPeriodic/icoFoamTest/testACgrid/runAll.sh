@@ -25,3 +25,9 @@ At this resolution,
 fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
 only degrades accuracy
 
+In icoOTFoamAC, the one line change that makes it behave badly is
+changing
+    U -= dt*fvc::grad(p);
+to
+    U = fvc::reconstruct(phi);
+This is the case both for a moving or a non-orthogonal fixed mesh

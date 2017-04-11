@@ -44,18 +44,16 @@ divSchemes
 {
     default         none;
     div(phi,U)      Gauss linearUpwind linearUpwind;
-    div(phi_0,U_0)  Gauss linearUpwind linearUpwind;
-    //div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
 {
     default         none;
     laplacian((1|A(U)),p) Gauss linear corrected;
-    laplacian(deltaT,p)   Gauss linear corrected;
     laplacian(rAUf,pcorr) Gauss linear corrected;
     laplacian(streamFunction) Gauss linear corrected;
-    //laplacian(nuEff,U) Gauss linear uncorrected;
+    laplacian(nuEff,U) Gauss linear uncorrected;
 }
 
 interpolationSchemes

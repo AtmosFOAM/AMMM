@@ -19,22 +19,26 @@ if (piso.momentumPredictor())
 // --- PISO loop
 while (piso.correct())
 {
+    UEqn.solve();
     volScalarField rAU(1.0/UEqn.A());
-    volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+    surfaceScalarField phiHbyA = (fvc::interpolate(U) & mesh.Sf())
+                               + fvc::interpolate(rAU)*fvc::ddtCorr(U,Uf);
+/*  volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(HbyA)
       //+ fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
     );
-
+*/
     // Non-orthogonal pressure corrector loop
     while (piso.correctNonOrthogonal())
     {
         // Pressure corrector
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
+//            fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
+            fvm::laplacian(dt, p) == fvc::div(phiHbyA)
         );
 
         pEqn.setReference(pRefCell, pRefValue);
@@ -47,8 +51,9 @@ while (piso.correct())
         }
     }
 
-    U = HbyA - rAU*fvc::grad(p);
-    //U = fvc::reconstruct(phi);
+//    U = HbyA - rAU*fvc::grad(p);
+    U -= dt*fvc::grad(p);
+//    U = fvc::reconstruct(phi);
     U.correctBoundaryConditions();
 
     {

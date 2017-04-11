@@ -9,6 +9,7 @@ fvVectorMatrix UEqn
 (
     fvm::ddt(U)
   + fvm::div(phi, U)
+  + (twoOmega ^ U)
 );
 
 if (piso.momentumPredictor())

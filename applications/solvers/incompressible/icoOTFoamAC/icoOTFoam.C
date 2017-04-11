@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
     #include "CourantNo.H"
 
     pisoControl piso(mesh);
+    
+    #define dt runTime.deltaT()
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
