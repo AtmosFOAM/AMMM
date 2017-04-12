@@ -14,6 +14,10 @@ in directory
 $HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
 and compile AtmosFOAM-tools using Allwmake
 
+and install
+liblapacke-dev
+
+
 Compile all AMMM applications and libraries using `./Allwmake`
 
 

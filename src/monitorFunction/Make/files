@@ -4,7 +4,6 @@ monitorFunctionFront.C
 monitorFunctionSech.C
 monitorFunctionSumGaussians.C
 monitorFunctionMapped.C
-tensor.C
 monitorFunctionFrom/monitorFunctionFrom.C
 monitorFunctionFrom/monitorFunctionFromGradU.C
 monitorFunctionFrom/monitorFunctionFromLinGradU.C

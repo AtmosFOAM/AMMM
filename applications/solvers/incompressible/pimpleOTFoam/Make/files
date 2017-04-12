@@ -1,3 +1,3 @@
 pimpleOTFoam.C
 
-EXE = $(FOAM_APPBIN)/pimpleOTFoam
+EXE = $(FOAM_USER_APPBIN)/pimpleOTFoam
