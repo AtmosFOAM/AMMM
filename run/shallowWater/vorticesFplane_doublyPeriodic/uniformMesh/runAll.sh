@@ -36,7 +36,7 @@ evince $time/hU.pdf &
 
 postProcess -func rMesh/vorticity2D -time $time -region rMesh
 gmtFoam -time $time vorticity -region rMesh
-evince $time/vorticity.pdf &
+gv $time/vorticity.pdf &
 
 # Only re-calcualte and re-plot recent times
 time=200000

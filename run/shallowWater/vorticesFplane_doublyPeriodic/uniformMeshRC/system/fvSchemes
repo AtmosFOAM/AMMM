@@ -24,45 +24,51 @@ FoamFile
 
 ddtSchemes
 {
-    default Euler;
+    default Euler; //CrankNicolson 0.8;
 }
-offCentre 0.6;
 
 gradSchemes
 {
-    default         none;
+    default         Gauss linear;
     linearUpwind Gauss linear;
     grad(streamFunction) Gauss linear;
     curl((streamFunction*(0,0,1))) Gauss linear;
+    grad(h)         Gauss linear;
+    grad((h+h0))    Gauss linear;
+    curl(U)         Gauss linear;
 }
 
 divSchemes
 {
     default none;
-    div(U,u)   Gauss linearUpwind linearUpwind;
+    div(phi,U)   Gauss linearUpwind linearUpwind;
+    div(phiv,hU)   Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
 {
-    default         none;
-    laplacian(streamFunction) Gauss linear corrected;
-    h                         Gauss linear uncorrected;
+    default         Gauss linear uncorrected;
+    laplacian(streamFunction) Gauss linear uncorrected;
     laplacian(monitor)        Gauss linear uncorrected;
+    laplacian(h)    Gauss linear uncorrected;
+    laplacian((mag(g)*interpolate((h*(1|A(hU))))),h) Gauss linear corrected;
 }
 
 interpolationSchemes
 {
-    default         linear;
-    interpolate(h)  linear;
-    H               linear;
-    Uf linear;
-    divuu linear;
+    default            linear;
+    interpolate((h*U)) linear;  
+    interpolate(h)     linear;
+    interpolate((h*(1|A(U)))) linear;
+    dotInterpolate(S,(h_0*U_0)) linear;
+    flux((h*HbyA))     linear;
 }
 
 snGradSchemes
 {
     default         none;
     snGrad(h)       uncorrected;
+    snGrad(h0)       uncorrected;
 }
 
 fluxRequired

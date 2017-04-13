@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -10,32 +10,16 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSolution;
+    object      initDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    "Phi|mmPhi"
-    {
-        solver GAMG;
-        smoother symGaussSeidel;
-        preconditioner   DILU;
-        tolerance        1e-4;
-        relTol           0.01;
-        maxIter          10;
-    };
-    streamFunction
-    {
-        solver PCG;
-        preconditioner DIC;
-        tolerance 1e-7;
-        relTol 0;
-        maxIter 500;
-    }
-}
-
-maxMAiters 0;
-maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 1000;
+// Input for OTmesh
+maxMAiters         0;
+maxMeshVelocity    0;
+monitorFunctionDynamic monitorFunctionFromNone;
+maxMonitorRatio     1;
+nMonSmooth          0;
+monitorFromName     hUf;
 
 // ************************************************************************* //
