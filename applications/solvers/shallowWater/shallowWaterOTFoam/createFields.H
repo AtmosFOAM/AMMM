@@ -1,5 +1,3 @@
-Info<< "Reading transportProperties\n" << endl;
-
 Info<< "Reading field h\n" << endl;
 volScalarField h
 (
@@ -45,6 +43,31 @@ surfaceScalarField phi
     ),
     hf*(fvc::interpolate(U) & mesh.Sf())
 );
-phi.write();
-volScalarField divPhi("divPhi", fvc::div(phi));
+
+volScalarField divPhi
+(
+    IOobject
+    (
+        "divPhi", runTime.timeName(), mesh,
+        IOobject::NO_READ, IOobject::AUTO_WRITE
+    ),
+    fvc::div(phi)
+);
 divPhi.write();
+
+volScalarField ACblend
+(
+    IOobject
+    (
+        "ACblend", runTime.timeName(), mesh,
+        IOobject::NO_READ, IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("b", dimless, ACblendConst)
+);
+if (ACblendConst < -SMALL)
+{
+    ACblend = calcACblend(divPhi);
+}
+ACblend.write();
+

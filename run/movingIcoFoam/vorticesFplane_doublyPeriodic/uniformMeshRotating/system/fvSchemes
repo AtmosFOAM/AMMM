@@ -30,36 +30,31 @@ ddtSchemes
 gradSchemes
 {
     default         none;
-    grad(p)         Gauss linear;
-    //grad(pcorr)     Gauss linear;
     linearUpwind    leastSquares;
     grad(streamFunction) Gauss linear;
     curl((streamFunction*(0,0,1))) Gauss linear;
+    grad(p)         Gauss linear;
     curl(U)         Gauss linear;
-    grad(curl(Uf))  leastSquares;
-    grad(U)         Gauss linear;
 }
 
 divSchemes
 {
     default         none;
     div(phi,U)      Gauss linearUpwind linearUpwind;
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
 {
     default         none;
-    laplacian((1|A(U)),p) Gauss linear corrected;
-    laplacian(rAUf,pcorr) Gauss linear corrected;
-    laplacian(streamFunction) Gauss linear corrected;
-    laplacian(nuEff,U) Gauss linear uncorrected;
+    laplacian(streamFunction) Gauss linear uncorrected;
+    laplacian((1|A(U)),p) Gauss linear uncorrected;
+    laplacian(rAUf,pcorr) Gauss linear uncorrected;
 }
 
 interpolationSchemes
 {
-    default         linear;
-    interpolate(U)  linear;
+    default            linear;
+    interpolate(U)     linear;
     dotInterpolate(S,U_0) linear;
     interpolate((1|A(U))) linear;
     flux(((1|A(U))*H(U))) linear;
@@ -69,7 +64,7 @@ interpolationSchemes
 snGradSchemes
 {
     default         none;
-    snGrad(p)       corrected;
+    snGrad(p)       uncorrected;
 }
 
 fluxRequired

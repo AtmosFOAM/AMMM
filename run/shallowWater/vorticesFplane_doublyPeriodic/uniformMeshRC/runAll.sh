@@ -1,5 +1,6 @@
 #!/bin/bash -e
-#
+
+# Create the case, run and post-process
 
 # clear out old stuff
 rm -rf [0-9]* constant/*/polyMesh constant/polyMesh core log legends gmt.history
@@ -10,8 +11,8 @@ mkdir -p constant/cMesh
 cp -r constant/polyMesh constant/cMesh
 ln -sf ../system/dynamicMeshDict constant/dynamicMeshDict
 
-# Createt initial conditions
-rm -rf 0
+# Create initial conditions
+rm -rf [0-9]* core
 cp -r init_0 0
 time=0
 # Create Gaussian patches of voriticty
@@ -36,29 +37,19 @@ gmtFoam -time $time hU
 gv $time/hU.pdf &
 
 postProcess -func vorticity -time $time
-writeuvw vorticity -time $time
+writeuvw -time $time vorticity
 mv $time/vorticityz $time/vorticity
 rm $time/vorticity?
 gmtFoam -time $time vorticity
 gv $time/vorticity.pdf &
 
-# Only re-calcualte and re-plot recent times
-time=200000
-postProcess -func rMesh/vorticity2D -region rMesh -time $time':'
-gmtFoam vorticity -region rMesh -time $time':'
+gmtFoam -time $time divPhi
+gv $time/divPhi.pdf &
 
+gmtFoam -time $time ACblend
+gv $time/ACblend.pdf &
 
-# Animation of vorticity
-postProcess -func rMesh/vorticity2D -region rMesh
-gmtFoam vorticity -region rMesh
-eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
+gmtFoam -time $time vorticityU
+gv $time/vorticityU.pdf &
 
-
-# Debugging
-time=1000
-for var in phi; do
-    sumFields $time ${var}Diff $time ${var} 0 ${var} -scale1 -1
-    echo Time $time variable $var
-    read -p "Press enter to continue"
-done
 

@@ -27,5 +27,3 @@ FieldsToPlot
 //region "-25e3/25e3/0/25e3";
 annotate "minMax 0 -38000";
 //boundaryMarks "5e3/5e3";
-
-

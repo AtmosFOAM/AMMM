@@ -1,5 +1,5 @@
 // Calculate absolute flux from the mapped surface velocity
-phi = mesh.Sf() & Uf;
+phi = Uf & mesh.Sf();
 
 // Make the flux relative to the mesh motion
 fvc::makeRelative(phi, U);
@@ -8,7 +8,7 @@ fvc::makeRelative(phi, U);
 fvVectorMatrix UEqn
 (
     fvm::ddt(U)
-  + fvm::div(phi, U)
+  + fvc::div(phi, U)
   + (twoOmega ^ U)
 );
 
@@ -26,7 +26,7 @@ while (piso.correct())
     (
         "phiHbyA",
         fvc::flux(HbyA)
-      + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
+//      + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
     );
 
     // Non-orthogonal pressure corrector loop
@@ -48,7 +48,11 @@ while (piso.correct())
         }
     }
 
-    U = HbyA - rAU*fvc::grad(p);
+//    U = HbyA - rAU*fvc::grad(p);
+    U = HbyA - fvc::reconstruct
+    (
+        fvc::interpolate(rAU)*fvc::snGrad(p)*mesh.magSf()
+    );
     U.correctBoundaryConditions();
 
     {

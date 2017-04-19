@@ -1,21 +1,6 @@
 // Calculate absolute flux from the mapped surface velocity
 phi = hf*(fvc::interpolate(U) & mesh.Sf());
 
-phi = phi - runTime.deltaT()*hf*
-(
-    fvc::flux
-    (
-        fvc::div(phi,U)/h
-      + (twoOmega ^ U)
-    )
-  + g*fvc::snGrad(h)*mesh.magSf()
-);
-phi.write();
-divPhi = fvc::div(phi);
-divPhi.write();
-FatalErrorIn("fluidEqns.H") << exit(FatalError);
-
-
 // Make the flux relative to the mesh motion
 fvc::makeRelative(phi, h, U);
 
@@ -27,20 +12,14 @@ fvVectorMatrix UEqn
 //  + h*(twoOmega ^ U)
 );
 
-//if (piso.momentumPredictor())
-//{
-//    solve(UEqn == -h*g*fvc::grad(h));
-//}
-
-//Info << "(UEqn.H + fvc::div(phi,U)) & U/U^2/h = "
-//     << ((UEqn.H() + fvc::div(phi,U))&U)/magSqr(U)/h.oldTime() << endl;
-//Info << "UEqn.A/h = " << UEqn.A()/h << endl;
-//FatalErrorIn("fluidEqns.H") << exit(FatalError);
+if (piso.momentumPredictor())
+{
+    solve(UEqn == -h*g*fvc::grad(h));
+}
 
 // --- PISO loop
 while (piso.correct())
 {
-    hf = fvc::interpolate(h);
     volScalarField rAU(1.0/UEqn.A());
     surfaceScalarField hrAUf("hrAUf", fvc::interpolate(h*rAU));
     volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, h));
@@ -50,7 +29,7 @@ while (piso.correct())
         "phiHbyA",
         hf*fvc::flux(HbyA)
       - CoriolisFlux
-      + hrAUf*fvc::ddtCorr(h, U, hUf)
+//      + hrAUf*fvc::ddtCorr(h, U, hUf)
     );
 
     fvc::makeRelative(phiHbyA, h, U);
@@ -70,21 +49,27 @@ while (piso.correct())
 
         if (piso.finalNonOrthogonalIter())
         {
-            //phi = phiHbyA + hEqn.flux();            
-            phi = phiHbyA - hrAUf*hf*g*fvc::snGrad(h)*mesh.magSf();
-            //U = HbyA + fvc::reconstruct(hEqn.flux())/h;
+            phi = phiHbyA + hEqn.flux();
         }
     }
 
-    //U = HbyA - rAU*g*h*fvc::grad(h);
-    //U = HbyA - fvc::reconstruct(hrAUf*g*fvc::snGrad(h)*mesh.magSf());
-    U = HbyA - fvc::reconstruct
-    (
-        hrAUf*hf*g*fvc::snGrad(h)*mesh.magSf()
-      - CoriolisFlux
-    )/h;
-    //U = fvc::reconstruct(phi/hf);
-    //U = fvc::reconstruct(phi)/h;
+    // Blend between the A-grid and the C-grid
+    divPhi = fvc::div(phi);
+    if (ACblendConst < -SMALL)
+    {
+        ACblend = calcACblend(divPhi);
+    }
+
+    // Update the velocity, blending A and C-grids (C is reconstruct from phi)
+    U = (1-ACblend)*
+        (
+            HbyA - fvc::reconstruct
+            (
+                hrAUf*hf*g*fvc::snGrad(h)*mesh.magSf()
+              + CoriolisFlux
+            )/h
+        )
+      + ACblend*fvc::reconstruct(phi/hf);
     U.correctBoundaryConditions();
 
     {
@@ -92,7 +77,9 @@ while (piso.correct())
         surfaceVectorField n(mesh.Sf()/mesh.magSf());
         hUf += n*(phi/(mesh.magSf()) - (n & hUf));
     }
+    hf = fvc::interpolate(h);
 
     // Make the fluxes relative to the mesh motion
     fvc::makeRelative(phi, h, U);
 }
+

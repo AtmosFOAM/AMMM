@@ -39,7 +39,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default        Gauss midPoint uncorrected;
+    default        Gauss linear uncorrected;
 }
 
 interpolationSchemes

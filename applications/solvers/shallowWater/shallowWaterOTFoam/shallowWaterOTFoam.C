@@ -34,6 +34,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "pisoControl.H"
 #include "CorrectPhi.H"
+#include "ACblend.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,16 +43,12 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
+    const scalar ACblendConst(readScalar(mesh.schemesDict().lookup("ACblend")));
     #include "createFields.H"
     #include "readEnvironmentalProperties.H"
     #include "CourantNo.H"
 
     pisoControl piso(mesh);
-
-    Info << "Mesh has normal direction" << flush;
-    vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
-    meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
-    Info << meshNormal << endl;
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

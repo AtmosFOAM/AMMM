@@ -39,7 +39,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss linear uncorrected;
+    default        Gauss linear uncorrected;
 }
 
 interpolationSchemes
@@ -50,7 +50,7 @@ interpolationSchemes
 snGradSchemes
 {
     default         none;
-    snGrad(meshPot)     uncorrected;
+    snGrad(meshPot) uncorrected;
 }
 
 fluxRequired
