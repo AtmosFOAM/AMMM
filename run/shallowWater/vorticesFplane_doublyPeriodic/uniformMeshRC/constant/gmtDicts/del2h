@@ -19,9 +19,7 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [ACblend filledContours 0 0.1 0.005 "$GMTU/colours/white_blue_red.cpt"]
-    [h contours 8000 10400 20 "black"]
-    [U vectors 1e4 1 "grey"]
+    [del2h filledContours -1e-9 1e-9 5e-11 "$GMTU/colours/red_white_blue.cpt"]
 );
 
 // Options

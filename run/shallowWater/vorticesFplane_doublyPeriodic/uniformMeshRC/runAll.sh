@@ -46,6 +46,9 @@ gv $time/vorticity.pdf &
 gmtFoam -time $time divPhi
 gv $time/divPhi.pdf &
 
+gmtFoam -time $time del4h
+gv $time/del4h.pdf &
+
 gmtFoam -time $time ACblend
 gv $time/ACblend.pdf &
 

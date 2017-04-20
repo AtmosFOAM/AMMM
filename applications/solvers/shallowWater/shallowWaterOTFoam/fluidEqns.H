@@ -54,10 +54,11 @@ while (piso.correct())
     }
 
     // Blend between the A-grid and the C-grid
-    divPhi = fvc::div(phi);
+    del2h = fvc::laplacian(h);
+    del4h = fvc::laplacian(del2h, "laplacian(h)");
     if (ACblendConst < -SMALL)
     {
-        ACblend = calcACblend(divPhi);
+        ACblend = calcACblend(del4h);
     }
 
     // Update the velocity, blending A and C-grids (C is reconstruct from phi)
@@ -82,4 +83,5 @@ while (piso.correct())
     // Make the fluxes relative to the mesh motion
     fvc::makeRelative(phi, h, U);
 }
+divPhi = fvc::div(phi);
 

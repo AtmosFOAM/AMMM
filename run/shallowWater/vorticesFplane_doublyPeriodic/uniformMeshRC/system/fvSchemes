@@ -34,6 +34,7 @@ gradSchemes
     linearUpwind    leastSquares;
     grad(streamFunction) Gauss linear;
     curl((streamFunction*(0,0,1))) Gauss linear;
+    grad(del4h)         Gauss linear;
     grad(h)         Gauss linear;
     curl(U)         Gauss linear;
     grad(divPhi)    Gauss linear;
@@ -51,6 +52,7 @@ laplacianSchemes
     laplacian(streamFunction) Gauss linear uncorrected;
     laplacian(h)    Gauss linear uncorrected;
     laplacian((mag(g)*interpolate((h*(1|A(hU))))),h) Gauss linear uncorrected;
+    laplacian(b) Gauss linear uncorrected;
 }
 
 interpolationSchemes
@@ -67,6 +69,7 @@ snGradSchemes
 {
     default         none;
     snGrad(h)       uncorrected;
+    snGrad(del4h)       uncorrected;
     snGrad(divPhi)  uncorrected;
 }
 
