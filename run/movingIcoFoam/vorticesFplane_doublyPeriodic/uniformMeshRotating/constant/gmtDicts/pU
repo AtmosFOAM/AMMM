@@ -20,7 +20,7 @@ projection2D XY;
 FieldsToPlot
 (
     [p filledContours 0 0 0 "$GMTU/colours/red_white_blue.cpt"]
-    [U vectors 1e4 5 "grey"]
+    [U vectors 1e4 5 "black"]
 );
 
 // Options

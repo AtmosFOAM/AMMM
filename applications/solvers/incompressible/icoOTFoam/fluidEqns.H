@@ -4,17 +4,19 @@ phi = Uf & mesh.Sf();
 // Make the flux relative to the mesh motion
 fvc::makeRelative(phi, U);
 
+const scalar CoriRecon = 1;
+
 // Momentum predictor
 fvVectorMatrix UEqn
 (
     fvm::ddt(U)
-  + fvc::div(phi, U)
-  + (twoOmega ^ U)
+  + fvm::div(phi, U)
+  + (1-CoriRecon)*(twoOmega ^ U)
 );
 
 if (piso.momentumPredictor())
 {
-    solve(UEqn == -fvc::grad(p));
+    solve(UEqn == -CoriRecon*(twoOmega ^ U) -fvc::grad(p));
 }
 
 // --- PISO loop
@@ -22,11 +24,13 @@ while (piso.correct())
 {
     volScalarField rAU(1.0/UEqn.A());
     volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+    surfaceScalarField CoriolisFlux(CoriRecon*fvc::flux(rAU*(twoOmega ^ U)));
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(HbyA)
-//      + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
+      - CoriolisFlux
+      + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
     );
 
     // Non-orthogonal pressure corrector loop
@@ -48,11 +52,13 @@ while (piso.correct())
         }
     }
 
-//    U = HbyA - rAU*fvc::grad(p);
+//    U = HbyA - rAU*(CoriRecon*(twoOmega ^ U) + fvc::grad(p));
     U = HbyA - fvc::reconstruct
     (
         fvc::interpolate(rAU)*fvc::snGrad(p)*mesh.magSf()
+      + CoriolisFlux
     );
+    U -= (U & meshNormal)*meshNormal;
     U.correctBoundaryConditions();
 
     {
@@ -64,3 +70,4 @@ while (piso.correct())
     // Make the fluxes relative to the mesh motion
     fvc::makeRelative(phi, U);
 }
+

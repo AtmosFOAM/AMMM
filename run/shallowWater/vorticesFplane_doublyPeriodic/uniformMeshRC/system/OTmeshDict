@@ -20,6 +20,6 @@ maxMeshVelocity    0;
 monitorFunctionDynamic monitorFunctionFromNone;
 maxMonitorRatio     1;
 nMonSmooth          0;
-monitorFromName     hUf;
+monitorFromName     Uf;
 
 // ************************************************************************* //

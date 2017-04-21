@@ -26,14 +26,31 @@ volVectorField U
     mesh
 );
 
+surfaceVectorField Uf
+(
+    IOobject("Uf", runTime.timeName(), mesh),
+    fvc::interpolate(U)
+);
+Uf.oldTime();
+Uf.write();
+
+surfaceScalarField hf("hf", fvc::interpolate(h));
+
+h *= 0;
+const volScalarField h0("h0", 0*h + dimensionedScalar("h0", dimLength, 1));
+hf = fvc::interpolate(h0, "interpolate(h)");
+
 surfaceVectorField hUf
 (
     IOobject("hUf", runTime.timeName(), mesh),
-    fvc::interpolate(h*U)
+    hf*Uf
 );
-hUf.oldTime();
 
-surfaceScalarField hf("hf", fvc::interpolate(h));
+volVectorField hU
+(
+    IOobject("hU", runTime.timeName(), mesh),
+    h0*U
+);
 
 surfaceScalarField phi
 (

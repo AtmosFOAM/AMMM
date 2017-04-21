@@ -50,6 +50,11 @@ int main(int argc, char *argv[])
 
     pisoControl piso(mesh);
 
+    Info << "Mesh has normal direction" << flush;
+    vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
+    meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
+    Info << meshNormal << endl;
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
@@ -58,7 +63,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
         #include "CourantNo.H"
 
-        mesh.update();
+        //mesh.update();
         #include "fluidEqns.H"
 
         runTime.write();

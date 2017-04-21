@@ -21,7 +21,6 @@ plotBoundaryDots false;
 FieldsToPlot
 (
     [vorticity filledContours -1.05e-4 1.05e-4 1e-5 "$GMTU/colours/red_white_blue.cpt"]
-    [none mesh "grey"]
 );
 
 //separateLegend true;

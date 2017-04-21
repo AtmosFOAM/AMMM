@@ -31,6 +31,8 @@ surfaceVectorField Uf
     IOobject("Uf", runTime.timeName(), mesh),
     fvc::interpolate(U)
 );
+Uf.oldTime();
+Uf.write();
 
 surfaceScalarField phi
 (
