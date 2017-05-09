@@ -4,8 +4,6 @@ phi = Uf & mesh.Sf();
 // Make the flux relative to the mesh motion
 fvc::makeRelative(phi, U);
 
-const scalar CoriRecon = 1;
-
 // Momentum predictor
 fvVectorMatrix UEqn
 (
@@ -30,7 +28,7 @@ while (piso.correct())
         "phiHbyA",
         fvc::flux(HbyA)
       - CoriolisFlux
-      + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
+      + ACblend*fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
     );
 
     // Non-orthogonal pressure corrector loop

@@ -18,15 +18,15 @@ FoamFile
 backgroundValue vorticity [0 0 -1 0 0] 0;
 gaussians 3
 (
-    centre [0 1 0 0 0] (6e6 9e6 0)
+    centre [0 1 0 0 0] (15e6 2.75e6 0)
     radius [0 1 0 0 0] 1e6
     max    [0 0 -1 0 0] 1e-4
 
-    centre [0 1 0 0 0] (6e6 5e6 0)
+    centre [0 1 0 0 0] (15e6 16.75e6 0)
     radius [0 1 0 0 0] 5e5
     max    [0 0 -1 0 0] -1e-4
 
-    centre [0 1 0 0 0] (12e6 14e6 0)
+    centre [0 1 0 0 0] (3e6 7.75e6 0)
     radius [0 1 0 0 0] 5e5
     max    [0 0 -1 0 0] -1e-4
 );

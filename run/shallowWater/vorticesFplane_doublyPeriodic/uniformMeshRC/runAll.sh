@@ -36,21 +36,14 @@ time=700000
 gmtFoam -time $time hU
 gv $time/hU.pdf &
 
-postProcess -func vorticity -time $time
-writeuvw -time $time vorticity
-mv $time/vorticityz $time/vorticity
-rm $time/vorticity?
-gmtFoam -time $time vorticity
-gv $time/vorticity.pdf &
-
-gmtFoam -time $time divPhi
-gv $time/divPhi.pdf &
-
-gmtFoam -time $time del4h
-gv $time/del4h.pdf &
-
-gmtFoam -time $time ACblend
-gv $time/ACblend.pdf &
+time=100000
+case=.
+postProcess -func vorticity -time $time -case $case
+writeuvw -time $time vorticity -case $case
+mv $case/$time/vorticityz $case/$time/vorticity
+rm $case/$time/vorticity?
+gmtFoam -time $time vorticity -case $case
+gv $case/$time/vorticity.pdf &
 
 gmtFoam -time $time vorticityU
 gv $time/vorticityU.pdf &

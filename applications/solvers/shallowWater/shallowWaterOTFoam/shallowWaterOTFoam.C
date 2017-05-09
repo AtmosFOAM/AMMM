@@ -34,7 +34,6 @@ Description
 #include "dynamicFvMesh.H"
 #include "pisoControl.H"
 #include "CorrectPhi.H"
-#include "ACblend.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +42,14 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    const scalar ACblendConst(readScalar(mesh.schemesDict().lookup("ACblend")));
+    const scalar ACblend
+    (
+        readScalar(mesh.schemesDict().lookup("ACblend"))
+    );
+    const scalar CoriRecon = readScalar
+    (
+        mesh.schemesDict().lookup("CoriRecon")
+    );
     #include "createFields.H"
     #include "readEnvironmentalProperties.H"
     #include "CourantNo.H"
