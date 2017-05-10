@@ -69,6 +69,7 @@ class OTmesh
 
         label maxMAiters_;
         scalar maxMeshVelocity_;
+        scalar meshRelax_;
         label nMonSmooth_;
         
         // The mesh potential and its gradient

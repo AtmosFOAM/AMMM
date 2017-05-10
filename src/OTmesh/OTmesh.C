@@ -68,6 +68,7 @@ Foam::OTmesh::OTmesh(const IOobject& io)
     ),
     maxMAiters_(readLabel(OTmeshCoeffs_.lookup("maxMAiters"))),
     maxMeshVelocity_(readScalar(OTmeshCoeffs_.lookup("maxMeshVelocity"))),
+    meshRelax_(readScalar(OTmeshCoeffs_.lookup("meshRelax"))),
     nMonSmooth_(readLabel(OTmeshCoeffs_.lookup("nMonSmooth"))),
     meshPot_
     (
@@ -105,8 +106,6 @@ Foam::OTmesh::OTmesh(const IOobject& io)
     (
         fvc::snGrad(meshPot_) - (gradMeshPot_ & cMesh_.Sf())/cMesh_.magSf()
     )*cMesh_.Sf()/cMesh_.magSf();
-
-    monitorP_.write();
 }
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -154,21 +153,25 @@ bool Foam::OTmesh::update()
     for(int nMAit = 0; nMAit < maxMAiters() && !converged; nMAit++)
     {
         // Hessian and its determinant
-        volTensorField Hessian(fvc::grad(gradMeshPot_));
-        volScalarField detHess(fvc::det(Hessian + tensor::I));
+        volTensorField Hessian("Hessian", fvc::grad(gradMeshPot_));
+        volScalarField detHess("detHess", fvc::det(Hessian + tensor::I));
 
         // The matrix A of co-factors
-        volTensorField cofacA(fvc::posDefCof(Hessian + tensor::I));
+        volTensorField cofacA("cofacA", fvc::posDefCof(Hessian + tensor::I));
 
         // The mean equidistribution, c
         dimensionedScalar equiDistMean = fvc::domainIntegrate(detHess)
                                  /fvc::domainIntegrate(1/monitorC_);
 
         // Source term
-        volScalarField source(detHess - equiDistMean/monitorC_);
+        volScalarField source("source", detHess - equiDistMean/monitorC_);
 
         // The laplacian of (A,meshPot) at the old iteration
-        volScalarField laplacianAPhi(fvc::laplacian(cofacA, meshPot_));
+        volScalarField laplacianAPhi
+        (
+            "laplacianAPhi",
+            fvc::laplacian(cofacA, meshPot_)
+        );
     
         // Setup and solve the MA equation to find the new meshPot
         for (int iCorr = 0; iCorr < 2; iCorr++)
@@ -208,6 +211,12 @@ bool Foam::OTmesh::update()
         meshMovement *= maxMMallowed/maxMM;
         Info << "Scaling mesh movement from maximum of " << maxMM
              << " to " << maxMMallowed << endl;
+    }
+    else if (meshRelax_ > SMALL && meshRelax_ < 1-SMALL)
+    {
+        meshMovement *= meshRelax_;
+        Info << "Max mesh velocity = "
+             << max(mag(meshMovement))/time().deltaT().value() << endl;
     }
 
     // Move the points

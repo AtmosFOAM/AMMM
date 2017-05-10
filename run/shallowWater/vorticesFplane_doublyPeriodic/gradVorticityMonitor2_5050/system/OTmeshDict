@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      initDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Input for OTmesh
+maxMAiters         4;
+maxMeshVelocity    0; //60;
+meshRelax          0.5;
+monitorFunctionDynamic monitorFunctionFromGradVorticity5050;
+maxMonitorRatio     2;
+nMonSmooth          8;
+monitorFromName     Uf;
+
+// ************************************************************************* //

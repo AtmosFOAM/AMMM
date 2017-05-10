@@ -39,9 +39,14 @@ Description
 
 int main(int argc, char *argv[])
 {
+    argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
+    argList::addBoolOption("fixedMesh", "run on rMesh and do not modify");
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
+    const Switch reMeshOnly = args.optionFound("reMeshOnly");
+    const Switch fixedMesh = args.optionFound("fixedMesh");
+
     const scalar ACblend
     (
         readScalar(mesh.schemesDict().lookup("ACblend"))
@@ -51,6 +56,13 @@ int main(int argc, char *argv[])
         mesh.schemesDict().lookup("CoriRecon")
     );
     #include "createFields.H"
+
+    if (reMeshOnly)
+    {
+        mesh.update();
+        runTime.writeAndEnd();
+    }
+
     #include "readEnvironmentalProperties.H"
     #include "CourantNo.H"
 
@@ -69,7 +81,10 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
         #include "CourantNo.H"
 
-        //mesh.update();
+        if (!fixedMesh)
+        {
+            mesh.update();
+        }
         #include "fluidEqns.H"
 
         runTime.write();
