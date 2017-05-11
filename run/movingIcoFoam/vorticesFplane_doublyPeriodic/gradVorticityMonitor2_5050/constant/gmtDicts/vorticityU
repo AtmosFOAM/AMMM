@@ -16,14 +16,13 @@ FoamFile
 // Compulsory inputs
 projection "X18c/18c";
 projection2D XY;
-plotBoundaryDots false;
 
 FieldsToPlot
 (
     [vorticity filledContours -1.05e-4 1.05e-4 1e-5 "$GMTU/colours/red_white_blue.cpt"]
+    [U vectors 1e4 1 "black"]
 );
 
-//separateLegend true;
-//region "-25e3/25e3/0/25e3";
+plotBoundaryDots false;
 annotate "minMax 0 -38000";
-//boundaryMarks "5e3/5e3";
+

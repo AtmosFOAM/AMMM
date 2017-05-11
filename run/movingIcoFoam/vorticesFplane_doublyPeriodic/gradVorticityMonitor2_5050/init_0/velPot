@@ -9,13 +9,13 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       surfaceScalarField;
-    location    "0";
-    object      meshPhi;
+    class       volScalarField;
+    location    "constant";
+    object      velPot;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 3 -1 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -29,17 +29,15 @@ boundaryField
     pole
     {
         type            cyclic;
-        value           uniform 0;
+        //gradient        uniform 10;
     }
     inlet
     {
         type            cyclic;
-        value           uniform 0;
     }
     outlet
     {
         type            cyclic;
-        value           uniform 0;
     }
     front
         {

@@ -39,13 +39,16 @@ until [ $meshIter -ge 20 ]; do
 #    gmtFoam -time $time vorticityMesh >& /dev/null
     let meshIter+=1
 
-    mkdir $meshIter
-    cp -r 0/polyMesh $meshIter
+#    mkdir $meshIter
+#    cp -r 0/polyMesh $meshIter
 done
 
-gmtFoam mesh >& /dev/null
-eps2gif mesh.gif ?/mesh.pdf ??/mesh.pdf
-rm -r [1-9]*
+#gmtFoam mesh >& /dev/null
+#eps2gif mesh.gif ?/mesh.pdf ??/mesh.pdf
+#rm -r [1-9]*
+
+gmtFoam -time $time vorticityMesh
+ev $time/vorticityMesh.pdf
 
 # Calculate the height in balance and plot
 setBalancedHeightRC
@@ -53,8 +56,7 @@ gmtFoam -time $time hUmesh
 gv $time/hUmesh.pdf &
 
 # Solve the SWE
-shallowWaterOTFoam >& log & sleqep 0.01; tail -f log
-#shallowWaterFoam >& log & sleep 0.01; tail -f log
+shallowWaterOTFoam >& log & sleep 0.01; tail -f log
 
 # Post process
 time=700000

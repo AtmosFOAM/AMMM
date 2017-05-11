@@ -9,59 +9,45 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      fvSolution;
+    class       volVectorField;
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-setReferenceP true;
+dimensions      [0 1 -1 0 0 0 0];
 
-solvers
+internalField   uniform (0 0 0);
+
+boundaryField
 {
-    p
+    equator
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-08;
-        relTol          0.01;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
-
-    pFinal
+    pole
     {
-        $p;
-        relTol          0;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
-    
-    pcorr {$p;}
-
-    U
+    inlet
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-05;
-        relTol          0;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
-    streamFunction
+    outlet
     {
-        solver PCG;
-        preconditioner DIC;
-        tolerance        1e-10;
-        relTol           0;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
-}
-
-PISO
-{
-    nCorrectors     2;
-    nNonOrthogonalCorrectors 2;
-    pRefCell        0;
-    pRefValue       0;
-}
-
-
-initialisation
-{
-    maxIters 200;
+    front
+    {
+        type empty;
+    }
+    back
+    {
+        type empty;
+    }
 }
 
 // ************************************************************************* //

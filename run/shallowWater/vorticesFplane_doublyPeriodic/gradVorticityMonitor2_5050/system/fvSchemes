@@ -39,6 +39,7 @@ gradSchemes
     curl(U)         Gauss linear;
     grad(divPhi)    Gauss linear;
     grad(curl(Uf))  Gauss linear;
+    grad(p)  Gauss linear;
 }
 
 divSchemes
@@ -52,6 +53,7 @@ laplacianSchemes
     default         none;
     laplacian(streamFunction) Gauss linear corrected;
     laplacian(h)    Gauss linear corrected;
+    laplacian((1|A(U)),p) Gauss linear corrected;
     laplacian((mag(g)*interpolate((h*(1|A(hU))))),h) Gauss linear corrected;
 }
 
@@ -69,6 +71,7 @@ snGradSchemes
 {
     default         none;
     snGrad(h)       corrected;
+    snGrad(p)       corrected;
 }
 
 fluxRequired

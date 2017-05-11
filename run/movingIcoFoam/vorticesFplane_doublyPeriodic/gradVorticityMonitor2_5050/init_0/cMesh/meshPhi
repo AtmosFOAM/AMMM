@@ -8,7 +8,7 @@
 FoamFile
 {
     version     2.0;
-    format      ascii;
+    format      binary;
     class       surfaceScalarField;
     location    "0";
     object      meshPhi;
@@ -42,13 +42,19 @@ boundaryField
         value           uniform 0;
     }
     front
-        {
-            type empty;
-        }
+    {
+        type            empty;
+        value           nonuniform 
+0
+;
+    }
     back
-        {
-            type empty;
-        }
+    {
+        type            empty;
+        value           nonuniform 
+0
+;
+    }
 }
 
 

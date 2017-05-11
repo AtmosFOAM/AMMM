@@ -52,14 +52,3 @@ surfaceScalarField phi
     hf*(fvc::interpolate(U) & mesh.Sf())
 );
 
-volScalarField divPhi
-(
-    IOobject
-    (
-        "divPhi", runTime.timeName(), mesh,
-        IOobject::NO_READ, IOobject::AUTO_WRITE
-    ),
-    fvc::div(phi)
-);
-divPhi.write();
-

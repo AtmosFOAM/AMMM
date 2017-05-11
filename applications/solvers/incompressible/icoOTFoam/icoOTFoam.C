@@ -39,23 +39,34 @@ Description
 
 int main(int argc, char *argv[])
 {
+    argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
+    argList::addBoolOption("fixedMesh", "run on rMesh and do not modify");
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "createFields.H"
-    #include "readEnvironmentalProperties.H"
-    #include "CourantNo.H"
+    const Switch reMeshOnly = args.optionFound("reMeshOnly");
+    const Switch fixedMesh = args.optionFound("fixedMesh");
 
-    pisoControl piso(mesh);
+    if (reMeshOnly)
+    {
+        mesh.update();
+        runTime.writeAndEnd();
+    }
 
+    const scalar ACblend
+    (
+        readScalar(mesh.schemesDict().lookup("ACblend"))
+    );
     const scalar CoriRecon = readScalar
     (
         mesh.schemesDict().lookup("CoriRecon")
     );
-    const scalar ACblend = readScalar
-    (
-        mesh.schemesDict().lookup("ACblend")
-    );
+
+    #include "readEnvironmentalProperties.H"
+    #include "CourantNo.H"
+
+    pisoControl piso(mesh);
 
     Info << "Mesh has normal direction" << flush;
     vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
@@ -70,7 +81,10 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
         #include "CourantNo.H"
 
-        //mesh.update();
+        if (!fixedMesh)
+        {
+            mesh.update();
+        }
         #include "fluidEqns.H"
 
         runTime.write();

@@ -30,7 +30,7 @@ while (piso.correct())
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        hf*fvc::flux(HbyA)
+        fvc::flux(h*HbyA)
       - CoriolisFlux
       + ACblend*hrAUf*fvc::ddtCorr(h, U, hUf)
     );
@@ -64,15 +64,11 @@ while (piso.correct())
     U.correctBoundaryConditions();
 
     {
-        Uf = fvc::interpolate(U);
+        hUf = fvc::interpolate(h*U);
         surfaceVectorField n(mesh.Sf()/mesh.magSf());
-        Uf += n*(phi/(hf*mesh.magSf()) - (n & Uf));
+        hUf += n*(fvc::absolute(phi,h,U)/mesh.magSf() - (n & hUf));
     }
+    Uf = hUf/hf;
     hf = fvc::interpolate(h);
-    hUf = hf*Uf;
-
-    // Make the fluxes relative to the mesh motion
-    fvc::makeRelative(phi, h, U);
 }
-divPhi = fvc::div(phi);
 
