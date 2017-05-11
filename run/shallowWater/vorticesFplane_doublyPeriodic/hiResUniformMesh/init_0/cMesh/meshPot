@@ -10,14 +10,14 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "constant";
-    object      h;
+    location    "0";
+    object      meshPot;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
+dimensions      [0 2 0 0 0 0 0];
 
-internalField   uniform 1e5;
+internalField   uniform 0;
 
 boundaryField
 {
@@ -38,13 +38,13 @@ boundaryField
         type            cyclic;
     }
     front
-    {
-        type empty;
-    }
+        {
+            type empty;
+        }
     back
-    {
-        type empty;
-    }
+        {
+            type empty;
+        }
 }
 
 

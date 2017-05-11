@@ -121,6 +121,12 @@ public:
         //- The maximum number of Newton iterations for finding the OT mesh
         label maxMAiters() const { return maxMAiters_; }
         
+        //- The maximum allowable mesh velocity
+        scalar maxMeshVelocity() const { return maxMeshVelocity_; }
+        
+        //- The proportion of the mesh movement actually applied
+        scalar meshRelax() const { return meshRelax_; }
+
         //- The number of laplacian smooths of the monitor function
         label nMonSmooth() const { return nMonSmooth_; }
         

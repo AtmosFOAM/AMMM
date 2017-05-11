@@ -1,51 +1,68 @@
 #!/bin/bash -e
-#
-set -o pipefail
+
+# Create the case, run and post-process
 
 # clear out old stuff
 rm -rf [0-9]* constant/*/polyMesh constant/polyMesh core log legends gmt.history
 
-cp -r init_0 0
-
 # Create initial mesh
 blockMesh
-mkdir -p constant/rMesh
-cp -r constant/polyMesh constant/rMesh
+mkdir -p constant/cMesh
+cp -r constant/polyMesh constant/cMesh
+ln -sf ../system/dynamicMeshDict constant/dynamicMeshDict
 
-# Createt initial conditions on the rMesh
+# Create initial conditions
+rm -rf [0-9]* core
+cp -r init_0 0
 time=0
 # Create Gaussian patches of voriticty
-setGaussians initDict -region rMesh
+setGaussians initDict
 # Invert to find the wind field
-invertVorticity -time $time initDict -region rMesh
-gmtFoam -time $time vorticity -region rMesh
-gv $time/vorticity.pdf &
+invertVorticity -time $time initDict
+
+gmtFoam -time $time vorticityMesh
+ev $time/vorticityMesh.pdf
 
 # Calculate the height in balance and plot
-setBalancedHeight -region rMesh
-gmtFoam -time $time hU -region rMesh
-evince $time/hU.pdf &
+setBalancedHeightRC
+gmtFoam -time $time hUmesh
+gv $time/hUmesh.pdf &
 
 # Solve the SWE
-movingshallowWaterFoamH >& log & sleep 0.01; tail -f log
+shallowWaterOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
 
 # Post process
 time=700000
-gmtFoam -time $time hU -region rMesh
-evince $time/hU.pdf &
+gmtFoam -time $time hU
+gv $time/hU.pdf &
 
-postProcess -func rMesh/vorticity2D -time $time -region rMesh
-gmtFoam -time $time vorticity -region rMesh
-evince $time/vorticity.pdf &
-
-# Only re-calcualte and re-plot recent times
-time=200000
-postProcess -func rMesh/vorticity2D -region rMesh -time $time':'
-gmtFoam vorticity -region rMesh -time $time':'
-
+time=100000
+case=.
+postProcess -func vorticity -time $time -case $case
+writeuvw -time $time vorticity -case $case
+mv $case/$time/vorticityz $case/$time/vorticity
+rm $case/$time/vorticity?
+gmtFoam -time $time vorticity -case $case
+gv $case/$time/vorticity.pdf &
 
 # Animation of vorticity
-postProcess -func rMesh/vorticity2D -region rMesh
-gmtFoam vorticity -region rMesh
-eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf ???????/vorticity.pdf
+case=.
+postProcess -func vorticity -case $case
+writeuvw vorticity -case $case
+for time in [0-9]*; do
+    mv $case/$time/vorticityz $case/$time/vorticity
+    rm $case/$time/vorticity?
+done
+gmtFoam vorticity -case $case
+eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf \
+        ???????/vorticity.pdf
+
+# Make links for animategraphics
+field=vorticity
+DT=100000
+mkdir -p animategraphics
+for time in [0-9]*; do
+    let t=$time/$DT
+    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
+done
 

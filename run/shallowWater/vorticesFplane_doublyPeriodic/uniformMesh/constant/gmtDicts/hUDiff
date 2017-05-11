@@ -14,7 +14,7 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/6c";          // see man psxy for details on -J options
+projection "X18c/18c";          // see man psxy for details on -J options
 projection2D XY;                // either XY, XZ, YZ or latLon
 plotBoundaryDots false;
 
@@ -22,16 +22,12 @@ plotBoundaryDots false;
 // A list of the fields to plot with plotting details
 FieldsToPlot
 (
-//  [fieldName plotType min max delta colorScale]
-//  plotType is one of filledContours, solidContours, dashedContours, vectors,
-//  vectorContours, mesh, meshPoints, meshCentres or rawValues
-
     [hDiff filledContours 0 0 0 "$GMTU/colours/red_white_blue.cpt"]
-
-    [none mesh "grey"]
-// for plotType vectors, the next numbers are the vector scale and then the
-// stride to not plotting every vector
-    [UDiff vectors 1e4 4 "black"]
+//    [UDiff vectors 1e4 4 "black"]
+    [UDiff vectors 0 4 "black"]
+//    [UzDiff contours 1e-4 1e-3 1e-4 "black"]
+//    [UzDiff contours -1e-3 -1e-4 1e-4 "black,-"]
+//    [UzDiff contours 0 1 1 "0.25p,black,1_4:0"]
 );
 
 // other options:
@@ -43,7 +39,7 @@ annotate "minMax 0 -0.01";
 
 // boundary ticks, annotation and grid
 //     (see man psbasemap for detail on -B option)
-boundaryMarks "a3e6/a3e6";
+//boundaryMarks "a3e6/a3e6";
 
 // should the legend be plotted separately on on the plot
 //separateLegend true;

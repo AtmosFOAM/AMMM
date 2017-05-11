@@ -22,18 +22,17 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application buoyantFoam;
+application     shallowWaterOTFoam;
 
-//startFrom       startTime;
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         4e6;
+endTime         2e6;
 
-deltaT          1000;
+deltaT          250;
 
 writeControl    runTime;
 
@@ -45,13 +44,13 @@ writeFormat     binary;
 
 writePrecision  6;
 
-writeCompression uncompressed;
+writeCompression off;
 
 timeFormat      general;
 
 timePrecision   8;
 
-runTimeModifiable yes;
+runTimeModifiable no;
 
 adjustTimeStep no;
 maxCo          0.5;

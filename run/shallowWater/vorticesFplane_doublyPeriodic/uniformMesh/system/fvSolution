@@ -16,26 +16,48 @@ FoamFile
 
 solvers
 {
-    "Phi|mmPhi"
+    "h|p"
     {
-        solver GAMG;
-        smoother symGaussSeidel;
-        preconditioner   DILU;
-        tolerance        1e-4;
-        relTol           0.01;
-        maxIter          10;
-    };
-    streamFunction
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-8;
+        relTol          0.01;
+    }
+
+    "hFinal|pFinal"
     {
-        solver PCG;
+        $p;
+        relTol          0;
+    }
+
+    "U|UFinal|hU|hUFinal"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-05;
+        relTol          0;
+    }
+    "streamFunction|velPot"
+    {
+        solver         PCG;
         preconditioner DIC;
-        tolerance 1e-7;
-        relTol 0;
-        maxIter 500;
+        tolerance      1e-7;
+        relTol         0;
     }
 }
 
-maxMAiters 0;
-maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 1000;
+"PISO|PIMPLE"
+{
+    nCorrectors     3;
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+    momentumPredictor false;
+}
+
+initialisation
+{
+    maxIters 20;
+}
 
 // ************************************************************************* //

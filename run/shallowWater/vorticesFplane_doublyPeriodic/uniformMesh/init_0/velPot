@@ -11,23 +11,25 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "constant";
-    object      h;
+    object      velPot;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 1e5;
+internalField   uniform 0;
 
 boundaryField
 {
     equator
     {
         type            cyclic;
+        value           uniform 0;
     }
     pole
     {
         type            cyclic;
+        //gradient        uniform 10;
     }
     inlet
     {
@@ -38,13 +40,13 @@ boundaryField
         type            cyclic;
     }
     front
-    {
-        type empty;
-    }
+        {
+            type empty;
+        }
     back
-    {
-        type empty;
-    }
+        {
+            type empty;
+        }
 }
 
 

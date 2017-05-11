@@ -18,29 +18,28 @@ FoamFile
 backgroundValue vorticity [0 0 -1 0 0] 0;
 gaussians 3
 (
-    centre [0 1 0 0 0] (6e6 9e6 0)
+    centre [0 1 0 0 0] (9e6 3e6 0)
     radius [0 1 0 0 0] 1e6
     max    [0 0 -1 0 0] 1e-4
+    (0 0 0)
+    (18e6 18e6 0)
 
-    centre [0 1 0 0 0] (6e6 5e6 0)
+    centre [0 1 0 0 0] (9e6 17e6 0)
     radius [0 1 0 0 0] 5e5
     max    [0 0 -1 0 0] -1e-4
+    (0 0 0)
+    (18e6 18e6 0)
 
-    centre [0 1 0 0 0] (12e6 14e6 0)
+    centre [0 1 0 0 0] (15e6 8e6 0)
     radius [0 1 0 0 0] 5e5
     max    [0 0 -1 0 0] -1e-4
+    (0 0 0)
+    (18e6 18e6 0)
 );
 
 // Input for invertVorticity (not used if specified in streamFunction BCs)
 // Background wind
 U0 U0 [0 1 -1 0 0] (0 0 0);
 setStreamFunctionReference true;
-
-// Input for movingshallowWaterFoamH
-monitorFunctionDynamic monitorFunctionFromNone;
-monitorMax 0;
-nMonSmooth 0;
-monitorBaseMin monitorBaseMin [0 0 0 0 0] 0;
-monitorBaseMax monitorBaseMax [0 0 0 0 0] 0;
 
 // ************************************************************************* //

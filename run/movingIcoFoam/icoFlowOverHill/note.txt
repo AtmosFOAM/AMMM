@@ -1,3 +1,0 @@
-This does not currently run for me (PAB). I get the following error:
-
-terrainFollowingMesh: symbol lookup error: terrainFollowingMesh: undefined symbol: _ZN4Foam25terrainFollowingTransform3NewERKNS_10dictionaryE

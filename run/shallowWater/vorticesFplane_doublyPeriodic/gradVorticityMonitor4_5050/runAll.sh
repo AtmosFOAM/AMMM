@@ -76,6 +76,7 @@ rm $case/$time/vorticity?
 gmtFoam -time $time vorticityMesh -case $case
 gv $case/$time/vorticityMesh.pdf &
 
+
 # animation of vorticityMesh
 case=.
 postProcess -func vorticity -case $case
