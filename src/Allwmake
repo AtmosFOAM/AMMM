@@ -11,6 +11,7 @@ makeType=${1:-libso}
     exit 1
 }
 
+wmake $makeType OTmesh
 wmake $makeType icoFoam
 wmake $makeType orography
 wmake $makeType ringMesh
