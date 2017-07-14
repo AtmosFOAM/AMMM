@@ -19,7 +19,7 @@ gmtFoam -time 0 -region pMesh UT
 evince 0/UT.pdf &
 
 # Run
-movingScalarTransportFoam -fixedMesh >& log & sleep 0.001; tail -f log
+movingScalarTransportFoam -fixedMesh | tee log.txt
 
 # Plot results
 time=0

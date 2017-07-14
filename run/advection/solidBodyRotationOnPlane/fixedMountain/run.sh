@@ -19,15 +19,15 @@ postProcess -func writeCellVolumes -time $time
 gmtFoam -time $time Tunder
 gmtFoam -time $time mountainOver
 cat $time/Tunder.ps $time/mountainOver.ps > $time/Tmountain.ps
-eps2pdf $time/Tmountain.ps
-mv Tmountain.ps.pdf $time/Tmountain.pdf
+ps2pdf $time/Tmountain.ps
+mv Tmountain.pdf $time/Tmountain.pdf
 rm $time/*.ps
 evince $time/Tmountain.pdf &
 
 rm 0/U 0/Uf
 
 # Run
-scalarTransportFoam >& log & sleep 0.001; tail -f log
+scalarTransportFoam | tee log.txt
 
 # Plot results
 for time in [1-9]*; do
@@ -36,7 +36,7 @@ for time in [1-9]*; do
     ln -s ../0/V $time/V
 done
 
-gmtFoam UT -time 0
+gmtFoam UT
 gmtFoam T
 eps2gif UT.gif 0/UT.pdf ??/UT.pdf ???/UT.pdf
 
