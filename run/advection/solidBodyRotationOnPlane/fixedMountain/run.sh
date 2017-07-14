@@ -16,7 +16,13 @@ terrainFollowingMesh
 # Write out cell volumes for post-processing
 time=0
 postProcess -func writeCellVolumes -time $time
-gmtFoam -time 0 mountainOver
+gmtFoam -time $time Tunder
+gmtFoam -time $time mountainOver
+cat $time/Tunder.ps $time/mountainOver.ps > $time/Tmountain.ps
+eps2pdf $time/Tmountain.ps
+mv Tmountain.ps.pdf $time/Tmountain.pdf
+rm $time/*.ps
+evince $time/Tmountain.pdf &
 
 rm 0/U 0/Uf
 
