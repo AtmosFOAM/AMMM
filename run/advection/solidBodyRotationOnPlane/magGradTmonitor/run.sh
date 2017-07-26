@@ -44,26 +44,3 @@ evince 0/monitor.pdf &
 
 # Run
 movingScalarTransportFoam >& log & sleep 0.001; tail -f log
-
-# Plot results
-time=0
-field=mesh
-field=monitor
-field=T
-field=UT
-gmtFoam $field -region pMesh -time $time':'
-eps2gif $field.gif 0/$field.pdf ??/$field.pdf ???/$field.pdf
-
-# Conservation of T
-globalSum T -region pMesh
-
-# Make links for animategraphics
-field=T
-field=mesh
-field=monitor
-mkdir -p animategraphics
-ln -s ../0/UT.pdf animategraphics/T_0.pdf
-for time in [1-9]*; do
-    let t=$time/50
-    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
-done
