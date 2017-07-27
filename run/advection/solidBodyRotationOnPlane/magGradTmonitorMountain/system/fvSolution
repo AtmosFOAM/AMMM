@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 0;
+maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 10;
 
 solvers
 {
