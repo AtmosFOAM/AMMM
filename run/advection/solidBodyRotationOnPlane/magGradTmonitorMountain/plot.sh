@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Plot results
-for field in T UT mesh uniT; do
+for field in T UT mesh uniT monitor; do
     gmtFoam ${field}under -region pMesh
     for time in [0-9]*; do
         cat $time/${field}under.ps ../fixedMountain/0/mountainOver.ps \
