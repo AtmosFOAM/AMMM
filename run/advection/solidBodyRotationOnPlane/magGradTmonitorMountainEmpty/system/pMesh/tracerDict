@@ -23,8 +23,8 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Specify the initial tracer
-type      gaussian;
-width     500;
+type      cone;
+width     100;
 centre    (5e3 7.5e3 500)
 maxTracer 1;
 
