@@ -27,4 +27,3 @@ mountain
     mountainCentre (2.5e3 5e3 0);
     mountainRadius mountainRadius [0 1 0 0 0] 1e3;
 }
-

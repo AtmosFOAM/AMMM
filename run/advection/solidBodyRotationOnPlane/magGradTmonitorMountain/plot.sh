@@ -18,7 +18,7 @@ globalSum T -region pMesh
 
 # Make links for animategraphics
 mkdir -p animategraphics
-for field in T UT mesh uniT; do
+for field in T UT mesh monitor uniT monitor; do
     for time in [0-9]*; do
         t=`echo $time | awk {'print $1/50'}`
         ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
