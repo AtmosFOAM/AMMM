@@ -21,9 +21,9 @@ solvers
         solver GAMG;
         smoother symGaussSeidel;
         preconditioner   DILU;
-        tolerance        1e-8;
+        tolerance        1e-4;
         relTol           0;
-        maxIter          50;
+        maxIter          10;
     };
     streamFunction
     {
@@ -35,5 +35,5 @@ solvers
     }
 }
 
-maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 1000;
+maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 500;
 // ************************************************************************* //

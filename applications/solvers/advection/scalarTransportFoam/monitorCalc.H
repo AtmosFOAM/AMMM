@@ -16,4 +16,6 @@ for(int iSmooth = 0; iSmooth < nMonSmooth; iSmooth++)
     );
 }
 
+setInternalAndBoundaryValues(monitorP, monitor);
+
 Info << min(monitor).value() << " to " << max(monitor).value() << endl;

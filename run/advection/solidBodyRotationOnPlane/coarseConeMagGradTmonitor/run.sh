@@ -20,7 +20,7 @@ evince 0/UTmesh.pdf &
 
 # Iterate, creating an adapted mesh and initial conditions on the mesh
 meshIter=0
-until [ $meshIter -ge 10 ]; do
+until [ $meshIter -ge 50 ]; do
     echo Mesh generation iteration $meshIter
     
     # Calculate the rMesh based on the monitor function derived from Uf
