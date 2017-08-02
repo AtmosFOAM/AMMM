@@ -35,5 +35,5 @@ solvers
     }
 }
 
-maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 500;
+maxMeshVelocity maxMeshVelocity [0 1 -1 0 0] 100;
 // ************************************************************************* //
