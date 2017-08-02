@@ -17,29 +17,29 @@ FoamFile
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0.5;
+internalField   uniform 0.0;
 
 boundaryField
 {
     south
     {
         type            cyclic;
-        value           uniform 0.5;
+        value           uniform 0.0;
     }
     north
     {
         type            cyclic;
-        value           uniform 0.5;
+        value           uniform 0.0;
     }
     east
     {
         type            cyclic;
-        value           uniform 0.5;
+        value           uniform 0.0;
     }
     west
     {
         type            cyclic;
-        value           uniform 0.5;
+        value           uniform 0.0;
     }
     top
     {
