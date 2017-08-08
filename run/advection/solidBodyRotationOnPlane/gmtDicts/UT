@@ -20,7 +20,7 @@ FieldsToPlot
 (
     [T filledContours 0 1 0.025 "$GMTU/colours/white_blue_red.cpt"]
     [U vectors 10 19 "black"]
-    [V    contours 5e6 9e6 1e6 "1pt,black"]
+    [V    contours 5e6 10e6 1e5 "1pt,black"]
 );
 
 // options

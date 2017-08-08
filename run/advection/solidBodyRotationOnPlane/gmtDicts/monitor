@@ -19,7 +19,7 @@ projection2D XY;
 FieldsToPlot
 (
     [monitor filledContours 1 16 0.5 "$GMTU/colours/white_blue_red.cpt"]
-    [V    contours 5e6 9e6 1e6 "black"]
+    [V    contours 5e6 10e6 1e5 "1pt,black"]
 );
 
 // options

@@ -6,13 +6,13 @@ FoamFile {
     object      mountainDict;
 }
 
+// Specify the mountain
 type btf;
 domainHeight 1000;
 mountain
 {
-    type coneMountain;
-    peakHeight peakHeight [0 1 0 0 0] 500;
+    type gaussianMountain;
+    peakHeight peakHeight [0 1 0 0 0] 100;
     mountainCentre (2.5e3 5e3 0);
-    mountainRadius mountainRadius [0 1 0 0 0] 1e3;
+    mountainHalfWidth mountainHalfWidth [0 1 0 0 0] 5e2;
 }
-
