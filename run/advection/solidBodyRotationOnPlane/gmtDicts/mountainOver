@@ -18,8 +18,10 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [V    contours 5e6 10e6 1e5 "1pt,black"]
+    [V contours 12.5e5 22.5e5 2.5e5 "black"]
+    [V contours 27.5e5 37.5e5 2.5e5 "black"]
 );
+
 
 // options
 region "0.01/0.9999e4/0/1.01e4";
