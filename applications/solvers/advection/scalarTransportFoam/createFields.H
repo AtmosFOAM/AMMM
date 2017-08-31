@@ -95,3 +95,12 @@ surfaceScalarField phiR
     rMesh
 );
 
+// Colin parameter
+volScalarField A
+(
+ IOobject("A", runTime.timeName(), pMesh,
+	  IOobject::NO_READ, IOobject::AUTO_WRITE),
+ pMesh,
+ dimensionedScalar("A", dimless, scalar(1))
+ );
+volScalarField Aold("Aold", A);
