@@ -104,3 +104,6 @@ volScalarField A
  dimensionedScalar("A", dimless, scalar(1))
  );
 volScalarField Aold("Aold", A);
+
+volScalarField AT("AT", T);
+volScalarField ATold("ATold", T);
