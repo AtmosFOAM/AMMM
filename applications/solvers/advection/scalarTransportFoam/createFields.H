@@ -101,7 +101,7 @@ volScalarField A
  IOobject("A", runTime.timeName(), pMesh,
 	  IOobject::NO_READ, IOobject::AUTO_WRITE),
  pMesh,
- dimensionedScalar("A", dimless, scalar(1))
+ dimensionedScalar("A", dimless, scalar(1.0))
  );
 volScalarField Aold("Aold", A);
 
