@@ -12,7 +12,6 @@ volScalarField T
     ),
     pMesh
 );
-volScalarField Told("Told", T);
 
 Info<< "Reading field phi\n" << endl;
 
@@ -25,6 +24,7 @@ surfaceScalarField phi
     ),
     pMesh
 );
+phi.oldTime();
 
 // Read U if present, otherwise create and write (not used)
 volVectorField U
@@ -39,6 +39,7 @@ volVectorField U
     ),
     fvc::reconstruct(phi)
 );
+U.oldTime();
 U.write();
 
 // Read Uf if present, otherwise create and write (not used)
@@ -98,11 +99,11 @@ surfaceScalarField phiR
 // Colin parameter
 volScalarField A
 (
- IOobject("A", runTime.timeName(), pMesh,
-	  IOobject::NO_READ, IOobject::AUTO_WRITE),
- pMesh,
- dimensionedScalar("A", dimless, scalar(1.0))
- );
+    IOobject("A", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    pMesh,
+    dimensionedScalar("A", dimless, scalar(1.0))
+);
 volScalarField Aold("Aold", A);
 
 volScalarField AT
