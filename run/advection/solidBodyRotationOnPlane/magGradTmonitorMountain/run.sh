@@ -14,8 +14,6 @@ cp -r init0 0
 setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
-setAnalyticTracerField -region pMesh -velocityDict advectionDict \
-                       -tracerDict tracerDict -name AT
 
 # Iterate, creating an adapted mesh and initial conditions on the mesh
 meshIter=0
@@ -28,8 +26,6 @@ until [ $meshIter -ge 10 ]; do
     # Re-create the initial conditions
     setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
-    setAnalyticTracerField -region pMesh -velocityDict advectionDict \
-                           -tracerDict tracerDict -name AT
     
     let meshIter+=1
 done
@@ -37,8 +33,6 @@ done
 setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
-setAnalyticTracerField -region pMesh -velocityDict advectionDict \
-                       -tracerDict tracerDict -name AT
 
 # Raise the mountain
 terrainFollowingMesh -region pMesh

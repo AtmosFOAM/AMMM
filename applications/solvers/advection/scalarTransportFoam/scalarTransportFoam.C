@@ -139,9 +139,6 @@ int main(int argc, char *argv[])
         #include "fluidEqns.H"
 
         Info << "Max T = " << max(T).value() << " min T = " << min(T).value() << endl;
-	A.write();
-	T.write();
-	AT.write();
 
         runTime.write();
 

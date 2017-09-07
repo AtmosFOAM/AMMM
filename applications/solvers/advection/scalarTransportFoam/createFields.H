@@ -105,5 +105,12 @@ volScalarField A
  );
 volScalarField Aold("Aold", A);
 
-volScalarField AT("AT", T);
+volScalarField AT
+(
+    IOobject("AT", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    A*T
+);
+
 volScalarField ATold("ATold", T);
+
