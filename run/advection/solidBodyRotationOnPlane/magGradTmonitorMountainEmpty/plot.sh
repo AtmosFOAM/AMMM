@@ -1,5 +1,15 @@
 #!/bin/bash -e
 
+time=0.5
+field=T
+gmtFoam ${field}under -region pMesh  -time $time
+cat $time/${field}under.ps ../fixedMountain/0/mountainOver.ps \
+    > $time/${field}.ps
+ps2pdf $time/${field}.ps $time/${field}.pdf.pdf
+pdfcrop $time/${field}.pdf.pdf $time/${field}.pdf
+rm $time/${field}under.ps $time/${field}.ps $time/${field}.pdf.pdf
+gv $time/${field}.pdf &
+
 # Plot results
 for field in T A AT UT mesh monitor uniT; do
     gmtFoam ${field}under -region pMesh

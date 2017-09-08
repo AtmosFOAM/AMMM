@@ -1,7 +1,12 @@
 // Make the flux relative
 #include "CourantNo.H"
 
-A == dimensionedScalar("", dimless, scalar(1));fvc::makeRelative(phi, U);
+//A == dimensionedScalar("", dimless, scalar(1));
+
+fvc::makeRelative(phi, U);
+fvc::makeRelative(zeroPhi, U0);
+
+Info << "Relative phi = " << phi << endl;
 
 // fvc::makeRelative(phi.oldTime(), U.oldTime());
 
@@ -12,18 +17,19 @@ A == dimensionedScalar("", dimless, scalar(1));fvc::makeRelative(phi, U);
 //            - volRatio*dt*(1-offCentre)*fvc::div(phi.oldTime(), uniT, "div(phi,A)");
 
 Aold      == volRatio*A
-           - volRatio*dt*(1-offCentre)*fvc::div(phi, A, "div(phi,A)");
+           - volRatio*dt*(1-offCentre)*fvc::div(zeroPhi, A, "div(phi,A)");
 
 uniTold   == volRatio*uniT
            - volRatio*dt*(1-offCentre)*fvc::div(phi, uniT, "div(phi,A)");
 
+AT == T;
 ATold     == volRatio*AT
            - volRatio*dt*(1-offCentre)*fvc::div(phi, AT, "div(phi,A)");
 
 // Fixed number of iterations per time-step
 for (int corr = 0; corr < nRKstages; corr++)
 {
-    A     == Aold      - dt*offCentre*fvc::div(phi, A, "div(phi,A)");
+    A     == Aold      - dt*offCentre*fvc::div(zeroPhi, A, "div(phi,A)");
 
     uniT  == uniTold   - dt*offCentre*fvc::div(phi, uniT, "div(phi,A)");
 
@@ -32,4 +38,5 @@ for (int corr = 0; corr < nRKstages; corr++)
 }
 
 fvc::makeAbsolute(phi, U);
+fvc::makeAbsolute(zeroPhi, U0);
 // fvc::makeAbsolute(phi.oldTime(), U.oldTime());
