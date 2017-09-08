@@ -31,8 +31,8 @@ ap 5;
 squeeze 1;
 expand  1;
 
-nx 50;
-ny 50;
+nx 25;
+ny 25;
 
 vertices
 (

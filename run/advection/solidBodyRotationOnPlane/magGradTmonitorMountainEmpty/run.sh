@@ -16,8 +16,8 @@ setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
 
 # Iterate, creating an adapted mesh and initial conditions on the mesh
-meshIter=1
-until [ $meshIter -gt 1 ]; do
+meshIter=0
+until [ $meshIter -ge 10 ]; do
     echo Mesh generation iteration $meshIter
     
     # Calculate the rMesh based on the monitor function derived from Uf
@@ -45,3 +45,4 @@ evince 0/monitor.pdf &
 
 # Run
 movingScalarTransportFoam >& log & sleep 0.001; tail -f log
+
