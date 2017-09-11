@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Plot results
-for field in T A AT UT mesh monitor uniT; do
+for field in T A AT UT mesh monitor uniT AuniT; do
     gmtFoam ${field}under -region pMesh
     for time in [0-9]*; do
         cat $time/${field}under.ps ../fixedMountain/0/mountainOver.ps \
@@ -15,12 +15,13 @@ done
 
 # Conservation of T
 globalSum T -region pMesh
+globalSum uniT -region pMesh
 
 # Make links for animategraphics
 mkdir -p animategraphics
-for field in T A AT UT mesh monitor uniT; do
+for field in T A AT UT mesh monitor uniT AuniT; do
     for time in [0-9]*; do
-        t=`echo $time | awk {'print $1/0.5'}`
+        t=`echo $time | awk {'print $1/50'}`
         ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
     done
 done

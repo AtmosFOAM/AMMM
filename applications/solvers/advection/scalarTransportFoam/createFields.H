@@ -84,7 +84,6 @@ volScalarField uniT
              IOobject::MUST_READ, IOobject::AUTO_WRITE),
     pMesh
 );
-volScalarField uniTold("uniTold", uniT);
 
 // Fluxes on the rMesh
 surfaceScalarField phiR
@@ -127,5 +126,13 @@ volScalarField AT
     A*T
 );
 
-volScalarField ATold("ATold", T);
+volScalarField ATold("ATold", AT);
 
+volScalarField AuniT
+(
+    IOobject("AuniT", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    A*uniT
+);
+
+volScalarField AuniTold("AuniTold", AuniT);
