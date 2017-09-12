@@ -5,12 +5,10 @@ A == dimensionedScalar("", dimless, scalar(1));
 
 fvc::makeRelative(phi, U);
 fvc::makeRelative(zeroPhi, U0);
-// fvc::makeRelative(phi.oldTime(), U.oldTime());
+
+flowOverGround.ref().field() = phi.boundaryField()[5];
 
 // First parts of Crank-Nicolson time-stepping
-
-// Aold      == volRatio*A
-//            - volRatio*dt*(1-offCentre)*fvc::div(phi.oldTime(), A, "div(phi,A)");
 
 Aold      == volRatio*A
            - volRatio*dt*(1-offCentre)*fvc::div(zeroPhi, A, "div(phi,A)");

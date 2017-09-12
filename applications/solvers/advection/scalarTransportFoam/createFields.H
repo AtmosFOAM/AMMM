@@ -136,3 +136,11 @@ volScalarField AuniT
 );
 
 volScalarField AuniTold("AuniTold", AuniT);
+
+volScalarField flowOverGround
+(
+    IOobject("flowOverGround", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    pMesh,
+    dimensionedScalar("flowOverGround", dimensionSet(0,3,-1,0,0), scalar(0))
+);
