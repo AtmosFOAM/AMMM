@@ -48,7 +48,7 @@ boundaryField
     }
     ground
     {
-        type            fixedValue;
+        type            calculated;
         value           uniform 0;
     }
 }

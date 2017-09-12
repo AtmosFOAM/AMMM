@@ -6,6 +6,14 @@ A == dimensionedScalar("", dimless, scalar(1));
 fvc::makeRelative(phi, U);
 fvc::makeRelative(zeroPhi, U0);
 
+forAll(phi.boundaryFieldRef()[5], facei)
+{
+    zeroPhi.boundaryFieldRef()[4][facei] = 0;
+    zeroPhi.boundaryFieldRef()[5][facei] = 0;
+    phi.boundaryFieldRef()[4][facei] = 0;
+    phi.boundaryFieldRef()[5][facei] = 0;
+}
+
 flowOverGround.ref().field() = phi.boundaryField()[5];
 
 // First parts of Crank-Nicolson time-stepping

@@ -18,7 +18,8 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [flowOverGround filledContours 0 0 0 "$GMTU/colours/red_white_blue.cpt"]
+    [flowOverGround filledContours -1.05e-9 1.05e-9 1e-10 "$GMTU/colours/red_white_blue.cpt"]
+    [none mesh "black"]
 );
 
 // options
