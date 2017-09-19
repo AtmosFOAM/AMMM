@@ -48,7 +48,7 @@ boundaryField
     }
     ground
     {
-        type            movingWallVelocity;
+        type            slip;
         value           uniform (0 0 0);
     }
 }
