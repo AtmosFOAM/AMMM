@@ -8,7 +8,6 @@ blockMesh
 
 # Calculate the initial conditions and the fluxes before imposing the terrain
 cp -r init0 0
-solidBodyRotationOnPlaneSetup
 
 # Put in a mountain
 terrainFollowingMesh
@@ -21,10 +20,3 @@ gmtFoam -time $time mountainOver
 cat $time/Tunder.ps $time/mountainOver.ps > $time/Tmountain.ps
 ps2pdf $time/Tmountain.ps
 mv Tmountain.pdf $time/Tmountain.pdf
-#rm $time/*.ps
-evince $time/Tmountain.pdf &
-
-rm 0/U 0/Uf
-
-# Run
-scalarTransportFoam >& log & sleep 0.001; tail -f log
