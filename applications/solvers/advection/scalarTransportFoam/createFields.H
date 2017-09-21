@@ -1,5 +1,4 @@
 Info<< "Reading field T\n" << endl;
-
 volScalarField T
 (
     IOobject
@@ -14,7 +13,6 @@ volScalarField T
 );
 
 Info<< "Reading field phi\n" << endl;
-
 surfaceScalarField phi
 (
     IOobject
