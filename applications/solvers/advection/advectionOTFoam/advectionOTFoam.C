@@ -47,14 +47,6 @@ int main(int argc, char *argv[])
     const Switch reMeshOnly = args.optionFound("reMeshOnly");
     const Switch fixedMesh = args.optionFound("fixedMesh");
 
-    const scalar ACblend
-    (
-        readScalar(mesh.schemesDict().lookup("ACblend"))
-    );
-    const scalar CoriRecon = readScalar
-    (
-        mesh.schemesDict().lookup("CoriRecon")
-    );
     #include "createFields.H"
 
     if (reMeshOnly)

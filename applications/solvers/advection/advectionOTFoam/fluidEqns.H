@@ -9,12 +9,12 @@ fvVectorMatrix UEqn
 (
     fvm::ddt(h,U)
   + fvc::div(phi, U)
-  + (1-CoriRecon)*h*(twoOmega ^ U)
+  + h*(twoOmega ^ U)
 );
 
 if (piso.momentumPredictor())
 {
-    solve(UEqn == -CoriRecon*h*(twoOmega ^ U) - h*g*fvc::grad(h));
+    solve(UEqn == - h*g*fvc::grad(h));
 }
 
 // --- PISO loop
@@ -23,16 +23,10 @@ while (piso.correct())
     volScalarField rAU(1.0/UEqn.A());
     surfaceScalarField hrAUf("hrAUf", fvc::interpolate(h*rAU));
     volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, h));
-    surfaceScalarField CoriolisFlux
-    (
-        CoriRecon*hf*fvc::flux(h*rAU*(twoOmega ^ U))
-    );
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(h*HbyA)
-      - CoriolisFlux
-      + ACblend*hrAUf*fvc::ddtCorr(h, U, hUf)
     );
     fvc::makeRelative(phiHbyA, h, U);
 
@@ -58,7 +52,6 @@ while (piso.correct())
     U = HbyA - fvc::reconstruct
     (
         hrAUf*hf*g*fvc::snGrad(h)*mesh.magSf()
-      + CoriolisFlux
     )/h;
     U -= (U & meshNormal)*meshNormal;
     U.correctBoundaryConditions();

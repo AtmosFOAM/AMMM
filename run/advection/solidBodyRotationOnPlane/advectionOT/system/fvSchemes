@@ -26,8 +26,6 @@ ddtSchemes
 {
     default CrankNicolson 0.8;
 }
-CoriRecon 0;
-ACblend 0;
 
 gradSchemes
 {
