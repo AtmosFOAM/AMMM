@@ -12,10 +12,14 @@ fvVectorMatrix UEqn
   + h*(twoOmega ^ U)
 );
 
-if (piso.momentumPredictor())
-{
-    solve(UEqn == - h*g*fvc::grad(h));
-}
+// fvc::makeRelative(phi, U);
+
+// fvScalarMatrix TEqn
+// (
+//     fvm::ddt(T)
+//   + fvc::div(phi, T)
+// );
+// TEqn = 0;
 
 // --- PISO loop
 while (piso.correct())

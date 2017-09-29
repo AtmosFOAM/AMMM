@@ -40,7 +40,7 @@ Description
 int main(int argc, char *argv[])
 {
     argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
-    argList::addBoolOption("fixedMesh", "run on rMesh and do not modify");
+    argList::addBoolOption("fixedMesh", "run on polyMesh and do not modify");
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"

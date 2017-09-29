@@ -12,6 +12,8 @@ volScalarField T
       mesh
 );
 
+surfaceScalarField Tf("Tf", fvc::interpolate(T));
+
 Info<< "Reading field U\n" << endl;
 volVectorField U
 (
