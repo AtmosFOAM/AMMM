@@ -24,11 +24,11 @@ FoamFile
 
 convertToMeters 1000;
 
-ax 18000;
-ay 18000;
+ax 10;
+ay 10;
 
-nx 100;
-ny 100;
+nx 25;
+ny 25;
 
 vertices
 (
