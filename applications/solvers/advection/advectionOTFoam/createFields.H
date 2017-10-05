@@ -1,3 +1,10 @@
+const label nIteration
+(
+    readLabel(mesh.solutionDict().lookup("nIteration"))
+);
+Info<< "nIteraion = " << nIteration << endl;
+
+
 Info<< "Reading field T\n" << endl;
 volScalarField T
 (
