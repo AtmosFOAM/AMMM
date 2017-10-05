@@ -14,12 +14,15 @@ fvVectorMatrix UEqn
 
 // fvc::makeRelative(phi, U);
 
-// fvScalarMatrix TEqn
-// (
-//     fvm::ddt(T)
-//   + fvc::div(phi, T)
-// );
-// TEqn = 0;
+// for(int icorr = 0; icorr < nIteration; icorr++)
+// {
+//     fvScalarMatrix TEqn
+//     (
+//         fvm::ddt(T)
+//       + fvc::div(phi, T)
+//     );
+//     TEqn.solve();
+// }
 
 // --- PISO loop
 while (piso.correct())
@@ -68,4 +71,3 @@ while (piso.correct())
     Uf = hUf/hf;
     hf = fvc::interpolate(h);
 }
-
