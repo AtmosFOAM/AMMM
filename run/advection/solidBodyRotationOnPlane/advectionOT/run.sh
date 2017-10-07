@@ -13,7 +13,7 @@ cp -r constant/polyMesh constant/cMesh
 ## Create initial conditions
 cp -r init_0 0
 # set tracer
-# setVelocityField -dict advectionDict
+setVelocityField -dict advectionDict
 setAnalyticTracerField -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
 ## Draw initial conditions

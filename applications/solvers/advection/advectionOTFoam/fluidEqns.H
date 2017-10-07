@@ -1,25 +1,13 @@
-// Calculate absolute flux from the mapped surface velocity
-phi = hUf & mesh.Sf();
+fvc::makeRelative(phi, U);
 
-// Make the flux relative to the mesh motion
-fvc::makeRelative(phi, h, U);
+for(int icorr = 0; icorr < nIteration; icorr++)
+{
+    fvScalarMatrix TEqn
+    (
+        fvm::ddt(T)
+      + fvc::div(phi, T)
+    );
+    TEqn.solve();
+}
 
-// Momentum predictor
-fvVectorMatrix UEqn
-(
-    fvm::ddt(h,U)
-  + fvc::div(phi, U)
-  + h*(twoOmega ^ U)
-);
-
-// fvc::makeRelative(phi, U);
-
-// for(int icorr = 0; icorr < nIteration; icorr++)
-// {
-//     fvScalarMatrix TEqn
-//     (
-//         fvm::ddt(T)
-//       + fvc::div(phi, T)
-//     );
-//     TEqn.solve();
-// }
+fvc::makeAbsolute(phi, U);

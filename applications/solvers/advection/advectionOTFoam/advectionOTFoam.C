@@ -32,7 +32,6 @@ Description
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "pisoControl.H"
 #include "CorrectPhi.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,16 +48,18 @@ int main(int argc, char *argv[])
 
     #include "createFields.H"
 
+    Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+        << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+        << "  Max T = " << max(T).value() << " min T = " << min(T).value()
+        << nl << endl;
+
     if (reMeshOnly)
     {
         mesh.update();
         runTime.writeAndEnd();
     }
 
-    #include "readEnvironmentalProperties.H"
-    #include "CourantNo.H"
-
-    pisoControl piso(mesh);
+//    #include "CourantNo.H"
 
     Info << "Mesh has normal direction" << flush;
     vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
-        #include "CourantNo.H"
+//        #include "CourantNo.H"
 
         if (!fixedMesh)
         {
