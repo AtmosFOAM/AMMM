@@ -4,7 +4,6 @@ const label nIteration
 );
 Info<< "nIteraion = " << nIteration << endl;
 
-
 Info<< "Reading field T\n" << endl;
 volScalarField T
 (

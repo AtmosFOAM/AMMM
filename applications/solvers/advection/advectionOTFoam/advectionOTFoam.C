@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            << "  Max T = " << max(T).value() << " min T = " << min(T).value()
             << nl << endl;
     }
 
