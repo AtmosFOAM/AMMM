@@ -21,6 +21,5 @@ EXE_LIBS = \
     -lHodgeOps \
     -lmonitorFunction \
     -lmorePrescribedFields \
-    -lgeometry \
-    -lorography -lgdal
+    -lgeometry
 

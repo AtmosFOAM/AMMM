@@ -1,3 +1,0 @@
-meshMovement2Dslice.C
-
-EXE = $(FOAM_USER_APPBIN)/meshMovement2Dslice
