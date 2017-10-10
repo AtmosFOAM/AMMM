@@ -10,7 +10,7 @@ done
 mkdir -p animategraphics
 for field in mesh T; do
     for time in [0-9]*; do
-	t=`echo $time | awk {'print $1/250'}`
+	t=`echo $time | awk {'print $1/50'}`
 	ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
     done
 done

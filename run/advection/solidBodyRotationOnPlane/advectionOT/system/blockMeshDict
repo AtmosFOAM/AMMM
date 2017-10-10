@@ -27,8 +27,8 @@ convertToMeters 1000;
 ax 10;
 ay 10;
 
-nx 25;
-ny 25;
+nx 50;
+ny 50;
 
 vertices
 (
