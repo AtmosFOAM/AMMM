@@ -40,10 +40,10 @@ volVectorField U
         "U",
         runTime.timeName(),
         mesh,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    mesh
+    fvc::reconstruct(phi)
 );
 
 Info<< "Reading field Uf\n" << endl;
@@ -54,8 +54,13 @@ surfaceVectorField Uf
         "Uf",
         runTime.timeName(),
         mesh,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    mesh
+    linearInterpolate(U)
 );
+Uf += (phi - (Uf & mesh.Sf()))*mesh.Sf()/sqr(mesh.magSf());
+Uf.write();
+volScalarField divU("divU", fvc::div(phi));
+divU.write();
+
