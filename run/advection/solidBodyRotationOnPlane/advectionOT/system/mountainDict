@@ -8,27 +8,25 @@
 
 FoamFile
 {
-    version         2.0;
-    format          ascii;
-
-    root            "";
-    case            "";
-    instance        "";
-    local           "";
-
-    class           dictionary;
-    object          environmentalProperties;
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      mountainDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Gravitational acceleration
-g g       [0 1 -2 0 0 0 0] 1; //10;
-// The directin of the rotation vector
-OmegaHat (0 0 1);
-// The Coriolis at y=0
-f0 f0 [0 0 -1 0 0] 1e-4;
-// The beta parameter where f = f0 + beta y
-beta beta [0 -1 -1 0 0] 0;
-
-// ************************************************************************* //
+// Specify the mountain
+type btf;
+domainHeight 1000;
+mountain
+{
+    type doubleConeMountain;
+    peakHeight      peakHeight      [0 1 0 0 0] 0;
+    mountainCentre                  (2.5e3 5e3 0);
+    mountainRadius	mountainRadius 	[0 1 0 0 0] 1e3;
+    peakHeightM 	peakHeightM 	[0 1 0 0 0] 0;
+    mountainCentreM 			    (7.5e3 5e3 0);
+    mountainRadiusM mountainRadiusM [0 1 0 0 0] 1e3;
+}

@@ -16,9 +16,9 @@ cp -r init_0 0
 setVelocityField -dict advectionDict
 setAnalyticTracerField -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
-## Draw initial conditions
-time=0
-gmtFoam -time $time vorticityMesh
+
+# Raise the mountain
+terrainFollowingMesh
 
 ## Solve the SWE
 advectionOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
