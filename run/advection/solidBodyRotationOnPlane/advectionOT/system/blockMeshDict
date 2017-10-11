@@ -1,50 +1,43 @@
-/*---------------------------------------------------------------------------*\
+/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.4                                   |
-|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
-    version         2.0;
-    format          ascii;
-
-    root            "";
-    case            "";
-    instance        "";
-    local           "";
-
-    class           dictionary;
-    object          blockMeshDict;
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 convertToMeters 1000;
 
 ax 10;
 ay 10;
+az 1;
 
 nx 50;
 ny 50;
 
 vertices
 (
-	(0	0	0)
-    	($ax 	0	0)
-    	($ax 	$ay 	0)
-    	(0 	$ay 	0)
-    	(0 	0 	1)
-    	($ax 	0 	1)
-    	($ax 	$ay 	1)
-    	(0 	$ay 	1)
+    (0   0   0)
+    ($ax 0   0)
+    ($ax $ay 0)
+    (0   $ay 0)
+    (0   0   $az)
+    ($ax 0   $az)
+    ($ax $ay $az)
+    (0   $ay $az)
 );
 
 blocks
 (
-	hex (0 1 2 3 4 5 6 7)  ($nx $ny 1) simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) ($nx $ny 1) simpleGrading (1 1 1)
 );
 
 edges
@@ -53,44 +46,58 @@ edges
 
 boundary
 (
-    equator
-    {
-        type            cyclic;
-        neighbourPatch  pole;
-        faces           ((0 1 5 4));
-    }
-    pole
-    {
-        type            cyclic;
-        neighbourPatch  equator;
-        faces           ((3 2 6 7));
-    }
     inlet
     {
-        type            cyclic;
-        neighbourPatch  outlet;
-        faces           ((4 7 3 0));
+        type           cyclic;
+        neighbourPatch outlet;
+        faces
+        (
+            (4 7 3 0)
+        );
     }
     outlet
     {
-        type            cyclic;
-        neighbourPatch  inlet;
-        faces           ((1 2 6 5));
+        type           cyclic;
+        neighbourPatch inlet;
+        faces
+        (
+            (1 2 6 5)
+        );
+    }
+    equator
+    {
+        type           cyclic;
+        neighbourPatch pole;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+    pole
+    {
+        type           cyclic;
+        neighbourPatch equator;
+        faces
+        (
+            (3 2 6 7)
+        );
     }
     top
     {
-        type            empty;
-        faces           ((4 5 6 7));
+        type empty;
+        faces
+        (
+            (4 5 6 7)
+        );
     }
     ground
     {
-        type            empty;
-        faces           ((0 3 2 1));
+        type empty;
+        faces
+        (
+            (0 3 2 1)
+        );
     }
-);
-
-mergePatchPairs
-(
 );
 
 // ************************************************************************* //
