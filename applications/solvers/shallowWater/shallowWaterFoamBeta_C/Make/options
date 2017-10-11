@@ -6,8 +6,6 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/sampling/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/finiteVolume/lnInclude \
-    -I$(ATMOSFOAM_TOOLS_SRC)/morePrescribedFields/lnInclude \
-    -I$(ATMOSFOAM_TOOLS_SRC)/geometry/lnInclude \
     -I$(AMMM_SRC)/monitorFunction/lnInclude
     
 
@@ -19,8 +17,5 @@ EXE_LIBS = \
     -lHodgeOps \
     -lfiniteVolumeAtmos \
     -lfiniteVolumeAtmosFOAMtools \
-    -lmonitorFunction \
-    -lmorePrescribedFields \
-    -lgeometry \
-    -lorography -lgdal
+    -lmonitorFunction
 

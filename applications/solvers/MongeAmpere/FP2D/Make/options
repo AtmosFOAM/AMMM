@@ -18,6 +18,5 @@ EXE_LIBS = \
     -lfiniteVolumeAtmosFOAMtools \
     -lmonitorFunction \
     -lmorePrescribedFields \
-    -lgeometry \
-    -lorography -lgdal
+    -lgeometry
 
