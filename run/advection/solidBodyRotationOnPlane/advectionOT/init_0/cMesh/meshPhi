@@ -41,19 +41,15 @@ boundaryField
         type            cyclic;
         value           uniform 0;
     }
-    front
+    top
     {
-        type            empty;
-        value           nonuniform 
-0
-;
+        type            calculated;
+        value           uniform 0;
     }
-    back
+    ground
     {
-        type            empty;
-        value           nonuniform 
-0
-;
+        type            calculated;
+        value           uniform 0;
     }
 }
 

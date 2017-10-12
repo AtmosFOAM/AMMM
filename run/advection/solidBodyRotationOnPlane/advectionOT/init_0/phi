@@ -43,11 +43,13 @@ boundaryField
     }
     top
     {
-        type            empty;
+        type            fixedValue;
+        value           uniform 0;
     }
     ground
     {
-        type            empty;
+        type            fixedValue;
+        value           uniform 0;
     }
 }
 

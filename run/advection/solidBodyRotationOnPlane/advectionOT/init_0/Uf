@@ -40,13 +40,15 @@ boundaryField
         type            cyclic;
         value           uniform (0 0 0);
     }
-    front
+    top
     {
-        type            empty;
+        type            calculated;
+        value           uniform (0 0 0);
     }
-    back
+    ground
     {
-        type            empty;
+        type            calculated;
+        value           uniform (0 0 0);
     }
 }
 

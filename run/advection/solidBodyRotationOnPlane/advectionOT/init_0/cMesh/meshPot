@@ -37,14 +37,14 @@ boundaryField
     {
         type            cyclic;
     }
-    front
-        {
-            type empty;
-        }
-    back
-        {
-            type empty;
-        }
+    top
+    {
+        type            zeroGradient;
+    }
+    ground
+    {
+        type            zeroGradient;
+    }
 }
 
 

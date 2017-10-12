@@ -18,6 +18,7 @@ cp -r init_0 0
 #                        -tracerDict tracerDict -name T
 # set divergence-free velocity field
 setVelocityField -dict advectionDict
+rm constant/polyMesh/magSf
 # Raise the mountain
 terrainFollowingMesh
 

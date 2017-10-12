@@ -39,11 +39,11 @@ boundaryField
     }
     top
     {
-        type            empty;
+        type            zeroGradient;
     }
     ground
     {
-        type            empty;
+        type            zeroGradient;
     }
 }
 
