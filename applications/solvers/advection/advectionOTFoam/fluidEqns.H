@@ -10,7 +10,4 @@ for(int icorr = 0; icorr < nIteration; icorr++)
     TEqn.solve();
 }
 
-divU = fvc::div(phi);
-divU.write();
-
 fvc::makeAbsolute(phi, U);
