@@ -18,6 +18,8 @@ volScalarField T
     mesh
 );
 
+surfaceVectorField gradT("gradT", fvc::interpolate(fvc::grad(T)));
+
 Info<< "Reading field phi\n" << endl;
 surfaceScalarField phi
 (

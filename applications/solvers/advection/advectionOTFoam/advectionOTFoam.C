@@ -55,12 +55,13 @@ int main(int argc, char *argv[])
 
     if (reMeshOnly)
     {
+        gradT = fvc::interpolate(fvc::grad(T));
         mesh.update();
         runTime.writeAndEnd();
     }
 
 //    #include "CourantNo.H"
-
+ 
     Info << "Mesh has normal direction" << flush;
     vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
     meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
