@@ -13,9 +13,9 @@ cp -r constant/polyMesh constant/cMesh
 ## Create initial conditions
 cp -r init_0 0
 # set tracer
-cp 0/T constant/T_init
-setAnalyticTracerField -velocityDict advectionDict \
-                       -tracerDict tracerDict -name T
+# cp 0/T constant/T_init
+# setAnalyticTracerField -velocityDict advectionDict \
+#                        -tracerDict tracerDict -name T
 # set divergence-free velocity field
 setVelocityField -dict advectionDict
 # Raise the mountain
