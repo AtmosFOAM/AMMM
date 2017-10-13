@@ -8,6 +8,13 @@ for(int icorr = 0; icorr < nIteration; icorr++)
       + fvc::div(phi, T)
     );
     TEqn.solve();
+
+    fvScalarMatrix uniTEqn
+    (
+        fvm::ddt(uniT)
+        + fvc::div(phi, uniT, "div(phi,T)")
+    );
+    uniTEqn.solve();
 }
 
 fvc::makeAbsolute(phi, U);

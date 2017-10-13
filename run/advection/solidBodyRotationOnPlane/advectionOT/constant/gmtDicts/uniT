@@ -18,7 +18,7 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [T filledContours 0 0 0  "$GMTU/colours/red_white_blue.cpt"]
+    [uniT filledContours 0 0 0  "$GMTU/colours/red_white_blue.cpt"]
 );
 
 // options

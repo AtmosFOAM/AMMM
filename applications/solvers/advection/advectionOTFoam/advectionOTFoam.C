@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     }
 
 //    #include "CourantNo.H"
- 
+
     Info << "Mesh has normal direction" << flush;
     vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
     meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);

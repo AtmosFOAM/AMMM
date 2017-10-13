@@ -18,7 +18,25 @@ volScalarField T
     mesh
 );
 
-surfaceVectorField gradT("gradT", fvc::interpolate(fvc::grad(T)));
+surfaceVectorField gradT
+(
+    "gradT",
+    fvc::interpolate(fvc::grad(T))
+);
+
+Info<< "Reading field uniT\n" << endl;
+volScalarField uniT
+(
+    IOobject
+    (
+        "uniT",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 Info<< "Reading field phi\n" << endl;
 surfaceScalarField phi
@@ -65,4 +83,3 @@ Uf += (phi - (Uf & mesh.Sf()))*mesh.Sf()/sqr(mesh.magSf());
 Uf.write();
 volScalarField divU("divU", fvc::div(phi));
 divU.write();
-
