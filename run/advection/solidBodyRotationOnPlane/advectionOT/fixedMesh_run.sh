@@ -19,11 +19,12 @@ setAnalyticTracerField -velocityDict advectionDict \
 # set divergence-free velocity field
 setVelocityField -dict advectionDict
 # Raise the mountain
-#terrainFollowingMesh
+terrainFollowingMesh
 
 # Draw initial condition
 gmtFoam -time 0 UT
 gv 0/UT.pdf &
 
 ## Solve the SWE
-advectionOTFoam >& log & sleep 0.01; tail -f log
+advectionOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
+
