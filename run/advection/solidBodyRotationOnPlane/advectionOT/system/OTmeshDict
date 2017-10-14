@@ -15,12 +15,15 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Input for OTmesh
-maxMAiters         4;
-maxMeshVelocity    60;
-meshRelax          0;
+maxMAiters             4;
+maxMeshVelocity        60;
+meshRelax              0;
 monitorFunctionDynamic monitorFunctionFromGradU5050;
-maxMonitorRatio     2;
-nMonSmooth          8;
-monitorFromName     gradT;
+maxMonitorRatio        2;
+nMonSmooth             8;
+monitorFromName        gradT;
+monitorBaseMin monitorBaseMin [0 0 0 0 0] 0;
+monitorBaseMax monitorBaseMax [0 0 0 0 0] 1;
+monitorMax 4;
 
 // ************************************************************************* //

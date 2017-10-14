@@ -14,7 +14,7 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/6c";
+projection "X18c/18c";
 projection2D XY;
 plotBoundaryDots false;
 
@@ -26,5 +26,5 @@ FieldsToPlot
 );
 
 // Options
+region "0.01/0.9999e4/0/1.01e4";
 annotate "minMax 0 -38000";
-
