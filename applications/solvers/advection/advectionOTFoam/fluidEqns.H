@@ -12,7 +12,7 @@ for(int icorr = 0; icorr < nIteration; icorr++)
     fvScalarMatrix uniTEqn
     (
         fvm::ddt(uniT)
-        + fvc::div(phi, uniT, "div(phi,T)")
+      + fvc::div(phi, uniT, "div(phi,T)")
     );
     uniTEqn.solve();
 }

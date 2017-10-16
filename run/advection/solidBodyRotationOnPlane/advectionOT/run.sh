@@ -11,13 +11,31 @@ mkdir constant/cMesh
 cp -r constant/polyMesh constant/cMesh
 
 ## Create initial conditions
-cp -r 0.org 0
+cp -r init0 0
 # set tracer
 cp 0/T constant/T_init
 setAnalyticTracerField -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
 # set divergence-free velocity field
 setVelocityField -dict advectionDict
+
+# Iterate, creating a mesh adapted to the initial conditions on that mesh
+sed 's/MAXMESHVELOCITY/0/g' system/OTmeshDictTemplate | \
+    sed 's/MESHRELAX/0.5/g' > system/OTmeshDict
+meshIter=0
+until [ $meshIter -ge 20 ]; do
+    echo Mesh generation iteration $meshIter
+
+    advectionOTFoam -reMeshOnly
+
+    setAnalyticTracerField -velocityDict advectionDict \
+                           -tracerDict tracerDict -name T
+
+    setVelocityField -dict advectionDict
+
+    let meshIter+=1
+done
+
 # Raise the mountain
 #terrainFollowingMesh
 
@@ -26,4 +44,7 @@ gmtFoam -time 0 UT
 gv 0/UT.pdf &
 
 ## Solve the SWE
+sed 's/MAXMESHVELOCITY/1e6/g' system/OTmeshDictTemplate | \
+    sed 's/MESHRELAX/0/g' > system/OTmeshDict
+
 advectionOTFoam >& log & sleep 0.01; tail -f log

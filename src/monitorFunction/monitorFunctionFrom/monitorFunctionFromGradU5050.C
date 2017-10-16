@@ -64,15 +64,17 @@ Foam::tmp<Foam::volScalarField> Foam::monitorFunctionFromGradU5050::baseToMonito
 ) const
 {
     const fvMesh& mesh = b.mesh();
+    const dimensionedScalar Vtot("Vtot", dimVol, gSum(mesh.V()));
+    const dimensionedScalar monitorMean = fvc::domainIntegrate(b)/Vtot;
+
     tmp<volScalarField> tmonitor
     (
         new volScalarField
         (
             IOobject(name(), b.instance(), mesh),
-            sqrt(b/sqr(monBaseMax() - monBaseMin()) + 1)
+            min(b/monitorMean+1, maxMonitorRatio())
         )
     );
-    tmonitor.ref() = min(tmonitor.ref(), monitorMax());
 
     return tmonitor;
 }
@@ -85,9 +87,7 @@ Foam::monitorFunctionFromGradU5050::monitorFunctionFromGradU5050
 )
 :
     monitorFunctionFrom(dict),
-    monBaseMin_(dict.lookup("monitorBaseMin")),
-    monBaseMax_(dict.lookup("monitorBaseMax")),
-    monitorMax_(readScalar(dict.lookup("monitorMax")))
+    maxMonitorRatio_(readScalar(dict.lookup("maxMonitorRatio")))
 {}
 
 

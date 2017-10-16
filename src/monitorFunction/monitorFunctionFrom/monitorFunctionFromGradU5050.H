@@ -53,14 +53,8 @@ class monitorFunctionFromGradU5050
 {
 private:
     // Private data
-        //- A low value of the base monitor function (for coarse resolution)
-        const dimensionedScalar monBaseMin_;
-
-        //- A high value of the base monitor function (for fine resolution)
-        const dimensionedScalar monBaseMax_;
-
-        //- The maximum allowable monitor function (1 is the minumum)
-        const scalar monitorMax_;
+        //- Maximum ratio between largest and smallest monitor function
+        const scalar maxMonitorRatio_;
 
 protected:
     // Protected Member functions
@@ -94,14 +88,8 @@ public:
         //- Access
         word name() const { return "monitorFunctionFromGradU5050"; }
 
-         //- A low value of the base monitor function (for coarse resolution)
-          const dimensionedScalar& monBaseMin() const {return monBaseMin_;}
-
-        //- A high value of the base monitor function (for fine resolution)
-          const dimensionedScalar& monBaseMax() const {return monBaseMax_;}
-
-          //- The maximum allowable monitor function (1 is the minumum)
-          scalar monitorMax() const { return monitorMax_;}
+        //-  Maximum ratio between largest and smallest monitor function
+        scalar maxMonitorRatio() const { return maxMonitorRatio_;}
 };
 
 

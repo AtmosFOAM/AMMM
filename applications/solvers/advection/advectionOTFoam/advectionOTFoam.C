@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    shallowWaterOTFoam
+    advectionOTFoam
 
 Description
     Transient solver for shallow water equations on a moving mesh.
@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
         runTime.writeAndEnd();
     }
 
-//    #include "CourantNo.H"
-
     Info << "Mesh has normal direction" << flush;
     vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
     meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
@@ -73,10 +71,10 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
-//        #include "CourantNo.H"
 
         if (!fixedMesh)
         {
+            gradT = fvc::interpolate(fvc::grad(T));
             mesh.update();
         }
         #include "fluidEqns.H"
