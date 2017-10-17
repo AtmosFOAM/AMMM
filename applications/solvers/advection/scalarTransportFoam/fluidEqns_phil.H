@@ -16,20 +16,20 @@ if (colinParameter)
 
     // First parts of Crank-Nicolson time-stepping
     Aold     == volRatio*A
-              - volRatio*dt*(1-offCentre)*fvc::div(zeroPhi, A,     "div(phi,A)");
+              - volRatio*dt*(1-offCentre)*fvc::div(phi, A,     "div(phi,T)");
 
     ATold    == volRatio*AT
-              - volRatio*dt*(1-offCentre)*fvc::div(phi,     AT,    "div(phi,A)");
+              - volRatio*dt*(1-offCentre)*fvc::div(phi, AT,    "div(phi,T)");
 
     AuniTold == volRatio*AuniT
-              - volRatio*dt*(1-offCentre)*fvc::div(phi,     AuniT, "div(phi,A)");
+              - volRatio*dt*(1-offCentre)*fvc::div(phi, AuniT, "div(phi,T)");
 
     // Fixed number of iterations per time-step
     for (int corr = 0; corr < nRKstages; corr++)
     {
-        A     == Aold     - dt*offCentre*fvc::div(zeroPhi, A,     "div(phi,A)");
-        AT    == ATold    - dt*offCentre*fvc::div(phi,     AT,    "div(phi,A)");
-        AuniT == AuniTold - dt*offCentre*fvc::div(phi,     AuniT, "div(phi,A)");
+        A     == Aold     - dt*offCentre*fvc::div(phi,  A,     "div(phi,T)");
+        AT    == ATold    - dt*offCentre*fvc::div(phi,  AT,    "div(phi,T)");
+        AuniT == AuniTold - dt*offCentre*fvc::div(phi,  AuniT, "div(phi,T)");
     }
 
     // Update T and uniT

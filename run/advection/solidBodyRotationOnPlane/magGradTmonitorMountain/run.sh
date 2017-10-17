@@ -38,6 +38,7 @@ setAnalyticTracerField -region pMesh -velocityDict advectionDict \
 # Raise the mountain
 terrainFollowingMesh -region pMesh
 
+# Draw initial conditions
 gmtFoam -time 0 -region pMesh UTmesh
 evince 0/UTmesh.pdf &
 gmtFoam -time 0 -region pMesh UT

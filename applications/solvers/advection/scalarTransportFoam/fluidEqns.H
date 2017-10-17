@@ -11,6 +11,7 @@ if (colinParameter)
 
     // Make the flux relative
     fvc::makeRelative(phi, U);
+    fvc::makeRelative(zeroPhi, U0);
 
     // Get flow over the ground for debugging
     flowOverGround.ref().field() = phi.boundaryField()[5];
@@ -46,6 +47,7 @@ if (colinParameter)
 
     // Recover the absolute flux
     fvc::makeAbsolute(phi, U);
+    fvc::makeAbsolute(zeroPhi, U0);
 }
 else
 {

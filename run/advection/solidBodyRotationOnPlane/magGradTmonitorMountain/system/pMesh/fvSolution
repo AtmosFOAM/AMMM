@@ -39,5 +39,19 @@ solvers
         tolerance       1e-08
         relTol          0;
     }
+    T
+    {
+        solver PBiCG;
+        preconditioner   DILU;
+        tolerance       1e-08
+        relTol          0;
+    }
+    uniT
+    {
+        solver PBiCG;
+        preconditioner   DILU;
+        tolerance       1e-08
+        relTol          0;
+    }
 }
 // ************************************************************************* //
