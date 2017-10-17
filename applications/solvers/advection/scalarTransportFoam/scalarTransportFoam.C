@@ -48,13 +48,15 @@ int main(int argc, char *argv[])
 {
     argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
     argList::addBoolOption("fixedMesh", "run on rMesh and do not modify");
+    argList::addBoolOption("colinParameter", "run with the Colin parameter A");
     #include "setRootCase.H"
     #include "createTime.H"
     #define dt runTime.deltaT()
     #include "createMesh.H"
-    
+
     const Switch reMeshOnly = args.optionFound("reMeshOnly");
     const Switch fixedMesh = args.optionFound("fixedMesh");
+    const Switch colinParameter = args.optionFound("colinParameter");
 
     // Create the moving mesh
     fvMesh rMesh
@@ -78,7 +80,7 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createMovingMeshFields.H"
     #include "createMountain.H"
-    
+
     const dimensionedScalar maxMeshVelocity
     (
         mesh.solutionDict().lookup("maxMeshVelocity")

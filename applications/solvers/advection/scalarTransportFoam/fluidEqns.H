@@ -1,44 +1,78 @@
-// Make the flux relative
 #include "CourantNo.H"
 
-A == dimensionedScalar("", dimless, scalar(1));
+//* Rewrite equations using OpenFOAM functions *//
 
-fvc::makeRelative(phi, U);
-fvc::makeRelative(zeroPhi, U0);
-
-// forAll(phi.boundaryFieldRef()[5], facei)
-// {
-//     zeroPhi.boundaryFieldRef()[4][facei] = 0;
-//     zeroPhi.boundaryFieldRef()[5][facei] = 0;
-//     phi.boundaryFieldRef()[4][facei] = 0;
-//     phi.boundaryFieldRef()[5][facei] = 0;
-// }
-
-flowOverGround.ref().field() = phi.boundaryField()[5];
-
-// First parts of Crank-Nicolson time-stepping
-Aold      == volRatio*A
-           - volRatio*dt*(1-offCentre)*fvc::div(zeroPhi, A, "div(phi,A)");
-
-AT == T;
-ATold     == volRatio*AT
-           - volRatio*dt*(1-offCentre)*fvc::div(phi, AT, "div(phi,A)");
-
-AuniT == uniT;
-AuniTold  == volRatio*AuniT
-           - volRatio*dt*(1-offCentre)*fvc::div(phi, AuniT, "div(phi,A)");
-
-// Fixed number of iterations per time-step
-for (int corr = 0; corr < nRKstages; corr++)
+if (colinParameter)
 {
-    A     == Aold      - dt*offCentre*fvc::div(zeroPhi, A, "div(phi,A)");
+    // Reset A
+    A     == dimensionedScalar("", dimless, scalar(1));
+    AT    == T;
+    AuniT == uniT;
 
-    AT    == ATold - dt*offCentre*fvc::div(phi, AT, "div(phi,A)");
+    // Make the flux relative
+    fvc::makeRelative(phi, U);
+
+    // Get flow over the ground for debugging
+    flowOverGround.ref().field() = phi.boundaryField()[5];
+
+    // Solve equations iterativelly
+    for(int icorr = 0; icorr < nRKstages; icorr++)
+    {
+        fvScalarMatrix AEqn
+        (
+            fvm::ddt(A)
+          + fvc::div(phi, A, "div(phi,T)")
+        );
+        AEqn.solve();
+
+        fvScalarMatrix ATEqn
+        (
+            fvm::ddt(AT)
+          + fvc::div(phi, AT, "div(phi,T)")
+        );
+        ATEqn.solve();
+
+        fvScalarMatrix AuniTEqn
+        (
+            fvm::ddt(AuniT)
+          + fvc::div(phi, AuniT, "div(phi,T)")
+        );
+        AuniTEqn.solve();
+    }
+
+    // Update T and uniT
     T     == AT/A;
-
-    AuniT == AuniTold - dt*offCentre*fvc::div(phi, AuniT, "div(phi,A)");
     uniT  == AuniT/A;
-}
 
-fvc::makeAbsolute(phi, U);
-fvc::makeAbsolute(zeroPhi, U0);
+    // Recover the absolute flux
+    fvc::makeAbsolute(phi, U);
+}
+else
+{
+    // Make the flux relative
+    fvc::makeRelative(phi, U);
+
+    // Get flow over the ground for debugging
+    flowOverGround.ref().field() = phi.boundaryField()[5];
+
+    // Solve equations iterativelly
+    for(int icorr = 0; icorr < nRKstages; icorr++)
+    {
+        fvScalarMatrix TEqn
+        (
+            fvm::ddt(T)
+          + fvc::div(phi, T)
+        );
+        TEqn.solve();
+
+        fvScalarMatrix uniTEqn
+        (
+            fvm::ddt(uniT)
+          + fvc::div(phi, uniT, "div(phi,T)")
+        );
+        uniTEqn.solve();
+    }
+
+    // Recover the absolute flux
+    fvc::makeAbsolute(phi, U);
+}

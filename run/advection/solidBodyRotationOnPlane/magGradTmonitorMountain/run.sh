@@ -3,7 +3,7 @@
 # Remove old stuff
 rm -rf [0-9]* constant/polyMesh constant/rMesh constant/pMesh
 
-# Generate the mesh - the rMesh and pMesh are periodic but the 
+# Generate the mesh - the rMesh and pMesh are periodic but the
 # mesh is not periodic
 blockMesh
 blockMesh -region rMesh
@@ -11,6 +11,7 @@ blockMesh -region pMesh
 
 # Calculate the initial conditions before imposing the terrain
 cp -r init0 0
+cp 0/pMesh/T constant/pMesh/T_init
 setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
@@ -19,14 +20,14 @@ setAnalyticTracerField -region pMesh -velocityDict advectionDict \
 meshIter=0
 until [ $meshIter -ge 10 ]; do
     echo Mesh generation iteration $meshIter
-    
+
     # Calculate the rMesh based on the monitor function derived from Uf
     movingScalarTransportFoam -reMeshOnly
 
     # Re-create the initial conditions
     setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
-    
+
     let meshIter+=1
 done
 # Re-create velocity field
@@ -44,4 +45,4 @@ gmtFoam -time 0 -region pMesh monitor
 evince 0/monitor.pdf &
 
 # Run
-movingScalarTransportFoam >& log & sleep 0.001; tail -f log
+movingScalarTransportFoam -colinParameter >& log & sleep 0.001; tail -f log

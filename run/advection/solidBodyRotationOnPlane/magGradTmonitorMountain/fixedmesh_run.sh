@@ -3,7 +3,7 @@
 # Remove old stuff
 rm -rf [0-9]* constant/polyMesh constant/rMesh constant/pMesh
 
-# Generate the mesh - the rMesh and pMesh are periodic but the 
+# Generate the mesh - the rMesh and pMesh are periodic but the
 # mesh is not periodic
 blockMesh
 blockMesh -region rMesh
@@ -11,6 +11,7 @@ blockMesh -region pMesh
 
 # Calculate the initial conditions before imposing the terrain
 cp -r init0 0
+cp 0/pMesh/T constant/pMesh/T_init
 setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T

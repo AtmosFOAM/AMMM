@@ -142,3 +142,7 @@ volScalarField flowOverGround
     pMesh,
     dimensionedScalar("flowOverGround", dimensionSet(0,3,-1,0,0), scalar(0))
 );
+
+
+volScalarField Told("Told", T);
+volScalarField uniTold("uniTold", uniT);
