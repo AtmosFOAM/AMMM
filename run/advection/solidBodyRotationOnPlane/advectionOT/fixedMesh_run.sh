@@ -11,7 +11,7 @@ mkdir constant/cMesh
 cp -r constant/polyMesh constant/cMesh
 
 ## Create initial conditions
-cp -r 0.org 0
+cp -r init0 0
 # set tracer
 cp 0/T constant/T_init
 setAnalyticTracerField -velocityDict advectionDict \

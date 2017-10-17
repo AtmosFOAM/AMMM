@@ -1,3 +1,6 @@
+// Calculate absolute flux from the mapped surface velocity
+phi = Uf & mesh.Sf();
+
 fvc::makeRelative(phi, U);
 
 for(int icorr = 0; icorr < nIteration; icorr++)
@@ -16,5 +19,3 @@ for(int icorr = 0; icorr < nIteration; icorr++)
     );
     uniTEqn.solve();
 }
-
-fvc::makeAbsolute(phi, U);
