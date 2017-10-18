@@ -31,8 +31,8 @@ offCentre 0.5;
 gradSchemes
 {
     default         none;
-    linearUpwind    leastSquares;
-    gradT           leastSquares;
+    linearUpwind    Gauss linear;
+    gradT           Gauss linear;
 }
 
 divSchemes
