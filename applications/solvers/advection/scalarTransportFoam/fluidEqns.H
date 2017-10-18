@@ -4,16 +4,24 @@
 
 if (colinParameter)
 {
-    // Reset A
+/*    // Reset A
     A     == dimensionedScalar("", dimless, scalar(1));
+    A.oldTime() == dimensionedScalar("", dimless, scalar(1));
     AT    == T;
+    AT.oldTime() == T.oldTime();
     AuniT == uniT;
-
+    AuniT.oldTime() == uniT.oldTime();
+*/
     // Make the flux relative
     fvc::makeRelative(phi, U);
-    fvc::makeRelative(zeroPhi, U0);
+    fvc::makeRelative(zeroPhi, U);
 
     // Get flow over the ground for debugging
+    phi.boundaryFieldRef()[5] *= 0;
+    forAll(phi.boundaryFieldRef()[5], facei)
+    {
+        phi.boundaryFieldRef()[5][facei] = 0;
+    }
     flowOverGround.ref().field() = phi.boundaryField()[5];
 
     // Solve equations iterativelly
@@ -47,7 +55,7 @@ if (colinParameter)
 
     // Recover the absolute flux
     fvc::makeAbsolute(phi, U);
-    fvc::makeAbsolute(zeroPhi, U0);
+    fvc::makeAbsolute(zeroPhi, U);
 }
 else
 {

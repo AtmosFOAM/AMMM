@@ -100,12 +100,6 @@ surfaceScalarField zeroPhi
     pMesh,
     dimensionedScalar("zeroPhi", dimensionSet(0,3,-1,0,0), scalar(0))
 );
-volVectorField U0
-(
-    IOobject("U0", runTime.timeName(), pMesh),
-    pMesh,
-    dimensionedVector("U0", dimVelocity, vector::zero)
-);
 
 // Colin parameter
 volScalarField A

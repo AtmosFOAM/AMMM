@@ -47,3 +47,4 @@ evince 0/monitor.pdf &
 
 # Run
 movingScalarTransportFoam -colinParameter >& log & sleep 0.001; tail -f log
+
