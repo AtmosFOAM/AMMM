@@ -30,7 +30,7 @@ until [ $meshIter -ge 10 ]; do
 
     let meshIter+=1
 done
-# Re-create velocity field
+# Re-create velocity field and re-plot
 setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
@@ -46,4 +46,9 @@ evince 0/monitor.pdf &
 
 # Run
 movingScalarTransportFoam -colinParameter >& log & sleep 0.001; tail -f log
+rm globalSumpMesh*.dat
+globalSum -region pMesh A
+globalSum -region pMesh T
+globalSum -region pMesh uniT
+more globalSumpMesh*.dat
 

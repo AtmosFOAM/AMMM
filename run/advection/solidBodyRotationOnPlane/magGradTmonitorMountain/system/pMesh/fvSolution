@@ -18,21 +18,7 @@ nRKstages 2;
 
 solvers
 {
-    A
-    {
-        solver PBiCG;
-        preconditioner   DILU;
-        tolerance       1e-08
-        relTol          0;
-    }
-    AT
-    {
-        solver PBiCG;
-        preconditioner   DILU;
-        tolerance       1e-08
-        relTol          0;
-    }
-    AuniT
+    "A|AT|AuniT|T|uniT"
     {
         solver PBiCG;
         preconditioner   DILU;

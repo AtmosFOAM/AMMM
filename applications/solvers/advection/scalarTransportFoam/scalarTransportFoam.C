@@ -131,6 +131,8 @@ int main(int argc, char *argv[])
             setInternalAndBoundaryValues(phi, phiR);
             U = fvc::reconstruct(phi);
             volRatio.field() = pMesh.V0()/pMesh.V();
+
+            //#include "checkMeshFluxes.H"
         }
         else
         {

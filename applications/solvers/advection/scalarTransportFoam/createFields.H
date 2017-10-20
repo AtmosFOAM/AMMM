@@ -93,14 +93,6 @@ surfaceScalarField phiR
     rMesh
 );
 
-// Fluxes and velocity for zero velocity
-surfaceScalarField zeroPhi
-(
-    IOobject("zeroPhi", runTime.timeName(), pMesh),
-    pMesh,
-    dimensionedScalar("zeroPhi", dimensionSet(0,3,-1,0,0), scalar(0))
-);
-
 // Colin parameter
 volScalarField A
 (
@@ -109,25 +101,6 @@ volScalarField A
     pMesh,
     dimensionedScalar("A", dimless, scalar(1.0))
 );
-volScalarField Aold("Aold", A);
-
-volScalarField AT
-(
-    IOobject("AT", runTime.timeName(), pMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    A*T
-);
-
-volScalarField ATold("ATold", AT);
-
-volScalarField AuniT
-(
-    IOobject("AuniT", runTime.timeName(), pMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    A*uniT
-);
-
-volScalarField AuniTold("AuniTold", AuniT);
 
 volScalarField flowOverGround
 (
@@ -137,6 +110,3 @@ volScalarField flowOverGround
     dimensionedScalar("flowOverGround", dimensionSet(0,3,-1,0,0), scalar(0))
 );
 
-
-volScalarField Told("Told", T);
-volScalarField uniTold("uniTold", uniT);

@@ -1,28 +1,16 @@
 #include "CourantNo.H"
 
-//* Rewrite equations using OpenFOAM functions *//
+// Make the flux relative
+fvc::makeRelative(phi, U);
+
+// Get flow over the ground for debugging
+flowOverGround.ref().field() = phi.boundaryField()[5];
 
 if (colinParameter)
 {
-/*    // Reset A
+    // Reset A
     A     == dimensionedScalar("", dimless, scalar(1));
     A.oldTime() == dimensionedScalar("", dimless, scalar(1));
-    AT    == T;
-    AT.oldTime() == T.oldTime();
-    AuniT == uniT;
-    AuniT.oldTime() == uniT.oldTime();
-*/
-    // Make the flux relative
-    fvc::makeRelative(phi, U);
-    fvc::makeRelative(zeroPhi, U);
-
-    // Get flow over the ground for debugging
-    phi.boundaryFieldRef()[5] *= 0;
-    forAll(phi.boundaryFieldRef()[5], facei)
-    {
-        phi.boundaryFieldRef()[5][facei] = 0;
-    }
-    flowOverGround.ref().field() = phi.boundaryField()[5];
 
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nRKstages; icorr++)
@@ -36,35 +24,21 @@ if (colinParameter)
 
         fvScalarMatrix ATEqn
         (
-            fvm::ddt(AT)
-          + fvc::div(phi, AT, "div(phi,T)")
+            fvm::ddt(A,T)
+          + fvc::div(phi, A*T, "div(phi,T)")
         );
         ATEqn.solve();
 
         fvScalarMatrix AuniTEqn
         (
-            fvm::ddt(AuniT)
-          + fvc::div(phi, AuniT, "div(phi,T)")
+            fvm::ddt(A, uniT)
+          + fvc::div(phi, A*uniT, "div(phi,T)")
         );
         AuniTEqn.solve();
     }
-
-    // Update T and uniT
-    T     == AT/A;
-    uniT  == AuniT/A;
-
-    // Recover the absolute flux
-    fvc::makeAbsolute(phi, U);
-    fvc::makeAbsolute(zeroPhi, U);
 }
 else
 {
-    // Make the flux relative
-    fvc::makeRelative(phi, U);
-
-    // Get flow over the ground for debugging
-    flowOverGround.ref().field() = phi.boundaryField()[5];
-
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nRKstages; icorr++)
     {
@@ -82,7 +56,8 @@ else
         );
         uniTEqn.solve();
     }
-
-    // Recover the absolute flux
-    fvc::makeAbsolute(phi, U);
 }
+
+// Recover the absolute flux
+fvc::makeAbsolute(phi, U);
+
