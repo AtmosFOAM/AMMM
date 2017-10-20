@@ -14,6 +14,7 @@ for field in A T uniT flowOverGround UT mesh monitor; do
 done
 
 # Conservation of T
+globalSum A -region pMesh
 globalSum T -region pMesh
 globalSum uniT -region pMesh
 

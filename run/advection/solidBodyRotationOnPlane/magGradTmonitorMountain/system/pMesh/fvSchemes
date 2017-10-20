@@ -37,9 +37,8 @@ gradSchemes
 
 divSchemes
 {
-<<<<<<< HEAD
-    default             none;
-    div(phi,T)          Gauss linearUpwind linearUpwind;
+    default         none;
+    div(phi,T)      Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
