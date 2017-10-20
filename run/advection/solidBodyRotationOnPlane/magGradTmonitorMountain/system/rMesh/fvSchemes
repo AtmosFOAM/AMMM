@@ -24,21 +24,21 @@ FoamFile
 
 ddtSchemes
 {
-    default Euler; //CrankNicolson 1;
+    default         Euler; //CrankNicolson 1;
 }
 offCentre 0.5;
 
 gradSchemes
 {
     default         none;
-    linearUpwind    leastSquares;
-    gradT           leastSquares;
+    linearUpwind    Gauss linear;
+    gradT           Gauss linear;
 }
 
 divSchemes
 {
-    default             none;
-    div(phi,T)          Gauss linearUpwind linearUpwind;
+    default         none;
+    div(phi,T)      Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
@@ -48,8 +48,8 @@ laplacianSchemes
 
 interpolationSchemes
 {
-    default        none;
-    gradT          linear;
+    default         none;
+    gradT           linear;
 }
 
 snGradSchemes

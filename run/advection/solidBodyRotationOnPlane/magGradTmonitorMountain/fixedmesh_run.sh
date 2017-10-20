@@ -19,13 +19,12 @@ setAnalyticTracerField -region pMesh -velocityDict advectionDict \
 # Raise the mountain
 terrainFollowingMesh -region pMesh
 
-postProcess -func writeCellVolumes -time 0 -region pMesh
-
+# Draw initial conditions
 gmtFoam -time 0 -region pMesh UTmesh
-#evince 0/UTmesh.pdf &
+evince 0/UTmesh.pdf &
 gmtFoam -time 0 -region pMesh UT
 gmtFoam -time 0 -region pMesh monitor
-#evince 0/monitor.pdf &
+evince 0/monitor.pdf &
 
 # Run
 movingScalarTransportFoam -fixedMesh >& log & sleep 0.001; tail -f log
