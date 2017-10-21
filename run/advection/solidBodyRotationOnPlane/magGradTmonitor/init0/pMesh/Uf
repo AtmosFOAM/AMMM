@@ -23,22 +23,22 @@ boundaryField
 {
     south
     {
-        type            cyclic;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
     north
     {
-        type            cyclic;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
     east
     {
-        type            cyclic;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
     west
     {
-        type            cyclic;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
     top
@@ -48,7 +48,7 @@ boundaryField
     }
     ground
     {
-        type            calculated;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
 }

@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     // Read the number of iterations each time-step
     const int nRKstages = readLabel(pMesh.solutionDict().lookup("nRKstages"));
     // The off-centering of the time-stepping scheme
-    const scalar offCentre = readScalar(pMesh.schemesDict().lookup("offCentre"));
+    //const scalar offCentre = readScalar(pMesh.schemesDict().lookup("offCentre"));
 
     IOdictionary dict
     (
@@ -114,6 +114,8 @@ int main(int argc, char *argv[])
     autoPtr<velocityField> v = velocityField::New(dict);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    
+    #include "diagnosticsInit.H"
 
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
@@ -130,19 +132,18 @@ int main(int argc, char *argv[])
             v->applyTo(phiR);
             setInternalAndBoundaryValues(phi, phiR);
             U = fvc::reconstruct(phi);
-            volRatio.field() = pMesh.V0()/pMesh.V();
-
-            //#include "checkMeshFluxes.H"
-        }
-        else
-        {
-            pointField newPoints = pMesh.points();
-            pMesh.movePoints(newPoints);
+            //volRatio.field() = pMesh.V0()/pMesh.V();
+            //A  = volRatio + dt*fvc::div(pMesh.phi());
         }
 
         #include "fluidEqns.H"
 
-        Info << "Max T = " << max(T).value() << " min T = " << min(T).value() << endl;
+        #include "diagnostics.H"
+
+        Info << "T goes from " << min(T).value() << " to " << max(T).value()
+             << endl;
+        Info << "uniT goes from " << min(uniT).value() << " to "
+             << max(uniT).value() << endl;
 
         runTime.write();
 

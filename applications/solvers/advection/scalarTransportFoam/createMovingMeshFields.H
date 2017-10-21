@@ -26,8 +26,11 @@ volScalarField monitorP
     pMesh,
     dimensionedScalar("monitor", dimless, scalar(1))
 );
-#include "monitorCalc.H"
-monitorP.write();
+if (!fixedMesh)
+{
+    #include "monitorCalc.H"
+    monitorP.write();
+}
 
 Info << "Creating in the mesh displacement potential, mmPhi" << endl;
 volScalarField mmPhi

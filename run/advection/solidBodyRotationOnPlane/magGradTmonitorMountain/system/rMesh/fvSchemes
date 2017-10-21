@@ -26,7 +26,6 @@ ddtSchemes
 {
     default         Euler; //CrankNicolson 1;
 }
-offCentre 0.5;
 
 gradSchemes
 {

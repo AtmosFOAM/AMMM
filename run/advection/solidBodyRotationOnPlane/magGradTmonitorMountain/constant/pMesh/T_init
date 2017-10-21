@@ -23,19 +23,19 @@ boundaryField
 {
     south
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     north
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     east
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     west
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     top
     {

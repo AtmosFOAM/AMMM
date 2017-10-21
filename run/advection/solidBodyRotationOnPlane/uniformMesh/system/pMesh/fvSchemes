@@ -26,7 +26,7 @@ ddtSchemes
 {
     default Euler; //CrankNicolson 1;
 }
-offCentre 0.5;
+//offCentre 0.5;
 
 gradSchemes
 {
@@ -38,7 +38,7 @@ gradSchemes
 divSchemes
 {
     default             none;
-    div(phi,A)          Gauss linearUpwind linearUpwind;
+    div(phi,T)          Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes

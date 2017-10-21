@@ -23,29 +23,31 @@ boundaryField
 {
     south
     {
-        type            slip;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
     north
     {
-        type            slip;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
     east
     {
-        type            slip;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
     west
     {
-        type            slip;
+        type            cyclic;
+        value           uniform (0 0 0);
     }
     top
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            empty;
     }
     ground
     {
-        type            slip;
-        value           uniform (0 0 0);
+        type            empty;
     }
 }
 

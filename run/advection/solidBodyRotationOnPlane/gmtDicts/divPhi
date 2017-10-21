@@ -18,11 +18,7 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [T filledContours 0 1 0.025 "$GMTU/colours/white_blue_red.cpt"]
-    [none mesh "grey"]
-    [U vectors 10 9 "black"]
-    [V contours 12.5e5 22.5e5 2.5e5 "black"]
-    [V contours 27.5e5 37.5e5 2.5e5 "black"]
+    [divPhi2 filledContours 0 0 0 "$GMTU/colours/red_white_blue.cpt"]
 );
 
 // options
@@ -31,4 +27,4 @@ region "0.01/0.9999e4/0/1.01e4";
 //separateLegend true;
 //overlay true;
 plotBoundaryDots false;
-annotate "minMax 2000 -60";
+annotate "minMax 2000 500";

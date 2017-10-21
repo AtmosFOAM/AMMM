@@ -67,14 +67,14 @@ surfaceScalarField meshPhi
     fvc::meshPhi(U)
 );
 
-// The change in volume per time-step
+/*// The change in volume per time-step
 volScalarField volRatio
 (
     IOobject("volRatio", runTime.timeName(), pMesh),
     pMesh,
     dimensionedScalar("volRatio", dimless, scalar(1))
 );
-
+*/
 // Also advect a uniform tracer
 volScalarField uniT
 (
@@ -99,14 +99,6 @@ volScalarField A
     IOobject("A", runTime.timeName(), pMesh,
              IOobject::NO_READ, IOobject::AUTO_WRITE),
     pMesh,
-    dimensionedScalar("A", dimless, scalar(1.0))
-);
-
-volScalarField flowOverGround
-(
-    IOobject("flowOverGround", runTime.timeName(), pMesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    pMesh,
-    dimensionedScalar("flowOverGround", dimensionSet(0,3,-1,0,0), scalar(0))
+    dimensionedScalar("A", dimless, scalar(1))
 );
 

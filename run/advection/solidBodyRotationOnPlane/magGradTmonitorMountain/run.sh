@@ -3,11 +3,12 @@
 # Remove old stuff
 rm -rf [0-9]* constant/polyMesh constant/rMesh constant/pMesh
 
-# Generate the mesh - the rMesh and pMesh are periodic but the
+# Generate the mesh - no meshes are periodic
 # mesh is not periodic
 blockMesh
-blockMesh -region rMesh
-blockMesh -region pMesh
+mkdir constant/rMesh constant/pMesh
+cp -r constant/polyMesh constant/rMesh
+cp -r constant/polyMesh constant/pMesh
 
 # Calculate the initial conditions before imposing the terrain
 cp -r init0 0
@@ -15,6 +16,9 @@ cp 0/pMesh/T constant/pMesh/T_init
 setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
+
+gmtFoam -time 0 -region pMesh UTmesh
+gv 0/UTmesh.pdf &
 
 # Iterate, creating an adapted mesh and initial conditions on the mesh
 meshIter=0
@@ -35,21 +39,14 @@ setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
 
-# Raise the mountain
-terrainFollowingMesh -region pMesh
-
-# Draw initial conditions
 gmtFoam -time 0 -region pMesh UTmesh
-evince 0/UTmesh.pdf &
-gmtFoam -time 0 -region pMesh UT
+gv 0/UTmesh.pdf &
 gmtFoam -time 0 -region pMesh monitor
 evince 0/monitor.pdf &
 
+# Raise the mountain
+terrainFollowingMesh -region pMesh
+
 # Run
 movingScalarTransportFoam -colinParameter >& log & sleep 0.001; tail -f log
-rm globalSumpMesh*.dat
-globalSum -region pMesh A
-globalSum -region pMesh T
-globalSum -region pMesh uniT
-more globalSumpMesh*.dat
 

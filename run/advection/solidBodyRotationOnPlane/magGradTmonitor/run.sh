@@ -3,11 +3,12 @@
 # Remove old stuff
 rm -rf [0-9]* constant/polyMesh constant/rMesh constant/pMesh
 
-# Generate the mesh - the rMesh and pMesh are periodic but the 
+# Generate the mesh - no meshes are periodic
 # mesh is not periodic
 blockMesh
-blockMesh -region rMesh
-blockMesh -region pMesh
+mkdir constant/rMesh constant/pMesh
+cp -r constant/polyMesh constant/rMesh
+cp -r constant/polyMesh constant/pMesh
 
 # Calculate the initial conditions
 cp -r init0 0
@@ -38,22 +39,6 @@ setVelocityField -region pMesh -dict advectionDict
 setAnalyticTracerField -region pMesh -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
 
-gmtFoam -time 0 -region pMesh UTmesh
-gmtFoam -time 0 -region pMesh UT
-gmtFoam -time 0 -region pMesh monitor
-evince 0/monitor.pdf &
-
 # Run
 movingScalarTransportFoam >& log & sleep 0.001; tail -f log
-
-# De-bugging plots
-gmtFoam -time 0.5 -region pMesh volError
-gv 0.5/volError.pdf &
-
-# Check conservation of T
-globalSum -region pMesh T
-more globalSumpMeshT.dat
-# Check conservation and unity of uniT
-globalSum -region pMesh uniT
-more globalSumpMeshuniT.dat
 

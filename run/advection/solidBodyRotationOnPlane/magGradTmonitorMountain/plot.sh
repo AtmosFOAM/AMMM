@@ -1,10 +1,12 @@
 #!/bin/bash -e
 
 # Plot results
+gmtPlot plots/plotMass.gmt
+
 for field in A T uniT flowOverGround UT mesh monitor; do
     gmtFoam ${field}under -region pMesh
     for time in [0-9]*; do
-	cat $time/${field}under.ps ../drawMountain/0/mountainOver.ps \
+    cat $time/${field}under.ps ../drawMountain/0/mountainOver.ps \
             > $time/${field}.ps
         ps2pdf $time/${field}.ps $time/${field}.pdf.pdf
         pdfcrop $time/${field}.pdf.pdf $time/${field}.pdf
@@ -12,10 +14,6 @@ for field in A T uniT flowOverGround UT mesh monitor; do
         gv $time/${field}.pdf &
     done
 done
-
-# Conservation of T
-globalSum T -region pMesh
-globalSum uniT -region pMesh
 
 # Make links for animategraphics
 mkdir -p animategraphics
