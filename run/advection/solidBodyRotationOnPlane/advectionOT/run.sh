@@ -31,10 +31,13 @@ until [ $meshIter -ge 20 ]; do
     setAnalyticTracerField -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
 
-    setVelocityField -dict advectionDict
-
     let meshIter+=1
 done
+
+# Re-create velocity field and re-plot
+setVelocityField -dict advectionDict
+setAnalyticTracerField -velocityDict advectionDict \
+                       -tracerDict tracerDict -name T
 
 # Raise the mountain
 #terrainFollowingMesh
