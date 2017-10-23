@@ -5,16 +5,16 @@ fvc::makeRelative(phi, U);
 
 if (colinParameter)
 {
+    fvScalarMatrix AEqn
+    (
+        fvm::ddt(A)
+      - fvc::div(pMesh.phi())
+    );
+    AEqn.solve();
+
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nRKstages; icorr++)
     {
-        fvScalarMatrix AEqn
-        (
-            fvm::ddt(A)
-          - fvc::div(pMesh.phi())
-        );
-        AEqn.solve();
-
         fvScalarMatrix AuniTEqn
         (
             fvm::ddt(A,uniT)
