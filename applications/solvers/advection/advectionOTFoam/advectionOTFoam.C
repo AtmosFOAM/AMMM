@@ -34,6 +34,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "CorrectPhi.H"
 #include "velocityField.H"
+#include "terrainFollowingTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

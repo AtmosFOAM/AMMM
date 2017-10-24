@@ -22,9 +22,8 @@ FieldsToPlot
 (
     [monitor filledContours 1 2 0.1 "$GMTU/colours/white_blue_red.cpt"]
     [none mesh "grey"]
-    [Uf vectors 1e4 11 "black"]
 );
 
 // Options
-region "0.01/0.9999e4/0/1.01e4";
+region "0.01/1.9999e4/0/1.9999e4";
 annotate "minMax 0 -38000";
