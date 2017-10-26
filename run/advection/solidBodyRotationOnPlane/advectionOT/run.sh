@@ -31,10 +31,11 @@ until [ $meshIter -ge 20 ]; do
     setAnalyticTracerField -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
 
-    setVelocityField -dict advectionDict
-
     let meshIter+=1
 done
+
+# Re-create velocity field
+setVelocityField -dict advectionDict
 
 # Raise the mountain
 #terrainFollowingMesh
@@ -47,4 +48,4 @@ gv 0/UT.pdf &
 sed 's/MAXMESHVELOCITY/1e6/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0/g' > system/OTmeshDict
 
-advectionOTFoam >& log & sleep 0.01; tail -f log
+advectionOTFoam >& log &

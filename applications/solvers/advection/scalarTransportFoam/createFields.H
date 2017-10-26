@@ -102,3 +102,10 @@ volScalarField A
     dimensionedScalar("A", dimless, scalar(1))
 );
 
+volScalarField AT
+(
+    IOobject("AT", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    A*T
+);
+AT.write();

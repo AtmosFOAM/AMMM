@@ -29,6 +29,7 @@ if (colinParameter)
         );
         ATEqn.solve();
     }
+    AT == A*T;
 }
 else
 {
@@ -53,4 +54,3 @@ else
 
 // Recover the absolute flux
 fvc::makeAbsolute(phi, U);
-

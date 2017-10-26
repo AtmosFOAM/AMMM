@@ -33,6 +33,8 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "CorrectPhi.H"
+#include "velocityField.H"
+#include "terrainFollowingTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +69,19 @@ int main(int argc, char *argv[])
     meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
     Info << meshNormal << endl;
 
+    IOdictionary dict
+    (
+        IOobject
+       (
+           "advectionDict", mesh.time().system(), mesh,
+           IOobject::READ_IF_PRESENT, IOobject::NO_WRITE
+       )
+    );
+    autoPtr<velocityField> v = velocityField::New(dict);
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    #include "diagnosticsInit.H"
 
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
@@ -79,8 +93,12 @@ int main(int argc, char *argv[])
         {
             gradT = fvc::interpolate(fvc::grad(T));
             mesh.update();
+            v->applyTo(phi);
+            U = fvc::reconstruct(phi);
         }
         #include "fluidEqns.H"
+
+        #include "diagnostics.H"
 
         runTime.write();
 

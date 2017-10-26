@@ -16,12 +16,12 @@ FoamFile
 
 convertToMeters 1000;
 
-ax 10;
-ay 10;
+ax 20;
+ay 20;
 az 1;
 
-nx 50;
-ny 50;
+nx 100;
+ny 100;
 
 vertices
 (

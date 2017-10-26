@@ -25,7 +25,9 @@ FoamFile
 // Specify the velocity field
 type              solidBodyRotation;
 solidBodyRotation (0 0 5.235987756e-3);
-centreOfRotation  (5e3 5e3 500);
+centreOfRotation  (10e3 10e3 500);
+//innerRadius       3.8e3;
+//outerRadius       5e3;
 
 // ************************************************************************* //
 
