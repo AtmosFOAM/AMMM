@@ -1,8 +1,9 @@
 fileName diags = args.rootPath() / args.caseName() / "diagnostics.dat";
 OFstream os(diags);
-os << "#time   normlalisedMassChange" << endl;
+os << "#time   Vtotal   ATtotal   globalSum   normlalisedMassChange" << endl;
 
 const scalar AVT0 = fvc::domainIntegrate(A*T).value();
+const scalar Vtot0 = gSum(mesh.V());
 
 #include "diagnostics.H"
 

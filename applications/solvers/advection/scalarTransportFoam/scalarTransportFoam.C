@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     autoPtr<velocityField> v = velocityField::New(dict);
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-    
+
     #include "diagnosticsInit.H"
 
     Info<< "\nStarting time loop\n" << endl;
