@@ -38,7 +38,7 @@ done
 setVelocityField -dict advectionDict
 
 # Raise the mountain
-#terrainFollowingMesh
+terrainFollowingMesh
 
 # Draw initial condition
 gmtFoam -time 0 UT
@@ -48,4 +48,4 @@ gv 0/UT.pdf &
 sed 's/MAXMESHVELOCITY/1e6/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0/g' > system/OTmeshDict
 
-advectionOTFoam >& log &
+advectionOTFoam -colinParameter >& log &

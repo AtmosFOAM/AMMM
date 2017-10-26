@@ -42,11 +42,14 @@ int main(int argc, char *argv[])
 {
     argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
     argList::addBoolOption("fixedMesh", "run on polyMesh and do not modify");
+    argList::addBoolOption("colinParameter", "run with the Colin parameter A");
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
+
     const Switch reMeshOnly = args.optionFound("reMeshOnly");
     const Switch fixedMesh = args.optionFound("fixedMesh");
+    const Switch colinParameter = args.optionFound("colinParameter");
 
     #include "createFields.H"
     #include "createMountain.H"
@@ -97,6 +100,7 @@ int main(int argc, char *argv[])
             mesh.update();
             v->applyTo(phi);
             U = fvc::reconstruct(phi);
+            #include "raiseOrography.H"
         }
         #include "fluidEqns.H"
 

@@ -81,5 +81,23 @@ surfaceVectorField Uf
 );
 Uf += (phi - (Uf & mesh.Sf()))*mesh.Sf()/sqr(mesh.magSf());
 Uf.write();
+
 volScalarField divU("divU", fvc::div(phi));
 divU.write();
+
+// Colin parameter
+volScalarField A
+(
+    IOobject("A", runTime.timeName(), mesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    mesh,
+    dimensionedScalar("A", dimless, scalar(1))
+);
+
+volScalarField AT
+(
+    IOobject("AT", runTime.timeName(), mesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    A*T
+);
+AT.write();

@@ -11,6 +11,7 @@ done
 # Conservation of T
 globalSum T
 globalSum uniT
+globalSum AT
 
 # Make links for animategraphics
 mkdir -p animategraphics

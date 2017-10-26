@@ -1,21 +1,52 @@
 // Make the flux relative
 fvc::makeRelative(phi, U);
 
-for(int icorr = 0; icorr < nIteration; icorr++)
+if (colinParameter)
 {
-    fvScalarMatrix TEqn
+    fvScalarMatrix AEqn
     (
-        fvm::ddt(T)
-      + fvc::div(phi, T)
+        fvm::ddt(A)
+      - fvc::div(mesh.phi())
     );
-    TEqn.solve();
+    AEqn.solve();
 
-    fvScalarMatrix uniTEqn
-    (
-        fvm::ddt(uniT)
-      + fvc::div(phi, uniT, "div(phi,T)")
-    );
-    uniTEqn.solve();
+    // Solve equations iterativelly
+    for(int icorr = 0; icorr < nIteration; icorr++)
+    {
+        fvScalarMatrix AuniTEqn
+        (
+            fvm::ddt(A,uniT)
+          + fvc::div(phi, uniT, "div(phi,T)")
+        );
+        AuniTEqn.solve();
+
+        fvScalarMatrix ATEqn
+        (
+            fvm::ddt(A,T)
+          + fvc::div(phi, T, "div(phi,T)")
+        );
+        ATEqn.solve();
+    }
+    AT == A*T;
+}
+else
+{
+    for(int icorr = 0; icorr < nIteration; icorr++)
+    {
+        fvScalarMatrix TEqn
+        (
+            fvm::ddt(T)
+          + fvc::div(phi, T)
+        );
+        TEqn.solve();
+
+        fvScalarMatrix uniTEqn
+        (
+            fvm::ddt(uniT)
+          + fvc::div(phi, uniT, "div(phi,T)")
+        );
+        uniTEqn.solve();
+    }
 }
 
 // Recover the absolute flux
