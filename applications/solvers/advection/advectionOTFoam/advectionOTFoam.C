@@ -81,6 +81,8 @@ int main(int argc, char *argv[])
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+    #include "diagnosticsInit.H"
+
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
     {
@@ -95,6 +97,8 @@ int main(int argc, char *argv[])
             U = fvc::reconstruct(phi);
         }
         #include "fluidEqns.H"
+
+        #include "diagnostics.H"
 
         runTime.write();
 
