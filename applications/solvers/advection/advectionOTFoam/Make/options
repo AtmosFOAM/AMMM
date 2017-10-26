@@ -21,4 +21,5 @@ EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
     -lgeometry \
     -lprescribedFields \
-    -lOTmesh
+    -lOTmesh \
+    -lorography -lgdal

@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     const Switch fixedMesh = args.optionFound("fixedMesh");
 
     #include "createFields.H"
+    #include "createMountain.H"
 
     Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
