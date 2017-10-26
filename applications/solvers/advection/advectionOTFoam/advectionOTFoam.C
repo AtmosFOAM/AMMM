@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     {
         gradT = fvc::interpolate(fvc::grad(T));
         mesh.update();
+        #include "raiseOrography.H"
         runTime.writeAndEnd();
     }
 
