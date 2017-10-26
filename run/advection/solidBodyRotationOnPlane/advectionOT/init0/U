@@ -22,23 +22,19 @@ boundaryField
 {
     equator
     {
-        type            cyclic;
-        value           uniform (0 0 0);
+        type            slip;
     }
     pole
     {
-        type            cyclic;
-        value           uniform (0 0 0);
+        type            slip;
     }
     inlet
     {
-        type            cyclic;
-        value           uniform (0 0 0);
+        type            slip;
     }
     outlet
     {
-        type            cyclic;
-        value           uniform (0 0 0);
+        type            slip;
     }
     top
     {

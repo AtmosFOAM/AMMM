@@ -8,50 +8,19 @@
 FoamFile
 {
     version     2.0;
-    format      binary;
-    class       surfaceScalarField;
-    location    "0";
-    object      meshPhi;
+    format      ascii;
+    class       dictionary;
+    object      initDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 3 -1 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    equator
-    {
-        type            fixedValue;
-        value           uniform 0;
-    }
-    pole
-    {
-        type            fixedValue;
-        value           uniform 0;
-    }
-    inlet
-    {
-        type            fixedValue;
-        value           uniform 0;
-    }
-    outlet
-    {
-        type            fixedValue;
-        value           uniform 0;
-    }
-    top
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-    ground
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-}
-
+// Input for OTmesh
+maxMAiters             4;
+maxMeshVelocity        1e6;
+meshRelax              0;
+monitorFunctionDynamic monitorFunctionFromGradU5050;
+maxMonitorRatio        4;
+nMonSmooth             8;
+monitorFromName        gradT;
 
 // ************************************************************************* //

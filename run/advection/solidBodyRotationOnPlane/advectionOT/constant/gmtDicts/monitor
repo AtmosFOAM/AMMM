@@ -25,5 +25,6 @@ FieldsToPlot
 );
 
 // Options
-region "0.01/1.9999e4/0/1.9999e4";
+//region "0.01/0.9999e4/0/0.9999e4";
+//region "0.01/1.9999e4/0/2.01e4";
 annotate "minMax 0 -38000";

@@ -14,23 +14,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-nIteration 3;
+nIteration 2;
 
 solvers
 {
-    T
+    "T|uniT|A"
     {
-        solver PBiCG;
-        preconditioner   DILU;
-        tolerance       1e-08
-        relTol          0;
-    }
-    uniT
-    {
-        solver PBiCG;
-        preconditioner   DILU;
-        tolerance       1e-08
-        relTol          0;
+        solver none;
+        tolerance       0;
     }
 }
 // ************************************************************************* //

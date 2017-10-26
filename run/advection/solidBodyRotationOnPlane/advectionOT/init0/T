@@ -23,19 +23,19 @@ boundaryField
 {
     equator
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     pole
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     inlet
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     outlet
     {
-        type            cyclic;
+        type            zeroGradient;
     }
     top
     {
