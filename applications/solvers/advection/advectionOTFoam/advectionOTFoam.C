@@ -109,9 +109,11 @@ int main(int argc, char *argv[])
         runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << "  Max T = " << max(T).value() << " min T = " << min(T).value()
-            << nl << endl;
+            << "  ClockTime = " << runTime.elapsedClockTime() << endl;
+        Info << "T goes from " << min(T).value() << " to " << max(T).value()
+             << endl;
+        Info << "uniT goes from " << min(uniT).value() << " to "
+             << max(uniT).value() << endl;
     }
 
     Info<< "End\n" << endl;

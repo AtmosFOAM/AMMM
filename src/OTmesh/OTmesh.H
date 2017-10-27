@@ -37,6 +37,7 @@ SourceFiles
 #ifndef OTmesh_H
 #define OTmesh_H
 
+#include "fvMesh.H"
 #include "dynamicFvMesh.H"
 #include "dictionary.H"
 #include "pointIOField.H"

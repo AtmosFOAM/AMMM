@@ -9,6 +9,8 @@ if (colinParameter)
       - fvc::div(mesh.phi())
     );
     AEqn.solve();
+    Info << "A goes from " << min(A) << " to " << max(A) << endl;
+    mesh.phi().write();
 
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
