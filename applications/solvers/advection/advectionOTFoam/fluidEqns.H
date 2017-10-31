@@ -10,7 +10,6 @@ if (colinParameter)
     );
     AEqn.solve();
     Info << "A goes from " << min(A) << " to " << max(A) << endl;
-    mesh.phi().write();
 
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
@@ -29,7 +28,6 @@ if (colinParameter)
         );
         ATEqn.solve();
     }
-    AT == A*T;
 }
 else
 {
@@ -50,6 +48,9 @@ else
         uniTEqn.solve();
     }
 }
+
+// Update AT
+AT == A*T;
 
 // Recover the absolute flux
 fvc::makeAbsolute(phi, U);
