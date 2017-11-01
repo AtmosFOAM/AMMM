@@ -63,7 +63,6 @@ int main(int argc, char *argv[])
     {
         gradT = fvc::interpolate(fvc::grad(T));
         mesh.update();
-        #include "raiseOrography.H"
         runTime.writeAndEnd();
     }
 
@@ -92,7 +91,7 @@ int main(int argc, char *argv[])
     while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
-//        #include "CourantNo.H"
+        #include "CourantNo.H"
 
         if (!fixedMesh)
         {
