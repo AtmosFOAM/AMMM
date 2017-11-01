@@ -8,7 +8,6 @@ if (colinParameter)
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
-
         fvScalarMatrix AEqn
         (
             fvm::ddt(A)
@@ -53,6 +52,7 @@ else
         );
         uniTEqn.solve();
     }
+    AT == A*T;
 }
 
 // Recover the absolute flux

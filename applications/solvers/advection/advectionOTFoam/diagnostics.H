@@ -1,13 +1,23 @@
 {
-    scalar AVT = fvc::domainIntegrate(A*T).value();
-    scalar Vtot = gSum(mesh.V());
-    scalar globalSum = AVT/Vtot;
-    scalar normalisedVolumeChange = (Vtot-Vtot0)/Vtot0;
-    scalar normalisedMassChange = (AVT - AVT0)/AVT0;
+    scalar Vn = gSum(mesh.V());
+    scalar ATn = fvc::domainIntegrate(A*T).value();
+    scalar Tn = fvc::domainIntegrate(T).value();
+    scalar globalSum = ATn/Vn;
+    scalar normalisedVolChange = (Vn - V0)/V0;
+    scalar normalisedATChange = (ATn - AT0)/AT0;
+    scalar normalisedTChange = (Tn - T0)/T0;
+
     os << runTime.timeName() << "    "
-       << AVT << "    " << Vtot << "    "
+       << Vn << "    " << ATn << "    " << Tn << "    "
        << globalSum << "    "
-       << normalisedVolumeChange << "    "
-       << normalisedMassChange << "    "
        << endl;
+
+    os_vol << normalisedVolChange << "    "
+           << endl;
+
+    os_AT << normalisedATChange << "    "
+          << endl;
+
+    os_T << normalisedTChange << "    "
+         << endl;
 }
