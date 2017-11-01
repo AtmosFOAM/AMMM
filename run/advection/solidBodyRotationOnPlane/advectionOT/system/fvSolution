@@ -18,7 +18,7 @@ nIteration 2;
 
 solvers
 {
-    "T|uniT|A"
+    "T|uniT|A|AT|AuniT"
     {
         solver none;
         tolerance       0;

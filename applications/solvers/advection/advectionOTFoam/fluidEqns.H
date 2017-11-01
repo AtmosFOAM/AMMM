@@ -1,33 +1,39 @@
 // Make the flux relative
 fvc::makeRelative(phi, U);
 
+flowOverGround.ref().field() = phi.boundaryField()[5];
+
 if (colinParameter)
 {
-    fvScalarMatrix AEqn
-    (
-        fvm::ddt(A)
-      - fvc::div(mesh.phi())
-    );
-    AEqn.solve();
-    Info << "A goes from " << min(A) << " to " << max(A) << endl;
-
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
-        fvScalarMatrix AuniTEqn
+
+        fvScalarMatrix AEqn
         (
-            fvm::ddt(A,uniT)
-          + fvc::div(phi, uniT, "div(phi,T)")
+            fvm::ddt(A)
+          + fvc::div(phi, A, "div(phi,T)")
         );
-        AuniTEqn.solve();
+        AEqn.solve();
 
         fvScalarMatrix ATEqn
         (
-            fvm::ddt(A,T)
-          + fvc::div(phi, T, "div(phi,T)")
+            fvm::ddt(AT)
+          + fvc::div(phi, AT, "div(phi,T)")
         );
         ATEqn.solve();
+
+        fvScalarMatrix AuniTEqn
+        (
+            fvm::ddt(AuniT)
+          + fvc::div(phi, AuniT, "div(phi,T)")
+        );
+        AuniTEqn.solve();
     }
+
+    // Update T and uniT
+    T     == AT/A;
+    uniT  == AuniT/A;
 }
 else
 {
@@ -48,9 +54,6 @@ else
         uniTEqn.solve();
     }
 }
-
-// Update AT
-AT == A*T;
 
 // Recover the absolute flux
 fvc::makeAbsolute(phi, U);
