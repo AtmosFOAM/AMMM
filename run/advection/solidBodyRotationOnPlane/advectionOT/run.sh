@@ -15,6 +15,8 @@ cp -r init0 0
 cp 0/T constant/T_init
 setAnalyticTracerField -velocityDict advectionDict \
                        -tracerDict tracerDict -name T
+# Set divergence-free velocity field
+setVelocityField -dict advectionDict
 
 # Iterate, creating a mesh adapted to the initial conditions on that mesh
 sed 's/MAXMESHVELOCITY/0/g' system/OTmeshDictTemplate | \
@@ -31,11 +33,10 @@ until [ $meshIter -ge 20 ]; do
     let meshIter+=1
 done
 
-# Set divergence-free velocity field
-setVelocityField -dict advectionDict
-
 # Raise the mountain
+mv 0/polyMesh/points constant/polyMesh
 terrainFollowingMesh
+mv constant/polyMesh/points 0/polyMesh
 
 # Draw initial condition
 gmtFoam -time 0 UT

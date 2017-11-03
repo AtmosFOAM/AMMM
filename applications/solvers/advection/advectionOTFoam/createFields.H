@@ -82,6 +82,20 @@ surfaceVectorField Uf
 Uf += (phi - (Uf & mesh.Sf()))*mesh.Sf()/sqr(mesh.magSf());
 Uf.write();
 
+Info << "Reading field meshPhi\n" << endl;
+surfaceScalarField meshPhi
+(
+    IOobject
+    (
+        "meshPhi",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    fvc::meshPhi(U)
+);
+
 volScalarField divU("divU", fvc::div(phi));
 divU.write();
 
