@@ -5,34 +5,62 @@ flowOverGround.ref().field() = phi.boundaryField()[5];
 
 if (colinParameter)
 {
+    // Reset A
+    // A     == dimensionedScalar("", dimless, scalar(1));
+    // A.oldTime() == dimensionedScalar("", dimless, scalar(1));
+
+    fvScalarMatrix AEqn
+    (
+        fvm::ddt(A)
+      - fvc::div(mesh.phi())
+    );
+    AEqn.solve();
+
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
-        fvScalarMatrix AEqn
+        fvScalarMatrix AuniTEqn
         (
-            fvm::ddt(A)
-          + fvc::div(phi, A, "div(phi,T)")
+            fvm::ddt(A,uniT)
+          + fvc::div(phi, uniT, "div(phi,T)")
         );
-        AEqn.solve();
+        AuniTEqn.solve();
 
         fvScalarMatrix ATEqn
         (
-            fvm::ddt(AT)
-          + fvc::div(phi, AT, "div(phi,T)")
+            fvm::ddt(A,T)
+          + fvc::div(phi, T, "div(phi,T)")
         );
         ATEqn.solve();
-
-        fvScalarMatrix AuniTEqn
-        (
-            fvm::ddt(AuniT)
-          + fvc::div(phi, AuniT, "div(phi,T)")
-        );
-        AuniTEqn.solve();
     }
+    // // Solve equations iterativelly
+    // for(int icorr = 0; icorr < nIteration; icorr++)
+    // {
+    //     fvScalarMatrix AEqn
+    //     (
+    //         fvm::ddt(A)
+    //       + fvc::div(phi, A, "div(phi,T)")
+    //     );
+    //     AEqn.solve();
 
-    // Update T and uniT
-    T     == AT/A;
-    uniT  == AuniT/A;
+    //     fvScalarMatrix ATEqn
+    //     (
+    //         fvm::ddt(AT)
+    //       + fvc::div(phi, AT, "div(phi,T)")
+    //     );
+    //     ATEqn.solve();
+
+    //     fvScalarMatrix AuniTEqn
+    //     (
+    //         fvm::ddt(AuniT)
+    //       + fvc::div(phi, AuniT, "div(phi,T)")
+    //     );
+    //     AuniTEqn.solve();
+    // }
+
+    // // Update T and uniT
+    // T     == AT/A;
+    // uniT  == AuniT/A;
 }
 else
 {
@@ -52,8 +80,10 @@ else
         );
         uniTEqn.solve();
     }
-    AT == A*T;
 }
+
+// Update AT
+AT == A*T;
 
 // Recover the absolute flux
 fvc::makeAbsolute(phi, U);
