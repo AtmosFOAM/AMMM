@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  dev                                   |
+|  \\    /   O peration     | Version:  2.3.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -9,18 +9,43 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      initDict;
+    class       volScalarField;
+    location    "0";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Input for OTmesh
-maxMAiters             4;
-maxMeshVelocity        0;
-meshRelax              0.5;
-monitorFunctionDynamic monitorFunctionFromGradU5050;
-maxMonitorRatio        4;
-nMonSmooth             8;
-monitorFromName        gradT;
+dimensions      [0 0 0 0 0 0 0];
+
+internalField  uniform 0;
+
+boundaryField
+{
+    equator
+    {
+        type            zeroGradient;
+    }
+    pole
+    {
+        type            zeroGradient;
+    }
+    inlet
+    {
+        type            zeroGradient;
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    top
+    {
+        type            zeroGradient;
+    }
+    ground
+    {
+        type            zeroGradient;
+    }
+}
+
 
 // ************************************************************************* //

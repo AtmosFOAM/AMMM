@@ -19,6 +19,9 @@ setAnalyticTracerField -velocityDict advectionDict \
 setVelocityField -dict advectionDict
 
 # Iterate, creating a mesh adapted to the initial conditions on that mesh
+terrainFollowingMesh
+postProcess -func writeCellVolumes -time 0
+gmtFoam -time 0 Tmesh
 sed 's/MAXMESHVELOCITY/0/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0.5/g' > system/OTmeshDict
 meshIter=0
@@ -26,17 +29,14 @@ until [ $meshIter -ge 20 ]; do
     echo Mesh generation iteration $meshIter
 
     advectionOTFoam -reMeshOnly
+    postProcess -func writeCellVolumes -time 0
+    gmtFoam -time 0 Tmesh
 
     setAnalyticTracerField -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
 
     let meshIter+=1
 done
-
-# Raise the mountain
-mv 0/polyMesh/points constant/polyMesh
-terrainFollowingMesh
-mv constant/polyMesh/points 0/polyMesh
 
 # Draw initial condition
 gmtFoam -time 0 UT
