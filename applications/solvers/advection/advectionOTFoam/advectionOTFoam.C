@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
     if (reMeshOnly)
     {
         gradT = fvc::interpolate(fvc::grad(T));
+        #include "flattenOrography.H"
         mesh.update();
         #include "raiseOrography.H"
         runTime.writeAndEnd();
@@ -97,6 +98,7 @@ int main(int argc, char *argv[])
         if (!fixedMesh)
         {
             gradT = fvc::interpolate(fvc::grad(T));
+            //#include "flattenOrography.H"
             mesh.update();
             v->applyTo(phi);
             U = fvc::reconstruct(phi);
