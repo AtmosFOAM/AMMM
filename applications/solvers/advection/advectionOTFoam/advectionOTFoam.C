@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         if (!fixedMesh)
         {
             gradT = fvc::interpolate(fvc::grad(T));
-            //#include "flattenOrography.H"
+            #include "flattenOrography.H"
             mesh.update();
             v->applyTo(phi);
             U = fvc::reconstruct(phi);
@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
              << endl;
         Info << "uniT goes from " << min(uniT).value() << " to "
              << max(uniT).value() << endl;
+        Info << "A goes from " << min(A).value() << " to " << max(A).value()
+             << endl;
     }
 
     Info<< "End\n" << endl;

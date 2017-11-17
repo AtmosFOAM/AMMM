@@ -1,14 +1,17 @@
 #!/bin/bash -e
 
 # Post process
-for time in [0-9]*; do
-    gmtFoam -time $time mesh
-    gmtFoam -time $time A
-    gmtFoam -time $time T
-    gmtFoam -time $time AT
-    gmtFoam -time $time uniT
-    gmtFoam -time $time monitor
-    gmtFoam -time $time flowOverGround
+gmtFoam mesh
+gmtFoam A
+gmtFoam T
+gmtFoam AT
+gmtFoam uniT
+gmtFoam monitor
+gmtFoam flowOverGround
+
+for field in monitor A T mesh; do
+    gmtFoam $field
+    eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf ????/$field.pdf
 done
 
 # Conservation of T

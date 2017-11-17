@@ -3,7 +3,7 @@ pointField newPPointsF = mesh.points();
 
 forAll(newPPointsF, ip)
 {
-    newPPointsF[ip] = flatten->physicalToComputational(newPPointsF[ip]);
+    newPPointsF[ip] = transform->physicalToComputational(newPPointsF[ip]);
 }
 
 mesh.movePoints(newPPointsF);

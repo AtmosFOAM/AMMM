@@ -7,7 +7,7 @@ if (colinParameter)
 {
     // Reset A
     // A     == dimensionedScalar("", dimless, scalar(1));
-    // A.oldTime() == dimensionedScalar("", dimless, scalar(1));
+    //A.oldTime() == dimensionedScalar("", dimless, scalar(1));
 
     fvScalarMatrix AEqn
     (

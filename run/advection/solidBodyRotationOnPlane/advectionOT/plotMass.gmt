@@ -1,0 +1,27 @@
+inputFiles=(diagnostics.dat)
+outFile=plots/mass.eps
+col=3
+colx=1
+legends=("normalised %age change in mass")
+#pens=(psxy pen types in double quotes)
+#symbols=(psxy symbol types in double quotes) (optional)
+#spens=(psxy pen types in double quotes for the symbols) (optional)
+xlabel="time (s)"
+ylabel="normalised %age change in mass"
+#xmin=0
+#xmax=40
+#dx=5
+#ddx=1 (number of ticks)
+#dxg=0 (x grid spacing)
+#ymin=-0.004
+#ymax=1e-4
+#dy=1e-3
+#ddy=1 (number of ticks)
+#dyg=0 (y grid spacing)
+#xscale=*1
+yscale=*100
+#legPos=x10/10
+nSkip=1
+projection=X15c/10c
+gv=1
+

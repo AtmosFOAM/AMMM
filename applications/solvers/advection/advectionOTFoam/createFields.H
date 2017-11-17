@@ -103,7 +103,7 @@ divU.write();
 volScalarField A
 (
     IOobject("A", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
+             IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
     mesh,
     dimensionedScalar("A", dimless, scalar(1))
 );
@@ -131,3 +131,4 @@ volScalarField flowOverGround
     mesh,
     dimensionedScalar("flowOverGround", dimensionSet(0,3,-1,0,0), scalar(0))
 );
+
