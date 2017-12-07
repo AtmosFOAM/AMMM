@@ -138,6 +138,10 @@ void Foam::OTmesh::setMonitor()
             "laplacian(monitor)"
         );
     }
+    
+    // Multiply the monitor function by the mesh density function, A
+    const volScalarField& A = lookupObjectRef<volScalarField>("A");
+    monitorC_ *= A;
 
     setInternalAndBoundaryValues(monitorP_, monitorC_);
 
