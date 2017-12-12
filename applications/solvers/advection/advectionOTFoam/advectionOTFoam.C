@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     argList::addBoolOption("reMeshOnly", "Re-mesh then stop, no fluid flow");
     argList::addBoolOption("fixedMesh", "run on polyMesh and do not modify");
     argList::addBoolOption("colinParameter", "run with the Colin parameter A");
+    argList::addBoolOption("resetA", "resetting A every time step");
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
     const Switch reMeshOnly = args.optionFound("reMeshOnly");
     const Switch fixedMesh = args.optionFound("fixedMesh");
     const Switch colinParameter = args.optionFound("colinParameter");
+    const Switch resetA = args.optionFound("resetA");
 
     #include "createFields.H"
     #include "createMountain.H"

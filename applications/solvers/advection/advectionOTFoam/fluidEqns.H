@@ -6,8 +6,12 @@ flowOverGround.ref().field() = phi.boundaryField()[5];
 if (colinParameter)
 {
     // Reset A
-    // A     == dimensionedScalar("", dimless, scalar(1));
-    //A.oldTime() == dimensionedScalar("", dimless, scalar(1));
+    if (resetA)
+    {
+        mesh.V0() == A.oldTime()*mesh.V0();
+        A.oldTime() == dimensionedScalar("", dimless, scalar(1));
+	T.oldTime() == A*T;
+    }
 
     fvScalarMatrix AEqn
     (
@@ -20,26 +24,35 @@ if (colinParameter)
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
         fvScalarMatrix AuniTEqn
-        (
-            fvm::ddt(A,uniT)
+	(
+	    fvm::ddt(A, uniT)
           + fvc::div(phi, uniT, "div(phi,T)")
         );
-        AuniTEqn.solve();
+	AuniTEqn.solve();
 
-        fvScalarMatrix ATEqn
-        (
-            fvm::ddt(A,T)
+	fvScalarMatrix ATEqn
+	(
+	    fvm::ddt(A, T)
           + fvc::div(phi, T, "div(phi,T)")
         );
-        ATEqn.solve();
+	ATEqn.solve();
     }
+    
+    // // Reset A to unity
+    // if (resetA)
+    // {
+    //     mesh.V0() == A.oldTime()*mesh.V0();
+    // 	A.oldTime() == dimensionedScalar("", dimless, scalar(1));
+    // 	AuniT.oldTime() == uniT.oldTime();
+    // 	//	AT.oldTime() == T.oldTime();
+    // }
     // // Solve equations iterativelly
     // for(int icorr = 0; icorr < nIteration; icorr++)
     // {
     //     fvScalarMatrix AEqn
     //     (
-    //         fvm::ddt(A)
-    //       + fvc::div(phi, A, "div(phi,T)")
+    // 	    fvm::ddt(A)
+    // 	  + fvc::div(phi, A, "div(phi,T)")
     //     );
     //     AEqn.solve();
 

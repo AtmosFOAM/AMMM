@@ -9,7 +9,7 @@ gmtFoam uniT
 gmtFoam monitor
 gmtFoam flowOverGround
 
-for field in monitor A T mesh; do
+for field in monitor A T mesh uniT; do
     gmtFoam $field
     eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf ????/$field.pdf
 done
