@@ -9,8 +9,8 @@ if (colinParameter)
     if (resetA)
     {
         mesh.V0() == A.oldTime()*mesh.V0();
+	T.oldTime() == A.oldTime()*T.oldTime();
         A.oldTime() == dimensionedScalar("", dimless, scalar(1));
-	T.oldTime() == A*T;
     }
 
     fvScalarMatrix AEqn
@@ -22,7 +22,8 @@ if (colinParameter)
 
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
-    {
+
+      {
         fvScalarMatrix AuniTEqn
 	(
 	    fvm::ddt(A, uniT)

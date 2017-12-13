@@ -1,10 +1,12 @@
 fileName diags = args.rootPath() / args.caseName() / "diagnostics.dat";
+
 OFstream os(diags);
-os << "#time   normalisedVolChange   normalisedATChange   normalisedTChange"
+os << "#time   totalV   totalAV   normalisedVChange   normalisedAVChange   normalisedTChange   normalisedATChange"
    << endl;
 
 const scalar V0 = gSum(mesh.V());
-const scalar AT0 = fvc::domainIntegrate(A*T).value();
+const scalar AV0 = fvc::domainIntegrate(A).value();
 const scalar T0 = fvc::domainIntegrate(T).value();
+const scalar AT0 = fvc::domainIntegrate(A*T).value();
 
 #include "diagnostics.H"
