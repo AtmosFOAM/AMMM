@@ -8,8 +8,8 @@ if (colinParameter)
     // Reset A
     if (resetA)
     {
-        mesh.V0() == A.oldTime()*mesh.V0();
-	T.oldTime() == A.oldTime()*T.oldTime();
+          // This line means that A is effectively not reset
+//        mesh.setV0() = A.oldTime()*mesh.V0();
         A.oldTime() == dimensionedScalar("", dimless, scalar(1));
     }
 
@@ -25,18 +25,18 @@ if (colinParameter)
 
       {
         fvScalarMatrix AuniTEqn
-	(
-	    fvm::ddt(A, uniT)
+        (
+            fvm::ddt(A, uniT)
           + fvc::div(phi, uniT, "div(phi,T)")
         );
-	AuniTEqn.solve();
+        AuniTEqn.solve();
 
-	fvScalarMatrix ATEqn
-	(
-	    fvm::ddt(A, T)
+        fvScalarMatrix ATEqn
+        (
+            fvm::ddt(A, T)
           + fvc::div(phi, T, "div(phi,T)")
         );
-	ATEqn.solve();
+        ATEqn.solve();
     }
     
     // // Reset A to unity
