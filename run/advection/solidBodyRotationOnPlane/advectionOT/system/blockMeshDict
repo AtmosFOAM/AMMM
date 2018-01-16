@@ -20,8 +20,8 @@ ax 10;
 ay 10;
 az 1;
 
-nx 50;
-ny 50;
+nx 100;
+ny 100;
 
 vertices
 (

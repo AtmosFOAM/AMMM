@@ -9,17 +9,10 @@ gmtFoam uniT
 gmtFoam monitor
 gmtFoam flowOverGround
 
-for field in monitor A T mesh uniT; do
+for field in monitor A T AT mesh uniT; do
     gmtFoam $field
     eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf ????/$field.pdf
 done
-
-# Conservation of T
-globalSum A
-globalSum T
-globalSum AT
-globalSum uniT
-
 
 # Make links for animategraphics
 mkdir -p animategraphics

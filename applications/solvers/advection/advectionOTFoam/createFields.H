@@ -116,14 +116,6 @@ volScalarField AT
 );
 AT.write();
 
-volScalarField AuniT
-(
-    IOobject("AuniT", runTime.timeName(), mesh,
-             IOobject::NO_READ, IOobject::AUTO_WRITE),
-    A*uniT
-);
-AuniT.write();
-
 volScalarField flowOverGround
 (
     IOobject("flowOverGround", runTime.timeName(), mesh,
@@ -131,4 +123,3 @@ volScalarField flowOverGround
     mesh,
     dimensionedScalar("flowOverGround", dimensionSet(0,3,-1,0,0), scalar(0))
 );
-

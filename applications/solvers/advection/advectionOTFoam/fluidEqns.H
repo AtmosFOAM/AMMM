@@ -8,8 +8,6 @@ if (colinParameter)
     // Reset A
     if (resetA)
     {
-          // This line means that A is effectively not reset
-//        mesh.setV0() = A.oldTime()*mesh.V0();
         A.oldTime() == dimensionedScalar("", dimless, scalar(1));
     }
 
@@ -22,8 +20,7 @@ if (colinParameter)
 
     // Solve equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
-
-      {
+    {
         fvScalarMatrix AuniTEqn
         (
             fvm::ddt(A, uniT)
@@ -38,43 +35,7 @@ if (colinParameter)
         );
         ATEqn.solve();
     }
-    
-    // // Reset A to unity
-    // if (resetA)
-    // {
-    //     mesh.V0() == A.oldTime()*mesh.V0();
-    // 	A.oldTime() == dimensionedScalar("", dimless, scalar(1));
-    // 	AuniT.oldTime() == uniT.oldTime();
-    // 	//	AT.oldTime() == T.oldTime();
-    // }
-    // // Solve equations iterativelly
-    // for(int icorr = 0; icorr < nIteration; icorr++)
-    // {
-    //     fvScalarMatrix AEqn
-    //     (
-    // 	    fvm::ddt(A)
-    // 	  + fvc::div(phi, A, "div(phi,T)")
-    //     );
-    //     AEqn.solve();
-
-    //     fvScalarMatrix ATEqn
-    //     (
-    //         fvm::ddt(AT)
-    //       + fvc::div(phi, AT, "div(phi,T)")
-    //     );
-    //     ATEqn.solve();
-
-    //     fvScalarMatrix AuniTEqn
-    //     (
-    //         fvm::ddt(AuniT)
-    //       + fvc::div(phi, AuniT, "div(phi,T)")
-    //     );
-    //     AuniTEqn.solve();
-    // }
-
-    // // Update T and uniT
-    // T     == AT/A;
-    // uniT  == AuniT/A;
+    AT == A*T;
 }
 else
 {
@@ -94,10 +55,8 @@ else
         );
         uniTEqn.solve();
     }
+    AT == A*T;
 }
-
-// Update AT
-AT == A*T;
 
 // Recover the absolute flux
 fvc::makeAbsolute(phi, U);
