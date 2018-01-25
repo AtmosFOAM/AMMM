@@ -1,16 +1,15 @@
 // Make the flux relative
 fvc::makeRelative(phi, U);
 
-flowOverGround.ref().field() = phi.boundaryField()[5];
-
 if (colinParameter)
 {
-    // Reset A
+    // Reset A to unity
     if (resetA)
     {
         A.oldTime() == dimensionedScalar("", dimless, scalar(1));
     }
 
+    // Solve A equation
     fvScalarMatrix AEqn
     (
         fvm::ddt(A)
@@ -18,7 +17,7 @@ if (colinParameter)
     );
     AEqn.solve();
 
-    // Solve equations iterativelly
+    // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
         fvScalarMatrix AuniTEqn
@@ -35,7 +34,6 @@ if (colinParameter)
         );
         ATEqn.solve();
     }
-    AT == A*T;
 }
 else
 {
@@ -55,7 +53,6 @@ else
         );
         uniTEqn.solve();
     }
-    AT == A*T;
 }
 
 // Recover the absolute flux
