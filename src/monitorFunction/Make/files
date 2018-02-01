@@ -6,6 +6,7 @@ monitorFunctionSumGaussians.C
 monitorFunctionMapped.C
 monitorFunctionFrom/monitorFunctionFrom.C
 monitorFunctionFrom/monitorFunctionFromGradU.C
+monitorFunctionFrom/monitorFunctionFromGradU5050.C
 monitorFunctionFrom/monitorFunctionFromLinGradU.C
 monitorFunctionFrom/monitorFunctionFromVorticity.C
 monitorFunctionFrom/monitorFunctionFromVorticity5050.C

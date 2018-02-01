@@ -18,12 +18,10 @@ nRKstages 2;
 
 solvers
 {
-    T
+    "A|AT|AuniT|T|uniT"
     {
-        solver PBiCG;
-        preconditioner   DILU;
-        tolerance       1e-08
-        relTol          0;
+        solver none;
+        tolerance       0;
     }
 }
 // ************************************************************************* //

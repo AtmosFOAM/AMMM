@@ -1,0 +1,59 @@
+// Make the flux relative
+fvc::makeRelative(phi, U);
+
+if (colinParameter)
+{
+    // Reset A to unity
+    if (resetA)
+    {
+        A.oldTime() == dimensionedScalar("", dimless, scalar(1));
+    }
+
+    // Solve A equation
+    fvScalarMatrix AEqn
+    (
+        fvm::ddt(A)
+      - fvc::div(mesh.phi())
+    );
+    AEqn.solve();
+
+    // Solve T and uniT equations iterativelly
+    for(int icorr = 0; icorr < nIteration; icorr++)
+    {
+        fvScalarMatrix AuniTEqn
+        (
+            fvm::ddt(A, uniT)
+          + fvc::div(phi, uniT, "div(phi,T)")
+        );
+        AuniTEqn.solve();
+
+        fvScalarMatrix ATEqn
+        (
+            fvm::ddt(A, T)
+          + fvc::div(phi, T, "div(phi,T)")
+        );
+        ATEqn.solve();
+    }
+}
+else
+{
+    for(int icorr = 0; icorr < nIteration; icorr++)
+    {
+        fvScalarMatrix TEqn
+        (
+            fvm::ddt(T)
+          + fvc::div(phi, T)
+        );
+        TEqn.solve();
+
+        fvScalarMatrix uniTEqn
+        (
+            fvm::ddt(uniT)
+          + fvc::div(phi, uniT, "div(phi,T)")
+        );
+        uniTEqn.solve();
+    }
+}
+
+// Recover the absolute flux
+fvc::makeAbsolute(phi, U);

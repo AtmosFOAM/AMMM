@@ -1,5 +1,4 @@
 Info<< "Reading field T\n" << endl;
-
 volScalarField T
 (
     IOobject
@@ -12,10 +11,8 @@ volScalarField T
     ),
     pMesh
 );
-volScalarField Told("Told", T);
 
 Info<< "Reading field phi\n" << endl;
-
 surfaceScalarField phi
 (
     IOobject
@@ -25,6 +22,7 @@ surfaceScalarField phi
     ),
     pMesh
 );
+phi.oldTime();
 
 // Read U if present, otherwise create and write (not used)
 volVectorField U
@@ -39,6 +37,7 @@ volVectorField U
     ),
     fvc::reconstruct(phi)
 );
+U.oldTime();
 U.write();
 
 // Read Uf if present, otherwise create and write (not used)
@@ -68,14 +67,14 @@ surfaceScalarField meshPhi
     fvc::meshPhi(U)
 );
 
-// The change in volume per time-step
+/*// The change in volume per time-step
 volScalarField volRatio
 (
     IOobject("volRatio", runTime.timeName(), pMesh),
     pMesh,
     dimensionedScalar("volRatio", dimless, scalar(1))
 );
-
+*/
 // Also advect a uniform tracer
 volScalarField uniT
 (
@@ -83,7 +82,6 @@ volScalarField uniT
              IOobject::MUST_READ, IOobject::AUTO_WRITE),
     pMesh
 );
-volScalarField uniTold("uniTold", uniT);
 
 // Fluxes on the rMesh
 surfaceScalarField phiR
@@ -95,3 +93,19 @@ surfaceScalarField phiR
     rMesh
 );
 
+// Colin parameter
+volScalarField A
+(
+    IOobject("A", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    pMesh,
+    dimensionedScalar("A", dimless, scalar(1))
+);
+
+volScalarField AT
+(
+    IOobject("AT", runTime.timeName(), pMesh,
+             IOobject::NO_READ, IOobject::AUTO_WRITE),
+    A*T
+);
+AT.write();

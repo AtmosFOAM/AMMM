@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 # Plot results
+gmtPlot plots/plotMass.gmt
+
 time=0
-for field in T UT mesh monitor uniT; do
+for field in Tmesh monitor uniT; do
     gmtFoam $field -region pMesh -time $time':'
 done
-
-# Conservation of T
-globalSum T -region pMesh
 
 # Make links for animategraphics
 mkdir -p animategraphics
