@@ -1,5 +1,5 @@
 // Make the flux relative
-fvc::makeRelative(phi, U);
+//fvc::makeRelative(phi, U);
 
 if (colinParameter)
 {
@@ -13,7 +13,16 @@ if (colinParameter)
     fvScalarMatrix AEqn
     (
         fvm::ddt(A)
-      - fvc::div(mesh.phi())
+      - fvm::div(mesh.phi(), A)
+    );
+    AEqn.solve();
+    surfaceScalarField Aup = fvc::interpolate(A);
+    // Doing make relative ourselves for Aphi
+    phi -= Aup*mesh.phi();
+    AEqn = fvScalarMatrix
+    (
+        fvm::ddt(A)
+      - fvc::div(Aup*mesh.phi())
     );
     AEqn.solve();
 
@@ -34,6 +43,7 @@ if (colinParameter)
         );
         ATEqn.solve();
     }
+    phi += Aup*mesh.phi();
 }
 else
 {
@@ -56,4 +66,4 @@ else
 }
 
 // Recover the absolute flux
-fvc::makeAbsolute(phi, U);
+//fvc::makeAbsolute(phi, U);

@@ -46,5 +46,4 @@ sed 's/MAXMESHVELOCITY/1e6/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0/g' > system/OTmeshDict
 advectionOTFoam -colinParameter -resetA >& log &
 
-gmtPlot plots/plotMass.gmt
 

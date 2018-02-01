@@ -9,18 +9,49 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      initDict;
+    class       volScalarField;
+    location    "0";
+    object      A;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Input for OTmesh
-maxMAiters             4;
-maxMeshVelocity        1e6;
-meshRelax              0;
-monitorFunctionDynamic monitorFunctionFromGradU5050;
-maxMonitorRatio        4;
-nMonSmooth             20;
-monitorFromName        gradT;
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 1;
+
+boundaryField
+{
+    inlet
+    {
+        type            zeroGradient;
+        value           uniform 1;
+    }
+    outlet
+    {
+        type            zeroGradient;
+        value           uniform 1;
+    }
+    equator
+    {
+        type            zeroGradient;
+        value           uniform 1;
+    }
+    pole
+    {
+        type            zeroGradient;
+        value           uniform 1;
+    }
+    top
+    {
+        type            zeroGradient;
+        value           uniform 1;
+    }
+    ground
+    {
+        type            zeroGradient;
+        value           uniform 1;
+    }
+}
+
 
 // ************************************************************************* //

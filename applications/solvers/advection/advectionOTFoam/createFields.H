@@ -100,7 +100,7 @@ surfaceScalarField meshPhi
 volScalarField A
 (
     IOobject("A", runTime.timeName(), mesh,
-             IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE),
-    mesh,
-    dimensionedScalar("A", dimless, scalar(1))
+             IOobject::MUST_READ, IOobject::AUTO_WRITE),
+    mesh
 );
+
