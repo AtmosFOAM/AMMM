@@ -16,7 +16,7 @@ FoamFile
 
 solvers
 {
-    "meshPot"
+    "meshPot|monitor"
     {
         solver GAMG;
         smoother symGaussSeidel;

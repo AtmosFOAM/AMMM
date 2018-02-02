@@ -24,7 +24,7 @@ FoamFile
 
 ddtSchemes
 {
-    ddt(gradPhi)    Euler;
+    default         Euler;
 }
 
 gradSchemes

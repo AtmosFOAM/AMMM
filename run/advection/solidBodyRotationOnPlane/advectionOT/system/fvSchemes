@@ -39,7 +39,7 @@ divSchemes
 {
     default         none;
     div(phi,T)      Gauss linearUpwind linearUpwind;
-    div(meshPhi,A)  Gauss upwind;
+    div(meshFlux,A)  Gauss downwind;
 }
 
 laplacianSchemes
@@ -51,7 +51,7 @@ interpolationSchemes
 {
     default                 none;
     interpolate(grad(T))    linear;
-    interpolate(A)          upwind meshPhi;
+    interpolate(A)          downwind meshFlux;
 }
 
 snGradSchemes

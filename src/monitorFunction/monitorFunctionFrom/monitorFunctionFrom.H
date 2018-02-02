@@ -58,9 +58,6 @@ class monitorFunctionFrom
     public IOdictionary
 {
 private:
-    // Private data
-        //- Number of iterations of laplacian smoothing
-        const label nMonSmooth_;
 
     // Private Member Functions
 
@@ -121,9 +118,6 @@ public:
         //- Access
         virtual word name() const = 0;
 
-          //- Number of iterations of laplacian smoothing
-          label nMonSmooth() const {return nMonSmooth_;}
-    
         //- The volScalarField of the monitor Function on the given mesh
         //- with smoothing
         tmp<volScalarField> evaluate

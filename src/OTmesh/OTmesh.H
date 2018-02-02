@@ -71,7 +71,7 @@ class OTmesh
         label maxMAiters_;
         scalar maxMeshVelocity_;
         scalar meshRelax_;
-        label nMonSmooth_;
+        scalar smoothCoeff_;
         
         // The mesh potential and its gradient
         volScalarField meshPot_;
@@ -128,8 +128,8 @@ public:
         //- The proportion of the mesh movement actually applied
         scalar meshRelax() const { return meshRelax_; }
 
-        //- The number of laplacian smooths of the monitor function
-        label nMonSmooth() const { return nMonSmooth_; }
+        //- Smoothing coefficient of the monitor function
+        scalar smoothCoeff() const { return smoothCoeff_;}
         
         //- The mesh potential
         const volScalarField& meshPot() const { return meshPot_;}

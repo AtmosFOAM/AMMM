@@ -22,6 +22,8 @@ az 1;
 
 nx 100;
 ny 100;
+//nx 25;
+//ny 25;
 
 vertices
 (

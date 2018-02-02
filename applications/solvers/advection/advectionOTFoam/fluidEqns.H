@@ -1,6 +1,3 @@
-// Make the flux relative
-//fvc::makeRelative(phi, U);
-
 if (colinParameter)
 {
     // Reset A to unity
@@ -9,22 +6,31 @@ if (colinParameter)
         A.oldTime() == dimensionedScalar("", dimless, scalar(1));
     }
 
-    // Solve A equation
+    surfaceScalarField meshFlux("meshFlux", mesh.phi());
+    
+    // Formulation where the mesh flux is multiplied by A (upwinded)
+    if (AmeshFlux)
+    {
+        // Solve A equation
+        fvScalarMatrix AEqn
+        (
+            fvm::ddt(A) - fvm::div(meshFlux, A)
+        );
+        AEqn.solve();
+
+        // Modify the mesh fluxes and calculate final A
+        meshFlux *= fvc::interpolate(A);
+    }
+
+    // Set A based on mesh fluxes (with or without A)
     fvScalarMatrix AEqn
     (
-        fvm::ddt(A)
-      - fvm::div(mesh.phi(), A)
+        fvm::ddt(A) - fvc::div(meshFlux)
     );
     AEqn.solve();
-    surfaceScalarField Aup = fvc::interpolate(A);
-    // Doing make relative ourselves for Aphi
-    phi -= Aup*mesh.phi();
-    AEqn = fvScalarMatrix
-    (
-        fvm::ddt(A)
-      - fvc::div(Aup*mesh.phi())
-    );
-    AEqn.solve();
+
+    // Make the fluxes relative
+    phi -= meshFlux;
 
     // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
@@ -43,10 +49,14 @@ if (colinParameter)
         );
         ATEqn.solve();
     }
-    phi += Aup*mesh.phi();
+    // Make the fluxes absolute again
+    phi += meshFlux;
 }
 else
 {
+    // Make the flux relative
+    fvc::makeRelative(phi, U);
+    
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
         fvScalarMatrix TEqn
@@ -63,7 +73,8 @@ else
         );
         uniTEqn.solve();
     }
+    // Recover the absolute flux
+    fvc::makeAbsolute(phi, U);
 }
 
-// Recover the absolute flux
-//fvc::makeAbsolute(phi, U);
+

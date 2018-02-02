@@ -1,0 +1,27 @@
+inputFiles=(Aminmax.dat Aminmax.dat)
+outFile=plots/Aminmax.eps
+col=(2 3)
+colx=1
+#legends=("minimum A" "maximum A")
+pens=("0.25p", "0.25p")
+#symbols=(psxy symbol types in double quotes) (optional)
+#spens=(psxy pen types in double quotes for the symbols) (optional)
+xlabel="time (s)"
+ylabel="Maximum and minimum A"
+xmin=0
+xmax=6000
+dx=600
+#ddx=1 (number of ticks)
+dxg=0
+ymin=0.97
+ymax=1.03
+dy=0.01
+#ddy=1 (number of ticks)
+dyg=1
+#xscale=*1
+yscale=*1
+#legPos=x10/10
+nSkip=0
+projection=X15c/10c
+gv=0
+
