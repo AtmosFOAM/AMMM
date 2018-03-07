@@ -7,7 +7,6 @@ if (colinParameter)
     }
 
     surfaceScalarField meshFlux("meshFlux", mesh.phi());
-    surfaceScalarField Af("Af", fvc::interpolate(A));
     
     // Formulation where the mesh flux is multiplied by A (upwinded)
     if (AmeshFlux)
@@ -20,8 +19,7 @@ if (colinParameter)
         AEqn.solve();
 
         // Modify the mesh fluxes and calculate final A
-	Af =  fvc::interpolate(A);
-        meshFlux = Af*meshFlux;
+        meshFlux *= fvc::interpolate(A);
     }
 
     // Set A based on mesh fluxes (with or without A)
@@ -32,7 +30,6 @@ if (colinParameter)
     AEqn.solve();
 
     // Make the fluxes relative
-    //    phi *= Af;
     phi -= meshFlux;
     
     // Solve T and uniT equations iterativelly
@@ -55,7 +52,6 @@ if (colinParameter)
 
     // Make the fluxes absolute again
     phi += meshFlux;
-    //    phi /= Af;
 }
 else
 {
