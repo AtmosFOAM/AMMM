@@ -17,6 +17,7 @@ for field in mesh A T uniT monitor; do
         rm $time/${field}under.ps $time/${field}.ps $time/${field}.pdf.pdf
     done
 done
+gmtFoam meshOverMountain
 
 # Make gif animation
 ./makegif.sh
@@ -24,11 +25,11 @@ done
 # Make links for animategraphics
 mkdir -p animategraphics
 time=0
-for field in mesh A T uniT monitor; do
+for field in mesh A T uniT monitor meshOverMountain; do
 	ln -s ../$time/$field.pdf animategraphics/${field}_$time.pdf
 done
 
-for field in mesh A T uniT monitor; do
+for field in mesh A T uniT monitor meshOverMountain; do
     for time in [1-9]*; do
 	    t=`echo $time | awk {'print $1/50'}`
 	    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
