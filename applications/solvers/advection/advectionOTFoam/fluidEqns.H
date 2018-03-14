@@ -7,7 +7,7 @@ if (colinParameter)
     }
 
     surfaceScalarField meshFlux("meshFlux", mesh.phi());
-    
+
     // Formulation where the mesh flux is multiplied by A (upwinded)
     if (AmeshFlux)
     {
@@ -31,7 +31,7 @@ if (colinParameter)
 
     // Make the fluxes relative
     phi -= meshFlux;
-    
+
     // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
@@ -57,7 +57,7 @@ else
 {
     // Make the flux relative
     fvc::makeRelative(phi, U);
-    
+
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
         fvScalarMatrix TEqn
