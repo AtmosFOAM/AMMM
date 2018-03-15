@@ -5,6 +5,7 @@
 |   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
@@ -12,16 +13,28 @@ FoamFile
     class       dictionary;
     object      fvSolution;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 nIteration 2;
 
 solvers
 {
-    "T|uniT|A|AT|AuniT"
+    "T|uniT|AT|AuniT"
     {
         solver none;
         tolerance       0;
     }
 }
+
+solvers
+{
+    A
+    {
+        solver smoothSolver;
+        smoother GaussSeidel;
+        tolerance       1e-6;
+    }
+}
+
 // ************************************************************************* //

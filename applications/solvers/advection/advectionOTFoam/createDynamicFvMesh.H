@@ -1,19 +1,19 @@
-    Info<< "Create mesh for time = "
-        << runTime.timeName() << nl << endl;
+Info<< "Create mesh for time = "
+    << runTime.timeName() << nl << endl;
 
-    autoPtr<dynamicFvMesh> meshPtr
+autoPtr<dynamicFvMesh> meshPtr
+(
+    dynamicFvMesh::New
     (
-        dynamicFvMesh::New
-        (
-            IOobject
-            (
-                dynamicFvMesh::defaultRegion,
-                runTime.timeName(),
-                runTime,
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            )
+        IOobject
+	(
+	    dynamicFvMesh::defaultRegion,
+	    runTime.timeName(),
+	    runTime,
+	    IOobject::MUST_READ,
+	    IOobject::AUTO_WRITE
         )
-    );
+    )
+);
 
-    dynamicFvMesh& mesh = meshPtr();
+dynamicFvMesh& mesh = meshPtr();

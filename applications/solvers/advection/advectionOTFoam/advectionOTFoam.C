@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
     argList::addBoolOption("fixedMesh", "run on polyMesh and do not modify");
     argList::addBoolOption("colinParameter", "run with the Colin parameter A");
     argList::addBoolOption("resetA", "resetting A every time step");
+    argList::addBoolOption("AmeshFlux", "multiply mesh fluxes by A");
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
@@ -52,14 +53,15 @@ int main(int argc, char *argv[])
     const Switch fixedMesh = args.optionFound("fixedMesh");
     const Switch colinParameter = args.optionFound("colinParameter");
     const Switch resetA = args.optionFound("resetA");
+    const Switch AmeshFlux = args.optionFound("AmeshFlux");
 
     #include "createFields.H"
     #include "createMountain.H"
 
-    Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+    Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
         << "  Max T = " << max(T).value() << " min T = " << min(T).value()
-        << nl << endl;
+        << endl;
 
     if (reMeshOnly)
     {
@@ -71,7 +73,6 @@ int main(int argc, char *argv[])
     }
 
     #include "CourantNo.H"
-
     Info << "Mesh has normal direction" << flush;
     vector meshNormal = 0.5*(Vector<label>(1,1,1)-mesh.geometricD());
     meshNormal -= 2*meshNormal[1]*vector(0.,1.,0.);
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
     {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.timeName() << endl;
         #include "CourantNo.H"
 
         if (!fixedMesh)
@@ -107,7 +108,6 @@ int main(int argc, char *argv[])
             #include "raiseOrography.H"
         }
         #include "fluidEqns.H"
-
         #include "diagnostics.H"
 
         runTime.write();
@@ -119,13 +119,12 @@ int main(int argc, char *argv[])
         Info << "uniT goes from " << min(uniT).value() << " to "
              << max(uniT).value() << endl;
         Info << "A goes from " << min(A).value() << " to " << max(A).value()
-             << endl;
+             << nl << endl;
     }
 
     Info<< "End\n" << endl;
 
     return 0;
 }
-
 
 // ************************************************************************* //

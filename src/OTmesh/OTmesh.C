@@ -69,7 +69,7 @@ Foam::OTmesh::OTmesh(const IOobject& io)
     maxMAiters_(readLabel(OTmeshCoeffs_.lookup("maxMAiters"))),
     maxMeshVelocity_(readScalar(OTmeshCoeffs_.lookup("maxMeshVelocity"))),
     meshRelax_(readScalar(OTmeshCoeffs_.lookup("meshRelax"))),
-    nMonSmooth_(readLabel(OTmeshCoeffs_.lookup("nMonSmooth"))),
+    smoothCoeff_(readScalar(OTmeshCoeffs_.lookup("smoothCoeff"))),
     meshPot_
     (
         IOobject
@@ -99,7 +99,8 @@ Foam::OTmesh::OTmesh(const IOobject& io)
     (
         IOobject("monitor", io.time().timeName(), cMesh_),
         cMesh_,
-        dimensionedScalar("monitor", dimless, scalar(1))
+        dimensionedScalar("monitor", dimless, scalar(1)),
+        meshPot_.boundaryField().types()
     )
 {
     gradMeshPot_ += 
@@ -129,23 +130,20 @@ void Foam::OTmesh::setMonitor()
     setInternalAndBoundaryValues(monitorC_, monitorP_);
 
     // Smoothing of the monitor function on the computational mesh
-    for(int iSmooth = 0; iSmooth < nMonSmooth(); iSmooth++)
+    if (smoothCoeff() > SMALL)
     {
-        monitorC_ += 0.25*fvc::laplacian
+        surfaceScalarField diffCoeff = 0.25*smoothCoeff()
+                      /sqr(cMesh_.deltaCoeffs())/time().deltaT();
+        monitorC_.oldTime() = monitorC_;
+        fvScalarMatrix smoothEqn
         (
-            1/sqr(cMesh_.deltaCoeffs()),
-            monitorC_,
-            "laplacian(monitor)"
+            fvm::ddt(monitorC_)
+         == fvm::laplacian(diffCoeff, monitorC_, "monitor")
         );
+        smoothEqn.solve();
     }
 
     setInternalAndBoundaryValues(monitorP_, monitorC_);
-    
-    // Multiply the monitor function by the mesh density function, A
-    const volScalarField& A = lookupObjectRef<volScalarField>("A");
-    monitorP_ *= A;
-
-    setInternalAndBoundaryValues(monitorC_, monitorP_);
 
     Info << min(monitorC_).value() << " to " << max(monitorC_).value() << endl;
 }

@@ -5,6 +5,7 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
@@ -12,6 +13,7 @@ FoamFile
     class       dictionary;
     object      blockMeshDict;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 convertToMeters 1000;
@@ -22,6 +24,8 @@ az 1;
 
 nx 100;
 ny 100;
+//nx 25;
+//ny 25;
 
 vertices
 (

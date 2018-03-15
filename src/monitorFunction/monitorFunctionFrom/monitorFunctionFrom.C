@@ -45,8 +45,7 @@ monitorFunctionFrom::monitorFunctionFrom
     const IOdictionary& dict
 )
 :
-    IOdictionary(dict),
-    nMonSmooth_(readLabel(dict.lookup("nMonSmooth")))
+    IOdictionary(dict)
 {}
 
 

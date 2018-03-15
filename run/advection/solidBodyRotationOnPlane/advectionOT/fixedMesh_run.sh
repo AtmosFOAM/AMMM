@@ -27,4 +27,3 @@ gv 0/UT.pdf &
 
 # Run
 advectionOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
-

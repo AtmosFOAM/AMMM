@@ -20,7 +20,7 @@ maxMeshVelocity        MAXMESHVELOCITY;
 meshRelax              MESHRELAX;
 monitorFunctionDynamic monitorFunctionFromGradU5050;
 maxMonitorRatio        4;
-nMonSmooth             20;
+smoothCoeff            20;
 monitorFromName        gradT;
 
 // ************************************************************************* //
