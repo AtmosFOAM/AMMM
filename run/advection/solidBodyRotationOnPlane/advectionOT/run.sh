@@ -44,4 +44,4 @@ gv 0/UT.pdf &
 # Run
 sed 's/MAXMESHVELOCITY/1e6/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0/g' > system/OTmeshDict
-advectionOTFoam -colinParameter -AmeshFlux  >& log &
+advectionOTFoam -colinParameter >& log &

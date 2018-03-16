@@ -18,8 +18,8 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [V contours 12.5e5 22.5e5 2.5e5 "black"]
-    [V contours 27.5e5 37.5e5 2.5e5 ".-"]
+    [V contours 12.5e5 22.5e5 2.5e5 "1,black"]
+    [V contours 27.5e5 37.5e5 2.5e5 "1,black,5_5:"]
 );
 
 
