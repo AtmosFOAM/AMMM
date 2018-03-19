@@ -1,0 +1,29 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      mountainDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Specify the mountain
+type btf;
+domainHeight 1000;
+mountain
+{
+    type gaussianMountain;
+    peakHeight      peakHeight      [0 1 0 0 0] 500;
+    mountainCentre                  (2.5e3 5e3 0);
+    mountainHalfWidth	mountainHalfWidth 	[0 1 0 0 0] 5e2;
+}

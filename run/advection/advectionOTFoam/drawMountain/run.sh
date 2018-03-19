@@ -17,4 +17,3 @@ time=0
 postProcess -func writeCellVolumes -time $time
 gmtFoam -time $time Tunder
 gmtFoam -time $time mountainOver
-
