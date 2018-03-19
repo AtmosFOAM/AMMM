@@ -2,7 +2,7 @@
 
 # run all cases
 for case in movingOverMountainsA movingOverMountains fixedOverMountains \
-            fixedMesh movingNoMountain; do
+            fixedNoMountain movingNoMountain; do
     cd $case
     ./run.sh
     cd ..
@@ -11,10 +11,9 @@ done
 # Create mountain plot
 cd ../drawMountain
 ./run.sh
-cd ../adveadvectionOT
+cd ../runAll
 
 # Create plots of for all cases with mountains
-gmtFoam -case ../drawMountain 
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     for field in T uniT monitor A; do
         gmtFoam ${field}under -case $case
@@ -31,7 +30,7 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
 done
 
 # Create plots of for all cases without mountains
-for case in movingNoMountain fixedMesh; do
+for case in movingNoMountain fixedNoMountain; do
     for field in T monitor; do
         gmtFoam ${field} -case $case
     done
@@ -54,7 +53,7 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     done
 done
 
-for case in movingNoMountain fixedMesh; do
+for case in movingNoMountain fixedNoMountain; do
     mkdir -p $case/animategraphics
     time=0
     for field in T monitor; do
