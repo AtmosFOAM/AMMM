@@ -3,8 +3,8 @@ FoamFile
     version         1.4;
     format          ascii;
 
-    root            "/export/lime/data-04/sws02hs/OpenFOAM/sws02hs-1.4.1/run/shallowWater";
-    case            "bucky4_30";
+    root            "";
+    case            "";
     instance        "constant";
     local           "";
 
@@ -13,18 +13,13 @@ FoamFile
 }
 
 // How to plot
+// Compulsory inputs
 projection "X18c/18c";
 projection2D XY;
+plotBoundaryDots false;
 
 FieldsToPlot
 (
-    [none mesh      "black"]
+    [none mesh "black"]
 );
 
-// options
-region "0.01/0.9999e4/0/1.01e4";
-//boundaryMarks "a1e3/a1e3";
-//separateLegend true;
-//overlay true;
-plotBoundaryDots false;
-annotate "minMax 2000 500";
