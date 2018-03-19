@@ -70,3 +70,22 @@ for case in movingNoMountain fixedMesh; do
     done
 done
 
+# Create graphs
+for dir in movingOverMountains movingOverMountainsA; do
+    cd $dir
+    gmtPlot ../plots/Vchange.gmt
+    gmtPlot ../plots/Tchange.gmt
+    gmtPlot ../plots/ATchange.gmt
+    grep '\bTime =' log | awk '{print $3}' > time.dat
+    grep '\bT goes from' log | awk '{print $4, $6}' > T.dat
+    grep '\buniT goes from' log | awk '{print $4, $6}' > uniT.dat
+    grep '\bA goes from ' log | awk '{print $4, $6}' > A.dat
+    echo '#time Tmin Tmax uniTmin uniTmax Amin Amax' > minMax.dat
+    paste time.dat T.dat uniT.dat A.dat >> minMax.dat
+    rm time.dat T.dat uniT.dat A.dat
+    gmtPlot ../plots/uniT.gmt
+    gmtPlot ../plots/A.gmt
+    
+    cd ..
+done
+
