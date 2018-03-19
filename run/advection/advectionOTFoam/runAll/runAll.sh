@@ -18,13 +18,12 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     for field in T uniT monitor A; do
         gmtFoam ${field}under -case $case
         for time in $case/[0-9]*; do
-            time=`filename $time`
-            cat $case/$time/${field}under.ps \
-                ../drawMountain/0/mountainOver.ps > $case/$time/${field}.ps
-            ps2pdf $case/$time/${field}.ps $case/$time/${field}.ps.pdf
-            pdfcrop $case/$time/${field}.ps.pdf $case/$time/${field}.pdf
-            rm $case/$time/${field}under.ps $case/$time/${field}.ps \
-                $case/$time/${field}.ps.pdf
+            cat $time/${field}under.ps \
+                ../drawMountain/0/mountainOver.ps > $time/${field}.ps
+            ps2pdf $time/${field}.ps $time/${field}.ps.pdf
+            pdfcrop $time/${field}.ps.pdf $time/${field}.pdf
+            rm $time/${field}under.ps $time/${field}.ps \
+                $time/${field}.ps.pdf
         done
     done
 done
@@ -45,11 +44,12 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     done
 
     for field in A T uniT monitor; do
-        for time in $case/[1-9]*; do
-            time=`filename $time`
+        cd $case
+        for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`
-            ln -s ../$time/$field.pdf $case/animategraphics/${field}_$t.pdf
+            ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
         done
+        cd ..
     done
 done
 
@@ -61,11 +61,12 @@ for case in movingNoMountain fixedNoMountain; do
     done
 
     for field in T monitor; do
-        for time in $case/[1-9]*; do
-            time=`filename $time`
+        cd $case
+        for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`
-            ln -s ../$time/$field.pdf $case/animategraphics/${field}_$t.pdf
+            ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
         done
+        cd ..
     done
 done
 
@@ -84,7 +85,6 @@ for dir in movingOverMountains movingOverMountainsA; do
     rm time.dat T.dat uniT.dat A.dat
     gmtPlot ../plots/uniT.gmt
     gmtPlot ../plots/A.gmt
-    
+
     cd ..
 done
-
