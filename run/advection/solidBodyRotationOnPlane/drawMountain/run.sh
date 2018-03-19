@@ -17,6 +17,4 @@ time=0
 postProcess -func writeCellVolumes -time $time
 gmtFoam -time $time Tunder
 gmtFoam -time $time mountainOver
-cat $time/Tunder.ps $time/mountainOver.ps > $time/Tmountain.ps
-ps2pdf $time/Tmountain.ps
-mv Tmountain.pdf $time/Tmountain.pdf
+
