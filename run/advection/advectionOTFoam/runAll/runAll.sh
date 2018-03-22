@@ -15,6 +15,7 @@ cd ../runAll
 
 # Create plots of for all cases with mountains
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
+    gmtFoam -case $case meshOverMountain
     for field in T uniT monitor A; do
         gmtFoam ${field}under -case $case
         for time in $case/[0-9]*; do
@@ -39,11 +40,11 @@ done
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     mkdir -p $case/animategraphics
     time=0
-    for field in A T uniT monitor; do
+    for field in A T uniT monitor meshOverMountain; do
         ln -s ../$time/$field.pdf $case/animategraphics/${field}_$time.pdf
     done
 
-    for field in A T uniT monitor; do
+    for field in A T uniT monitor meshOverMountain; do
         cd $case
         for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`

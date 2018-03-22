@@ -9,6 +9,7 @@ for time in [0-9]*; do
     rm $case/$time/vorticity?
 done
 gmtFoam vorticity -case $case
+gmtFoam vorticityMesh -case $case
 
 for time in [0-9]*; do
     gmtFoam -time $time hU
@@ -16,14 +17,15 @@ for time in [0-9]*; do
 done
 
 # Animattion of vorticity
-# eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf \
-#                                       ???????/vorticity.pdf
+eps2gif vorticity.gif 0/vorticity.pdf ??????/vorticity.pdf \
+                                      ???????/vorticity.pdf
 
 # Make links for animategraphics
 mkdir -p animategraphics
-for field in vorticity hU mesh; do
+for field in vorticityMesh vorticity hU mesh; do
     for time in [0-9]*; do
-	t=`echo $time | awk {'print $1/100000'}`
-	ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
+        t=`echo $time | awk {'print $1/100000'}`
+        ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
     done
 done
+
