@@ -74,6 +74,7 @@ done
 # Create graphs
 for dir in movingOverMountains movingOverMountainsA; do
     cd $dir
+    mkdir plots
     gmtPlot ../plots/Vchange.gmt
     gmtPlot ../plots/Tchange.gmt
     gmtPlot ../plots/ATchange.gmt
@@ -86,6 +87,5 @@ for dir in movingOverMountains movingOverMountainsA; do
     rm time.dat T.dat uniT.dat A.dat
     gmtPlot ../plots/uniT.gmt
     gmtPlot ../plots/A.gmt
-
     cd ..
 done
