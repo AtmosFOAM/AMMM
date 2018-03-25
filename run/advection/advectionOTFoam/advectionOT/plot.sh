@@ -19,9 +19,6 @@ for field in mesh A T uniT monitor; do
 done
 gmtFoam meshOverMountain
 
-# Make gif animation
-./makegif.sh
-
 # Make links for animategraphics
 mkdir -p animategraphics
 time=0
@@ -34,4 +31,9 @@ for field in mesh A T uniT monitor meshOverMountain; do
 	    t=`echo $time | awk {'print $1/50'}`
 	    ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
     done
+done
+
+# Make gif animation
+for field in mesh A T uniT monitor meshOverMountain; do
+    eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf ????/$field.pdf
 done
