@@ -50,6 +50,11 @@ int main(int argc, char *argv[])
     const Switch reMeshOnly = args.optionFound("reMeshOnly");
     const Switch fixedMesh = args.optionFound("fixedMesh");
     const Switch colinParameter = args.optionFound("colinParameter");
+    
+    const scalar offCentre = readScalar
+    (
+        mesh.schemesDict().lookup("offCentre")
+    );
 
     #include "createFields.H"
     #include "createMountain.H"
