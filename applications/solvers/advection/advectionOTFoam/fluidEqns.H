@@ -2,12 +2,12 @@ if (colinParameter)
 {
     surfaceScalarField meshFlux("meshFlux", mesh.phi());
 
-    // Solve A equation implicitly
-    fvScalarMatrix AmeshFlux
-    (
-        fvm::ddt(A) + fvm::div(-meshFlux, A)
-    );
-    AmeshFlux.solve();
+    // // Solve A equation implicitly
+    // fvScalarMatrix AmeshFlux
+    // (
+    //     fvm::ddt(A) + fvm::div(-meshFlux, A)
+    // );
+    // AmeshFlux.solve();
 
     // Modify the mesh fluxes
     meshFlux *= fvc::interpolate(A);
@@ -25,17 +25,39 @@ if (colinParameter)
     // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
+
+        uniTm == uniT;
+        uniTm.oldTime() == uniT.oldTime();
+        Tm == T;
+        Tm.oldTime() == T.oldTime();
+
+        fvScalarMatrix AuniTmEqn
+        (
+            fvm::ddt(A, uniTm)
+          + fvc::div(phi, uniTm, "div(phi,T)")
+        );
+        AuniTmEqn.solve();
+
         fvScalarMatrix AuniTEqn
         (
             fvm::ddt(A, uniT)
-          + fvc::div(phi, uniT, "div(phi,T)")
+          + 0.5*fvc::div(phi, uniT, "div(phi,T)")
+          + 0.5*fvc::div(phi, uniTm, "div(phi,T)")
         );
         AuniTEqn.solve();
+
+        fvScalarMatrix ATmEqn
+        (
+            fvm::ddt(A, Tm)
+          + fvc::div(phi, Tm, "div(phi,T)")
+        );
+        ATmEqn.solve();
 
         fvScalarMatrix ATEqn
         (
             fvm::ddt(A, T)
-          + fvc::div(phi, T, "div(phi,T)")
+          + 0.5*fvc::div(phi, T, "div(phi,T)")
+          + 0.5*fvc::div(phi, Tm, "div(phi,T)")
         );
         ATEqn.solve();
     }

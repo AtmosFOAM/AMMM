@@ -16,25 +16,25 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-nIteration 2;
+nIteration 1;
 
 solvers
 {
-    "T|uniT|AT|AuniT"
+    "A|T|uniT|Tm|uniTm"
     {
         solver none;
         tolerance       0;
     }
 }
 
-solvers
-{
-    A
-    {
-        solver smoothSolver;
-        smoother GaussSeidel;
-        tolerance       1e-6;
-    }
-}
+// solvers
+// {
+//     "T|uniT"
+//     {
+//         solver smoothSolver;
+//         smoother GaussSeidel;
+//         tolerance       1e-8;
+//     }
+// }
 
 // ************************************************************************* //

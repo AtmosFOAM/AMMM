@@ -19,6 +19,20 @@ volScalarField T
     mesh
 );
 
+Info<< "Reading field Tm" << endl;
+volScalarField Tm
+(
+    IOobject
+    (
+        "Tm",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
 Info << "Reading field gradT" << endl;
 surfaceVectorField gradT
 (
@@ -32,6 +46,20 @@ volScalarField uniT
     IOobject
     (
         "uniT",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+Info<< "Reading field uniTm" << endl;
+volScalarField uniTm
+(
+    IOobject
+    (
+        "uniTm",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
