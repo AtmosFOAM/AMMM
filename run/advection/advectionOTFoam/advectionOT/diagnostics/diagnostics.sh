@@ -1,5 +1,5 @@
 # Create graphs
-mkdir diagnostics/plots
+mkdir -p diagnostics/plots
 gmtPlot diagnostics/Vchange.gmt
 gmtPlot diagnostics/Tchange.gmt
 gmtPlot diagnostics/ATchange.gmt
@@ -12,3 +12,4 @@ paste time.dat T.dat uniT.dat A.dat >> minMax.dat
 rm time.dat T.dat uniT.dat A.dat
 gmtPlot diagnostics/uniT.gmt
 gmtPlot diagnostics/A.gmt
+

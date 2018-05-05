@@ -20,7 +20,8 @@ maxMeshVelocity        1e6;
 meshRelax              0;
 monitorFunctionDynamic monitorFunctionFromGradU5050;
 maxMonitorRatio        4;
-smoothCoeff            20;
+//smoothCoeff            20;
+meshDiffusion meshDiffusion [0 2 0 0 0]   1.25e4;
 monitorFromName        gradT;
 
 // ************************************************************************* //

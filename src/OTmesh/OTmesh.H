@@ -71,7 +71,7 @@ class OTmesh
         label maxMAiters_;
         scalar maxMeshVelocity_;
         scalar meshRelax_;
-        scalar smoothCoeff_;
+        dimensionedScalar meshDiffusion_;
         
         // The mesh potential and its gradient
         volScalarField meshPot_;
@@ -129,7 +129,7 @@ public:
         scalar meshRelax() const { return meshRelax_; }
 
         //- Smoothing coefficient of the monitor function
-        scalar smoothCoeff() const { return smoothCoeff_;}
+        dimensionedScalar meshDiffusion() const { return meshDiffusion_;}
         
         //- The mesh potential
         const volScalarField& meshPot() const { return meshPot_;}
