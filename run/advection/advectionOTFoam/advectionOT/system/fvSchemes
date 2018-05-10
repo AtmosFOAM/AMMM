@@ -39,7 +39,6 @@ divSchemes
 {
     default         none;
     div(phi,T)      Gauss linearUpwind linearUpwind;
-    div(-meshFlux,A)  Gauss upwind;
 }
 
 laplacianSchemes
@@ -64,6 +63,5 @@ fluxRequired
     default         no;
     h;
 }
-
 
 // ************************************************************************* //

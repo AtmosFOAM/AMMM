@@ -20,10 +20,7 @@ setVelocityField -dict advectionDict
 
 # Raise the mountain
 terrainFollowingMesh
-
-# Draw initial condition
-gmtFoam -time 0 UT
-gv 0/UT.pdf &
+gmtFoam -time 0 meshOverMountain
 
 # Run
 advectionOTFoam -fixedMesh >& log & sleep 0.01; tail -f log

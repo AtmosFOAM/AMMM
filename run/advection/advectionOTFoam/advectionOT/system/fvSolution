@@ -20,21 +20,11 @@ nIteration 2;
 
 solvers
 {
-    "A|T|uniT|Tm|uniTm"
+    "A|T|uniT"
     {
         solver none;
         tolerance       0;
     }
 }
-
-// solvers
-// {
-//     "T|uniT"
-//     {
-//         solver smoothSolver;
-//         smoother GaussSeidel;
-//         tolerance       1e-8;
-//     }
-// }
 
 // ************************************************************************* //

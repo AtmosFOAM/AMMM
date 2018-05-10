@@ -46,19 +46,21 @@ else
     // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
     {
-        fvScalarMatrix TEqn
-        (
-            fvm::ddt(T)
-          + fvc::div(phi, T)
-        );
-        TEqn.solve();
-
         fvScalarMatrix uniTEqn
         (
             fvm::ddt(uniT)
-          + fvc::div(phi, uniT, "div(phi,T)")
+          + (1-offCentre)*fvc::div(phi, uniT.oldTime(), "div(phi,T)")
+          + offCentre*fvc::div(phi, uniT, "div(phi,T)")
         );
         uniTEqn.solve();
+
+        fvScalarMatrix TEqn
+        (
+            fvm::ddt(T)
+          + (1-offCentre)*fvc::div(phi, T.oldTime(), "div(phi,T)")
+          + offCentre*fvc::div(phi, T, "div(phi,T)")
+        );
+        TEqn.solve();
     }
 
     // Make the fluxes absolute
