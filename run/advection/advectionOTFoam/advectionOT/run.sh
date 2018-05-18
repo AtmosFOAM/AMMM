@@ -22,8 +22,6 @@ setVelocityField -dict advectionDict
 terrainFollowingMesh
 gmtFoam -time 0 meshOverMountain
 evince 0/meshOverMountain.pdf &
-gmtFoam -time 0 mesh
-evince 0/mesh.pdf &
 sed 's/MAXMESHVELOCITY/0/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0.5/g' > system/OTmeshDict
 meshIter=0
@@ -32,7 +30,6 @@ until [ $meshIter -ge 20 ]; do
 
     advectionOTFoam -reMeshOnly
     gmtFoam -time 0 meshOverMountain
-    gmtFoam -time 0 mesh
 
     setAnalyticTracerField -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
@@ -48,4 +45,3 @@ gv 0/UT.pdf &
 sed 's/MAXMESHVELOCITY/1e6/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0/g' > system/OTmeshDict
 advectionOTFoam -colinParameter >& log &
-
