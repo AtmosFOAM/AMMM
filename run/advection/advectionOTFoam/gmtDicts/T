@@ -19,7 +19,7 @@ projection2D XY;
 FieldsToPlot
 (
     [T filledContours 0 1 0.025 "$GMTU/colours/white_blue_red.cpt"]
-    [V contours 0 0 0 "black"]
+    [none mesh "grey"]
 );
 
 // options

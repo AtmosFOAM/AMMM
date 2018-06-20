@@ -1,0 +1,17 @@
+inputFiles=(minMax.dat minMax.dat)
+outFile=diagnostics/plots/AminMax.eps
+col=(6 7)
+colx=1
+pens=("1p,black" "1p,black")
+xlabel="Time (s)"
+ylabel="Maximum and minimum A"
+xmin=0
+xmax=600
+dx=100
+ymin=0.97
+ymax=1.03
+dyg=1
+dy=1e-2
+nSkip=1
+projection=X10c/7.5c
+gv=1
