@@ -3,7 +3,7 @@
 # run all cases
 for case in movingOverMountainsA movingOverMountains fixedOverMountains \
             fixedNoMountain movingNoMountain; do
-    cd $case/100
+    cd $case/n100
     ./run.sh
     cd ../..
 done
@@ -16,10 +16,10 @@ cd ../runAll
 # Create plots of for all cases with mountains
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     cd $case
-    gmtFoam -case 100 meshOverMountain
+    gmtFoam -case n100 meshOverMountain
     for field in T uniT monitor A; do
-        gmtFoam ${field}under -case 100
-        for time in 100/[0-9]*; do
+        gmtFoam ${field}under -case n100
+        for time in n100/[0-9]*; do
             cat $time/${field}under.ps \
                 ../drawMountain/0/mountainOver.ps > $time/${field}.ps
             ps2pdf $time/${field}.ps $time/${field}.ps.pdf
@@ -35,21 +35,21 @@ done
 for case in movingNoMountain fixedNoMountain; do
     cd $case
     for field in T monitor; do
-        gmtFoam ${field} -case 100
+        gmtFoam ${field} -case n100
     done
     cd ..
 done
 
 # Make links for animategraphics
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
-    mkdir -p $case/100/animategraphics
+    mkdir -p $case/n100/animategraphics
     time=0
     for field in A T uniT monitor meshOverMountain; do
-        ln -s ../$time/$field.pdf $case/100/animategraphics/${field}_$time.pdf
+        ln -s ../$time/$field.pdf $case/n100/animategraphics/${field}_$time.pdf
     done
 
     for field in A T uniT monitor meshOverMountain; do
-        cd $case/100
+        cd $case/n100
         for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`
             ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
@@ -59,14 +59,14 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
 done
 
 for case in movingNoMountain fixedNoMountain; do
-    mkdir -p $case/100/animategraphics
+    mkdir -p $case/n100/animategraphics
     time=0
     for field in T monitor; do
-        ln -s ../$time/$field.pdf $case/100/animategraphics/${field}_$time.pdf
+        ln -s ../$time/$field.pdf $case/n100/animategraphics/${field}_$time.pdf
     done
 
     for field in T monitor; do
-        cd $case/100
+        cd $case/n100
         for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`
             ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
@@ -77,7 +77,7 @@ done
 
 # Create graphs
 for dir in movingOverMountains movingOverMountainsA; do
-    cd $dir/100
+    cd $dir/n100
     mkdir plots
     gmtPlot ../../plots/Vchange.gmt
     gmtPlot ../../plots/Tchange.gmt

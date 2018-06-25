@@ -4,7 +4,7 @@
 for dir in fixedNoMountain fixedOverMountains \
            movingNoMountain movingOverMountains movingOverMountainsA; do
     cd $dir
-    for case in 50 100 200 400; do
+    for case in n50 n100 n200 n400; do
         cd $case
         ./run.sh
         cd ..
@@ -16,7 +16,7 @@ done
 for dir in fixedNoMountain fixedOverMountains \
            movingNoMountain movingOverMountains movingOverMountainsA; do
     cd $dir
-    for case in 50 100 200 400; do
+    for case in n50 n100 n200 n400; do
         cd $case
         ./convergence.sh
         cd ..
@@ -26,17 +26,15 @@ done
 
 # Create graphs
 echo '#meshSize gridSize 1stOrder 2ndOrder fixedNoMountain fixedOverMountains movingNoMountain movingOverMountainsA' > convergence.dat
-for case in 50 100 200 400; do
-    echo $case >> meshSize.dat
-    echo `expr 10000 / $case` >> gridSize.dat
-done
+echo -e "50\n100\n200\n400\n" > meshSize.dat
+echo -e "200\n100\n50\n25\n" > gridSize.dat
 echo -e "0.04\n0.02\n0.01\n0.005\n" > 1stOrder.dat
 echo -e "0.04\n0.01\n0.0025\n0.000625\n" > 2ndOrder.dat
 
 for dir in fixedNoMountain fixedOverMountains \
            movingNoMountain movingOverMountainsA; do
     cd $dir
-    for case in 50 100 200 400; do
+    for case in n50 n100 n200 n400; do
         cd $case
         grep '\b600 ' globalSumTerror.dat | awk '{print $3}' >> ../../$dir.dat
         cd ..

@@ -2,7 +2,7 @@
 
 # run all cases
 for case in movingOverMountainsA movingOverMountains; do
-    cd $case/100_long
+    cd $case/n100_long
     ./run.sh
     cd ../..
 done
@@ -15,10 +15,10 @@ cd ../runAll
 # Create plots
 for case in movingOverMountainsA movingOverMountains; do
     cd $case
-    gmtFoam -case 100_long meshOverMountain
+    gmtFoam -case n100_long meshOverMountain
     for field in T uniT monitor A; do
-        gmtFoam ${field}under -case 100_long
-        for time in 100_long/[0-9]*; do
+        gmtFoam ${field}under -case n100_long
+        for time in n100_long/[0-9]*; do
             cat $time/${field}under.ps \
                 ../drawMountain/0/mountainOver.ps > $time/${field}.ps
             ps2pdf $time/${field}.ps $time/${field}.ps.pdf
@@ -32,14 +32,14 @@ done
 
 # Make links for animategraphics
 for case in movingOverMountainsA movingOverMountains; do
-    mkdir -p $case/100_long/animategraphics
+    mkdir -p $case/n100_long/animategraphics
     time=0
     for field in A T uniT monitor meshOverMountain; do
-        ln -s ../$time/$field.pdf $case/100_long/animategraphics/${field}_$time.pdf
+        ln -s ../$time/$field.pdf $case/n100_long/animategraphics/${field}_$time.pdf
     done
 
     for field in A T uniT monitor meshOverMountain; do
-        cd $case/100_long
+        cd $case/n100_long
         for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`
             ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
@@ -50,7 +50,7 @@ done
 
 # Create graphs
 for dir in movingOverMountains movingOverMountainsA; do
-    cd $dir/100_long
+    cd $dir/n100_long
     mkdir plots
     gmtPlot ../../plots/longRun/Vchange.gmt
     gmtPlot ../../plots/longRun/Tchange.gmt
