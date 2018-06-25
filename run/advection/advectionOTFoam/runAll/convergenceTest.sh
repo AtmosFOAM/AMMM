@@ -1,3 +1,5 @@
+#!/bin/bash -e
+#
 # Run all advectionOT test cases at four resolutions and calculate l2 norms
 
 # run all cases at four resolutions

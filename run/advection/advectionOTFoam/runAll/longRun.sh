@@ -1,3 +1,5 @@
+#!/bin/bash -e
+#
 # Run movingOverMountains and movingOverMountainsA cases for 10 circulations
 
 # run all cases
@@ -20,7 +22,7 @@ for case in movingOverMountainsA movingOverMountains; do
         gmtFoam ${field}under -case n100_long
         for time in n100_long/[0-9]*; do
             cat $time/${field}under.ps \
-                ../drawMountain/0/mountainOver.ps > $time/${field}.ps
+                ../../drawMountain/0/mountainOver.ps > $time/${field}.ps
             ps2pdf $time/${field}.ps $time/${field}.ps.pdf
             pdfcrop $time/${field}.ps.pdf $time/${field}.pdf
             rm $time/${field}under.ps $time/${field}.ps \

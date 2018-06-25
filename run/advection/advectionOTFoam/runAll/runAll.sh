@@ -1,3 +1,6 @@
+#!/bin/bash -ev
+#
+
 # Run and post process all advectionOTFoam cases at 100x100 resolution
 
 # run all cases
@@ -21,7 +24,7 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
         gmtFoam ${field}under -case n100
         for time in n100/[0-9]*; do
             cat $time/${field}under.ps \
-                ../drawMountain/0/mountainOver.ps > $time/${field}.ps
+                ../../drawMountain/0/mountainOver.ps > $time/${field}.ps
             ps2pdf $time/${field}.ps $time/${field}.ps.pdf
             pdfcrop $time/${field}.ps.pdf $time/${field}.pdf
             rm $time/${field}under.ps $time/${field}.ps \
