@@ -1,5 +1,5 @@
 # Create graphs
-mkdir -p diagnostics/plots
+mkdir -p plots
 gmtPlot diagnostics/Vchange.gmt
 gmtPlot diagnostics/Tchange.gmt
 gmtPlot diagnostics/ATchange.gmt

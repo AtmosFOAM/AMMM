@@ -1,5 +1,5 @@
 inputFiles=(diagnostics.dat)
-outFile=diagnostics/plots/Vchange.eps
+outFile=plots/Vchange.eps
 col=4
 colx=1
 pens=("1p,black")
@@ -8,8 +8,8 @@ ylabel="Normalised change in volume"
 xmin=0
 xmax=600
 dx=100
-ymin=-2e-5
-ymax=2e-5
+ymin=-4e-5
+ymax=4e-5
 dy=1e-5
 nSkip=1
 projection=X10c/7.5c

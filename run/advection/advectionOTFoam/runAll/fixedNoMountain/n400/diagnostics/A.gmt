@@ -1,5 +1,5 @@
 inputFiles=(minMax.dat minMax.dat)
-outFile=diagnostics/plots/AminMax.eps
+outFile=plots/AminMax.eps
 col=(6 7)
 colx=1
 pens=("1p,black" "1p,black")
