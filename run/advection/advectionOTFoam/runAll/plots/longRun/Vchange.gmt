@@ -1,0 +1,16 @@
+inputFiles=(diagnostics.dat)
+outFile=plots/Vchange.eps
+col=4
+colx=1
+pens=("1p,black")
+xlabel="Time (s)"
+ylabel="Normalised change in volume"
+xmin=0
+xmax=6000
+dx=1000
+ymin=-4e-5
+ymax=4e-5
+dy=1e-5
+nSkip=1
+projection=X10c/7.5c
+gv=1

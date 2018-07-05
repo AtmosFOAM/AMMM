@@ -69,7 +69,7 @@ Foam::OTmesh::OTmesh(const IOobject& io)
     maxMAiters_(readLabel(OTmeshCoeffs_.lookup("maxMAiters"))),
     maxMeshVelocity_(readScalar(OTmeshCoeffs_.lookup("maxMeshVelocity"))),
     meshRelax_(readScalar(OTmeshCoeffs_.lookup("meshRelax"))),
-    smoothCoeff_(readScalar(OTmeshCoeffs_.lookup("smoothCoeff"))),
+    meshDiffusion_(OTmeshCoeffs_.lookup("meshDiffusion")),
     meshPot_
     (
         IOobject
@@ -130,10 +130,9 @@ void Foam::OTmesh::setMonitor()
     setInternalAndBoundaryValues(monitorC_, monitorP_);
 
     // Smoothing of the monitor function on the computational mesh
-    if (smoothCoeff() > SMALL)
+    if (meshDiffusion().value() > SMALL)
     {
-        surfaceScalarField diffCoeff = 0.25*smoothCoeff()
-                      /sqr(cMesh_.deltaCoeffs())/time().deltaT();
+        dimensionedScalar diffCoeff = meshDiffusion()/time().deltaT();
         monitorC_.oldTime() = monitorC_;
         fvScalarMatrix smoothEqn
         (

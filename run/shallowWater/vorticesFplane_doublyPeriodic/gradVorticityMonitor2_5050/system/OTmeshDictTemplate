@@ -20,7 +20,7 @@ maxMeshVelocity    MAXMESHVELOCITY;
 meshRelax          MESHRELAX;
 monitorFunctionDynamic monitorFunctionFromGradVorticity5050;
 maxMonitorRatio     2;
-nMonSmooth          8;
+smoothCoeff          20;
 monitorFromName     Uf;
 
 // ************************************************************************* //
