@@ -11,7 +11,7 @@ cd ../runAll
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     cd $case
     gmtFoam -case n100 meshOverMountain
-    for field in T uniT monitor A; do
+    for field in T uniT monitor mesh A; do
         gmtFoam ${field}under -case n100
         for time in n100/[0-9]*; do
             cat $time/${field}under.ps \
@@ -38,11 +38,11 @@ done
 for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     mkdir -p $case/n100/animategraphics
     time=0
-    for field in A T uniT monitor meshOverMountain; do
+    for field in A T uniT monitor mesh meshOverMountain; do
         ln -sf ../$time/$field.pdf $case/n100/animategraphics/${field}_$time.pdf
     done
 
-    for field in A T uniT monitor meshOverMountain; do
+    for field in A T uniT monitor mesh meshOverMountain; do
         cd $case/n100
         for time in [1-9]*; do
             t=`echo $time | awk {'print $1/50'}`
@@ -86,7 +86,7 @@ for dir in movingOverMountains movingOverMountainsA; do
     gmtPlot ../../plots/uniT.gmt
     gmtPlot ../../plots/A.gmt
     cd ../..
-    
+
     for file in $dir/n100/plots/*.eps; do
         eps2pdf $file
     done
