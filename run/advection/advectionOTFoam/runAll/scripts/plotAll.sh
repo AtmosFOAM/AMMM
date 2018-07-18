@@ -86,4 +86,9 @@ for dir in movingOverMountains movingOverMountainsA; do
     gmtPlot ../../plots/uniT.gmt
     gmtPlot ../../plots/A.gmt
     cd ../..
+    
+    for file in $dir/n100/plots/*.eps; do
+        eps2pdf $file
+    done
 done
+
