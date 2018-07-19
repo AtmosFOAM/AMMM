@@ -25,6 +25,15 @@ for case in movingOverMountainsA movingOverMountains fixedOverMountains; do
     cd ..
 done
 
+cd fixedOverMountains/n100
+gmtFoam -time 0 Uunder
+cat 0/Uunder.ps ../../../drawMountain/0/mountainOver.ps \
+    > 0/U.ps
+ps2pdf 0/U.ps 0/U.pdf.pdf
+pdfcrop 0/U.pdf.pdf 0/U.pdf
+rm 0/Uunder.ps 0/U.ps 0/U.pdf.pdf
+cd ../..
+
 # Create plots of for all cases without mountains
 for case in movingNoMountain fixedNoMountain; do
     cd $case
@@ -88,7 +97,6 @@ for dir in movingOverMountains movingOverMountainsA; do
     cd ../..
 
     for file in $dir/n100/plots/*.eps; do
-        eps2pdf $file
+        epstopdf $file
     done
 done
-

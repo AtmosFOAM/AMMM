@@ -46,5 +46,5 @@ done
 paste meshSize.dat gridSize.dat 1stOrder.dat 2ndOrder.dat fixedNoMountain.dat fixedOverMountains.dat movingNoMountain.dat movingOverMountainsA.dat>> convergence.dat
 rm meshSize.dat gridSize.dat 1stOrder.dat 2ndOrder.dat fixedNoMountain.dat fixedOverMountains.dat movingNoMountain.dat movingOverMountainsA.dat
 gmtPlot plots/l2norms.gmt
-    eps2pdf l2norms.eps
+epstopdf l2norms.eps
 

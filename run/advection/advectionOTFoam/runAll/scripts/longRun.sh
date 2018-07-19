@@ -67,4 +67,8 @@ for dir in movingOverMountains movingOverMountainsA; do
     gmtPlot ../../plots/longRun/uniT.gmt
     gmtPlot ../../plots/longRun/A.gmt
     cd ../..
+
+    for file in $dir/n100_long/plots/*.eps; do
+        epstopdf $file
+    done
 done

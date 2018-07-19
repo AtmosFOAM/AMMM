@@ -8,3 +8,5 @@
 ./scripts/plotAll.sh
 # Run & plot the results for longer test cases
 ./scripts/longRun.sh
+# Collect figures for the paper
+./scripts/collectFigures.sh
