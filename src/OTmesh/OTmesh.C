@@ -69,7 +69,7 @@ Foam::OTmesh::OTmesh(const IOobject& io)
     maxMAiters_(readLabel(OTmeshCoeffs_.lookup("maxMAiters"))),
     maxMeshVelocity_(readScalar(OTmeshCoeffs_.lookup("maxMeshVelocity"))),
     meshRelax_(readScalar(OTmeshCoeffs_.lookup("meshRelax"))),
-    meshDiffusion_(OTmeshCoeffs_.lookup("meshDiffusion")),
+    smoothCoeff_(readScalar(OTmeshCoeffs_.lookup("smoothCoeff"))),
     meshPot_
     (
         IOobject
@@ -103,7 +103,7 @@ Foam::OTmesh::OTmesh(const IOobject& io)
         meshPot_.boundaryField().types()
     )
 {
-    gradMeshPot_ += 
+    gradMeshPot_ +=
     (
         fvc::snGrad(meshPot_) - (gradMeshPot_ & cMesh_.Sf())/cMesh_.magSf()
     )*cMesh_.Sf()/cMesh_.magSf();
@@ -125,14 +125,16 @@ void Foam::OTmesh::setMonitor()
     (
         lookupObject<surfaceVectorField>(monitorFromName_)
     );
-    
+
     monitorP_ = monitorFunc_().evaluate(Uf);
     setInternalAndBoundaryValues(monitorC_, monitorP_);
 
     // Smoothing of the monitor function on the computational mesh
-    if (meshDiffusion().value() > SMALL)
+    // resolution dependent
+    if (smoothCoeff() > SMALL)
     {
-        dimensionedScalar diffCoeff = meshDiffusion()/time().deltaT();
+        surfaceScalarField diffCoeff = 0.25*smoothCoeff()
+            /sqr(cMesh_.deltaCoeffs())/time().deltaT();
         monitorC_.oldTime() = monitorC_;
         fvScalarMatrix smoothEqn
         (
@@ -175,7 +177,7 @@ bool Foam::OTmesh::update()
             "laplacianAPhi",
             fvc::laplacian(cofacA, meshPot_)
         );
-    
+
         // Setup and solve the MA equation to find the new meshPot
         for (int iCorr = 0; iCorr < 2; iCorr++)
         {
@@ -192,7 +194,7 @@ bool Foam::OTmesh::update()
 
         // The gradient of the mesh potential on faces
         gradMeshPot_ = fvc::interpolate(fvc::grad(meshPot_));
-        gradMeshPot_ += 
+        gradMeshPot_ +=
         (
             fvc::snGrad(meshPot_) - (gradMeshPot_ & cMesh_.Sf())/cMesh_.magSf()
         )*cMesh_.Sf()/cMesh_.magSf();
@@ -232,6 +234,5 @@ bool Foam::OTmesh::update()
 
     return true;
 }
-
 
 // ************************************************************************* //

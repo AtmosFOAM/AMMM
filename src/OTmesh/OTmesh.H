@@ -71,12 +71,12 @@ class OTmesh
         label maxMAiters_;
         scalar maxMeshVelocity_;
         scalar meshRelax_;
-        dimensionedScalar meshDiffusion_;
-        
+        scalar smoothCoeff_;
+
         // The mesh potential and its gradient
         volScalarField meshPot_;
         surfaceVectorField gradMeshPot_;
-        
+
         // name of the vector field to use to calculate the monitor function
         word monitorFromName_;
 
@@ -114,23 +114,23 @@ public:
 
 
     // Member Functions
-    
+
         //- Access
         //- The computational mesh
         const fvMesh& cMesh() const { return cMesh_; }
 
         //- The maximum number of Newton iterations for finding the OT mesh
         label maxMAiters() const { return maxMAiters_; }
-        
+
         //- The maximum allowable mesh velocity
         scalar maxMeshVelocity() const { return maxMeshVelocity_; }
-        
+
         //- The proportion of the mesh movement actually applied
         scalar meshRelax() const { return meshRelax_; }
 
         //- Smoothing coefficient of the monitor function
-        dimensionedScalar meshDiffusion() const { return meshDiffusion_;}
-        
+        scalar smoothCoeff() const { return smoothCoeff_;}
+
         //- The mesh potential
         const volScalarField& meshPot() const { return meshPot_;}
 
