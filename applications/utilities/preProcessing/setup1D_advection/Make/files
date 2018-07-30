@@ -1,3 +1,0 @@
-setup1D_advection.C
-
-EXE = $(FOAM_USER_APPBIN)/setup1D_advection

@@ -1,3 +1,0 @@
-setupRing_advection.C
-
-EXE = $(FOAM_USER_APPBIN)/setupRing_advection
