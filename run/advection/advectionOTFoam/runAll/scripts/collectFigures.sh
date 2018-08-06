@@ -21,6 +21,9 @@ cp movingOverMountains/n100/600/mesh.pdf figures/mesh_600.pdf
 cp movingOverMountains/n100/plots/Vchange.pdf figures/Vchange.pdf
 
 cp movingOverMountains/n100/50/uniT.pdf figures/uniT_50.pdf
+cp movingOverMountains/n100/150/uniT.pdf figures/uniT_150.pdf
+cp movingOverMountains/n100/300/uniT.pdf figures/uniT_300.pdf
+cp movingOverMountains/n100/450/uniT.pdf figures/uniT_450.pdf
 cp movingOverMountains/n100/600/uniT.pdf figures/uniT_600.pdf
 
 cp movingOverMountainsA/n100/150/A.pdf figures/A_150.pdf
