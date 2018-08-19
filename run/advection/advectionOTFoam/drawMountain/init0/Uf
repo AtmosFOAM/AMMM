@@ -1,49 +1,50 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2.3.0                                 |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
     format      ascii;
     class       surfaceVectorField;
-    location    "0";
     object      Uf;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField  uniform (0 0 0);
+internalField   uniform (0 0 0);
 
 boundaryField
 {
-    south
+    equator
     {
-        type            calculated;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
-    north
+    pole
     {
-        type            calculated;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
-    east
+    inlet
     {
-        type            calculated;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
-    west
+    outlet
     {
-        type            calculated;
+        type            fixedValue;
         value           uniform (0 0 0);
     }
     top
     {
-        type            fixedValue;
+        type            calculated;
         value           uniform (0 0 0);
     }
     ground
@@ -52,6 +53,5 @@ boundaryField
         value           uniform (0 0 0);
     }
 }
-
 
 // ************************************************************************* //

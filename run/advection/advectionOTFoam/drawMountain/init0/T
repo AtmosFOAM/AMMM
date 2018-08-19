@@ -5,6 +5,7 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
@@ -13,6 +14,7 @@ FoamFile
     location    "0";
     object      T;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
@@ -21,25 +23,21 @@ internalField  uniform 0;
 
 boundaryField
 {
-    south
+    equator
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
     }
-    north
+    pole
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
     }
-    east
+    inlet
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
     }
-    west
+    outlet
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
     }
     top
     {
@@ -50,6 +48,5 @@ boundaryField
         type            zeroGradient;
     }
 }
-
 
 // ************************************************************************* //

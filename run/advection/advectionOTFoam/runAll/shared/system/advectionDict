@@ -5,23 +5,28 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      initDict;
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "constant";
+    local           "";
+
+    class           dictionary;
+    object          advectionDict;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Input for OTmesh
-maxMAiters             4;
-maxMeshVelocity        MAXMESHVELOCITY;
-meshRelax              MESHRELAX;
-monitorFunctionDynamic monitorFunctionFromGradU5050;
-maxMonitorRatio        4;
-//smoothCoeff            20;
-meshDiffusion meshDiffusion [0 2 0 0 0]   1.25e4;
-monitorFromName        gradT;
+// Specify the velocity field
+type              solidBodyRotation;
+solidBodyRotation (0 0 5.235987756e-3);
+centreOfRotation  (5e3 5e3 500);
+innerRadius       3.8e3;
+outerRadius       5e3;
 
 // ************************************************************************* //

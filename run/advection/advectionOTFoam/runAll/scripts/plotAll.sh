@@ -3,6 +3,8 @@
 # Post process all advectionOTFoam cases at 100x100 resolution
 
 # Create mountain plot
+cp shared/system/mountainDict ../drawMountain/system/
+cp shared/system/blockMeshDict ../drawMountain/system/
 cd ../drawMountain
 ./run.sh
 cd ../runAll

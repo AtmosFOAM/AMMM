@@ -22,7 +22,7 @@ type btf;
 domainHeight 1000;
 mountain
 {
-    type doubleConeMountain;
+    type doubleCosineMountain;
     peakHeight      peakHeight      [0 1 0 0 0] 500;
     mountainCentre                  (2.5e3 5e3 0);
     mountainRadius	mountainRadius 	[0 1 0 0 0] 1e3;
