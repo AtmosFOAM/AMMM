@@ -119,8 +119,6 @@ Foam::OTmesh::~OTmesh()
 
 void Foam::OTmesh::setMonitor()
 {
-    Info << "OTmesh::setMonitor: Monitor function goes from " << flush;
-
     const surfaceVectorField& Uf
     (
         lookupObject<surfaceVectorField>(monitorFromName_)
@@ -146,7 +144,8 @@ void Foam::OTmesh::setMonitor()
 
     setInternalAndBoundaryValues(monitorP_, monitorC_);
 
-    Info << min(monitorC_).value() << " to " << max(monitorC_).value() << endl;
+    Info << "OTmesh::setMonitor: Monitor function goes from "
+         << min(monitorC_).value() << " to " << max(monitorC_).value() << endl;
 }
 
 bool Foam::OTmesh::update()

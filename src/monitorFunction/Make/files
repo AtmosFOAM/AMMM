@@ -3,7 +3,6 @@ monitorFunctionTanh.C
 monitorFunctionFront.C
 monitorFunctionSech.C
 monitorFunctionSumGaussians.C
-monitorFunctionMapped.C
 monitorFunctionFrom/monitorFunctionFrom.C
 monitorFunctionFrom/monitorFunctionFromGradU.C
 monitorFunctionFrom/monitorFunctionFromGradU5050.C
