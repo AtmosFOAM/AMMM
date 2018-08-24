@@ -23,10 +23,11 @@ terrainFollowingMesh
 sed 's/MAXMESHVELOCITY/0/g' system/OTmeshDictTemplate | \
     sed 's/MESHRELAX/0.5/g' > system/OTmeshDict
 meshIter=0
+mkdir -p meshLogs
 until [ $meshIter -ge 20 ]; do
     echo Mesh generation iteration $meshIter
 
-    advectionOTFoam -reMeshOnly
+    advectionOTFoam -reMeshOnly > meshLogs/log$meshIter
     setAnalyticTracerField -velocityDict advectionDict \
                            -tracerDict tracerDict -name T
 

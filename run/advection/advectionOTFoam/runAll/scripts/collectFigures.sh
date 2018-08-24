@@ -1,6 +1,6 @@
 #!/bin/bash 
 #
-# Cllect figures for the paper and put them in ../figures
+# Collect figures for the paper and put them in ../figures
 
 mkdir -p figures
 cp fixedOverMountains/n100/0/T.pdf figures/initial_tracer.pdf
@@ -36,3 +36,11 @@ cp movingOverMountainsA/n100/plots/ATchange.pdf figures/ATchange.pdf
 cp movingOverMountainsA/n100_long/plots/AminMax.pdf figures/AminMax.pdf
 
 cp l2norms.pdf figures/l2norms.pdf
+
+for file in plots/*eps; do
+    filename=`filename $file`
+    fileroot=`fileroot $filename`
+    eps2pdf $file
+    mv plots/$fileroot.pdf figures
+done
+

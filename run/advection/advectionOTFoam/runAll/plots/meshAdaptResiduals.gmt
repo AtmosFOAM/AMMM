@@ -1,0 +1,30 @@
+inputFiles=(movingOverMountainsA/n50/meshAdaptConverge.dat
+           movingOverMountainsA/n100/meshAdaptConverge.dat
+           movingOverMountainsA/n200/meshAdaptConverge.dat
+           movingOverMountainsA/n400/meshAdaptConverge.dat)
+outFile=plots/meshAdaptResiduals.eps
+col=(2 2 2 2)
+colx=1
+legends=("50x50" "100x100" "200x200" "400x400")
+pens=("1,black," "1,black," "1,darkgrey," "1,darkgrey,")
+spens=("1.5,black," "1.5,black," "1,darkgrey," "1,darkgrey,")
+symbols=("x10p" "+10p" "c7p" "t7p")
+xlabel="Time (s)"
+ylabel="Residual"
+xmin=149.99
+xmax=152.01
+dx=1
+ddx=1
+dxg=0
+ymin=1e-5
+ymax=0.01
+dy=10
+ddy=2
+dyg=0
+xscale=*1
+yscale=*1
+legPos=x7.5/8
+nSkip=0
+projection=X12c/8cl
+gv=1
+
