@@ -26,6 +26,21 @@ volVectorField U
     mesh
 );
 
+Info << "Reading mountain height, h0\n" << endl;
+volScalarField h0
+(
+    IOobject
+    (
+        "h0",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("h0", dimLength, scalar(0))
+);
+
 surfaceVectorField Uf
 (
     IOobject("Uf", runTime.timeName(), mesh),

@@ -11,19 +11,29 @@ mkdir -p constant/cMesh
 cp -r constant/polyMesh constant/cMesh
 ln -sf ../system/dynamicMeshDict constant/dynamicMeshDict
 
+# Create the mountain
+cp init_0/h0 constant/T_init
+setInitialTracerField
+mv 0/T constant/h0
+rm -r 0
+gmtFoam -constant h0Mesh
+gv constant/h0Mesh.pdf &
+
 # Create initial conditions
 rm -rf [0-9]* core
 cp -r init_0 0
+rm 0/h0
 time=0
-# Create Gaussian patches of voriticty
-setGaussians initDict
-# Invert to find the wind field
-invertVorticity -time $time initDict
-gmtFoam -time $time vorticityMesh
-
-# Calculate the height in balance and plot
 setBalancedHeightRC
-gmtFoam -time $time hUmesh
+gmtFoam -time 0 hMesh
+gv 0/hMesh.pdf &
 
 # Solve the SWE
 shallowWaterOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
+
+# Difference between solutions
+time=10000
+sumFields $time UDiff $time U 0 U -scale1 -1
+sumFields $time hDiff  $time h  0 h  -scale1 -1
+gmtFoam -time $time hUDiff
+gv $time/hUDiff.pdf &

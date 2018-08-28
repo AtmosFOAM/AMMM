@@ -17,46 +17,73 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          fvSchemes;
+    object          blockMeshDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    ddt(gradPhi)    Euler;
-}
+convertToMeters 1e6;
 
-gradSchemes
-{
-    default         Gauss linear;
-}
 
-divSchemes
-{
-    default none;
-}
+vertices
+(
+    (0 0 0)
+    (24 0 0)
+    (24 12 0)
+    (0  12 0)
+    (0 0 1)
+    (24 0 1)
+    (24 12 1)
+    (0  12 1)
+);
 
-laplacianSchemes
-{
-    default         Gauss linear uncorrected;
-}
+blocks
+(
+	hex (0 1 2 3 4 5 6 7)  (100 50 1) simpleGrading (1 1 1)
+);
 
-interpolationSchemes
-{
-    default         linear;
-}
+edges
+(
+);
 
-snGradSchemes
-{
-    default         none;
-    snGrad(meshPot) uncorrected;
-}
+boundary
+(
+    equator
+    {
+        type            patch;
+        faces           ((0 1 5 4));
+    }
+    pole
+    {
+        type            patch;
+        faces           ((3 7 6 2));
+    }
+    inlet
+    {
+        type            cyclic;
+        neighbourPatch  outlet;
+        faces           ((0 4 7 3));
+    }
+    outlet
+    {
+        type            cyclic;
+        neighbourPatch  inlet;
+        faces           ((1 2 6 5));
+    }
+    front
+    {
+        type            empty;
+        faces           ((4 5 6 7));
+    }
+    back
+    {
+        type            empty;
+        faces           ((0 3 2 1));
+    }
+);
 
-fluxRequired
-{
-    default         no;
-}
-
+mergePatchPairs
+(
+);
 
 // ************************************************************************* //

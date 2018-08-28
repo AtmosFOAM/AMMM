@@ -16,31 +16,23 @@ FoamFile
 
 solvers
 {
-    h
+    "meshPot"
     {
-        solver PCG;
-        preconditioner DIC;
-        tolerance        1e-10;
+        solver GAMG;
+        smoother symGaussSeidel;
+        preconditioner   DILU;
+        tolerance        1e-4;
         relTol           0.01;
-    }
-    hFinal
+        maxIter          10;
+    };
+    streamFunction
     {
         solver PCG;
         preconditioner DIC;
-        tolerance        1e-10;
-        relTol           0;
+        tolerance 1e-7;
+        relTol 0;
+        maxIter 500;
     }
-}
-
-iterations
-{
-    nCorrectors      2;
-    nNonOrthogonalCorrectors 2;
-}
-
-initialisation
-{
-    maxIters 200;
 }
 
 // ************************************************************************* //

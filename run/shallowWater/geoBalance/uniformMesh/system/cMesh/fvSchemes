@@ -17,19 +17,46 @@ FoamFile
     local           "";
 
     class           dictionary;
-    object          libmonitorFunction;
+    object          fvSchemes;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type  vorticity2D;
-libs   ("libAtmosFoamFieldFunctionObjects.so");
-region rMesh;
-fields
-(
-    Uf
-);
-vorticityComponent 2;
+ddtSchemes
+{
+    ddt(gradPhi)    Euler;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default none;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         none;
+    snGrad(meshPot) uncorrected;
+}
+
+fluxRequired
+{
+    default         no;
+}
+
 
 // ************************************************************************* //
-

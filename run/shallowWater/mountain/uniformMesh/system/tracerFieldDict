@@ -1,0 +1,12 @@
+FoamFile {
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object	tracerFieldDict;
+}
+
+type            cone;
+maxTracer       2000;
+centre          (6e6 6e6 5e5);
+width           1.5e6;

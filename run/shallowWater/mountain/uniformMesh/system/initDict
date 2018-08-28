@@ -1,46 +1,27 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
-    format      ascii;
+    format      binary;
     class       dictionary;
-    object      fvSolution;
+    location    "system";
+    object      initDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    h
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-8;
-        relTol          0.01;
-    }
-    hFinal
-    {
-        $h;
-        relTol          0;
-    }
+monitorFunctionDynamic monitorFunctionFromNone;
+monScale        monScale [ 0 0 0 0 0 ] 0;
+nMonSmooth      0;
+monitorBaseMin monitorBaseMin [0 0 0 0 0] 0;
+monitorBaseMax monitorBaseMax [0 0 0 0 0] 0;
+monitorMax 1;
 
-}
 
-"PISO|PIMPLE"
-{
-    nCorrectors     3;
-    nNonOrthogonalCorrectors 0;
-    momentumPredictor false;
-}
-
-initialisation
-{
-    maxIters 20;
-}
 
 // ************************************************************************* //

@@ -28,7 +28,10 @@ solvers
         $h;
         relTol          0;
     }
-
+    h0
+    {
+        solver       none;
+    }
 }
 
 "PISO|PIMPLE"

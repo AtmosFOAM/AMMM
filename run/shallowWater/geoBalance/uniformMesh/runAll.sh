@@ -15,15 +15,16 @@ ln -sf ../system/dynamicMeshDict constant/dynamicMeshDict
 rm -rf [0-9]* core
 cp -r init_0 0
 time=0
-# Create Gaussian patches of voriticty
-setGaussians initDict
-# Invert to find the wind field
-invertVorticity -time $time initDict
-gmtFoam -time $time vorticityMesh
-
-# Calculate the height in balance and plot
 setBalancedHeightRC
-gmtFoam -time $time hUmesh
+gmtFoam -time 0 hMesh
+evince 0/hMesh.pdf &
 
 # Solve the SWE
 shallowWaterOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
+
+# Difference between solutions
+time=10000
+sumFields $time UDiff $time U 0 U -scale1 -1
+sumFields $time hDiff  $time h  0 h  -scale1 -1
+gmtFoam -time $time hUDiff
+evince $time/hUDiff.pdf &

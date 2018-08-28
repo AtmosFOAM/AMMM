@@ -9,42 +9,52 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "constant";
-    object      h;
+    class       surfaceScalarField;
+    location    "0";
+    object      meshPhi;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
+dimensions      [0 3 -1 0 0 0 0];
 
-internalField   uniform 1e4;
+internalField   uniform 0;
 
 boundaryField
 {
     equator
     {
-        type            geostrophicZeroFlux;
+        type            fixedValue;
+        value           uniform 0;
     }
     pole
     {
-        type            geostrophicZeroFlux;
+        type            fixedValue;
+        value           uniform 0;
     }
     inlet
     {
         type            cyclic;
+        value           uniform 0;
     }
     outlet
     {
         type            cyclic;
+        value           uniform 0;
     }
     front
-        {
-            type empty;
-        }
+    {
+        type            empty;
+        value           nonuniform 
+0
+;
+    }
     back
-        {
-            type empty;
-        }
+    {
+        type            empty;
+        value           nonuniform 
+0
+;
+    }
 }
 
 

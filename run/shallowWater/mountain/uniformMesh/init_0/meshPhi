@@ -42,13 +42,19 @@ boundaryField
         value           uniform 0;
     }
     front
-        {
-            type empty;
-        }
+    {
+        type            empty;
+        value           nonuniform 
+0
+;
+    }
     back
-        {
-            type empty;
-        }
+    {
+        type            empty;
+        value           nonuniform 
+0
+;
+    }
 }
 
 

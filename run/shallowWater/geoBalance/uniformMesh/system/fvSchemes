@@ -24,39 +24,58 @@ FoamFile
 
 ddtSchemes
 {
-    ddt(gradPhi)    Euler;
+    default CrankNicolson 0.8;
 }
+CoriRecon 0;
+ACblend 0;
 
 gradSchemes
 {
-    default         Gauss linear;
+    default         none;
+    linearUpwind    leastSquares;
+    grad(h)         Gauss linear;
+    curl(U)         Gauss linear;
+    grad(divPhi)    Gauss linear;
+    grad(curl(Uf))  Gauss linear;
+    grad(p)  Gauss linear;
 }
 
 divSchemes
 {
-    default none;
+    default         none;
+    div(phi,U)      Gauss linearUpwind linearUpwind;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear uncorrected;
+    default         none;
+    laplacian(streamFunction) Gauss linear corrected;
+    laplacian(h)    Gauss linear corrected;
+    laplacian((1|A(U)),p) Gauss linear corrected;
+    laplacian((mag(g)*interpolate((h*(1|A(hU))))),h) Gauss linear corrected;
 }
 
 interpolationSchemes
 {
-    default         linear;
+    default            linear;
+    interpolate((h*U)) linear;
+    interpolate(h)     linear;
+    interpolate((h*(1|A(U)))) linear;
+    dotInterpolate(S,(h_0*U_0)) linear;
+    flux((h*HbyA))     linear;
 }
 
 snGradSchemes
 {
     default         none;
-    snGrad(Phi)     uncorrected;
-    snGrad(mmPhi)   uncorrected;
+    snGrad(h)       corrected;
+    snGrad(p)       corrected;
 }
 
 fluxRequired
 {
     default         no;
+    h;
 }
 
 

@@ -9,38 +9,45 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      fvSolution;
+    class       volVectorField;
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (80 0 0);
+
+boundaryField
 {
-    h
+    equator
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-8;
-        relTol          0.01;
+        type            slip;
+        value           uniform (80 0 0);
     }
-    hFinal
+    pole
     {
-        $h;
-        relTol          0;
+        type            slip;
+        value           uniform (80 0 0);
     }
-
-}
-
-"PISO|PIMPLE"
-{
-    nCorrectors     3;
-    nNonOrthogonalCorrectors 0;
-    momentumPredictor false;
-}
-
-initialisation
-{
-    maxIters 20;
+    inlet
+    {
+        type            cyclic;
+        value           uniform (80 0 0);
+    }
+    outlet
+    {
+        type            cyclic;
+        value           uniform (80 0 0);
+    }
+    front
+    {
+        type empty;
+    }
+    back
+    {
+        type empty;
+    }
 }
 
 // ************************************************************************* //

@@ -1,3 +1,10 @@
+// Calculate the orography on the moved mesh
+fvScalarMatrix h0Eqn
+(
+    fvm::ddt(h0) - fvc::div(mesh.phi(), h0)
+);
+h0Eqn.solve();
+
 // Calculate absolute flux from the mapped surface velocity
 phi = hUf & mesh.Sf();
 
@@ -10,6 +17,7 @@ fvVectorMatrix UEqn
     fvm::ddt(h,U)
   + fvc::div(phi, U)
   + (1-CoriRecon)*h*(twoOmega ^ U)
+  + fvc::reconstruct(hf*g*fvc::snGrad(h0)*mesh.magSf())
 );
 
 if (piso.momentumPredictor())
