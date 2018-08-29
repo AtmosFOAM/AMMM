@@ -31,10 +31,10 @@ f0   f0   [0  0 -1 0 0] 0;
 nSponges 2;
 spongeOnCellCentres true;
 spongeCentre0 (0 0 0);
-spongeLength0 (0 9.6e5 0);
-spongeMax0    0.3;
+spongeLength0 (0 2e6 0);
+spongeMax0    0.5;
 spongeCentre1 (0 12e6 0);
-spongeLength1 (0 9.6e5 0);
-spongeMax1    0.3;
+spongeLength1 (0 2e6 0);
+spongeMax1    0.5;
 
 // ************************************************************************* //

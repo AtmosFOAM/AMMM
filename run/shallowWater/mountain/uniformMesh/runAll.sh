@@ -12,20 +12,25 @@ cp -r constant/polyMesh constant/cMesh
 ln -sf ../system/dynamicMeshDict constant/dynamicMeshDict
 
 # Create the mountain
-cp init_0/h0 constant/T_init
-setInitialTracerField
-mv 0/T constant/h0
-rm -r 0
-gmtFoam -constant h0Mesh
-gv constant/h0Mesh.pdf &
+cp init_0/h0_init constant
+setAnalyticTracerField -time 0 -name h0 -tracerDict mountainDict
+mkdir 0
+mv constant/h0 0
+rm constant/h0*
+gmtFoam h0Mesh
+gv 0/h0Mesh.pdf &
 
-# Create the sponge
-createSpongeLayer
+## Create the sponge
+#createSpongeLayer
+#cp constant/muSponge 0
+
+# Create diffusion coefficient
+cp init_0/diffusionCoeff_init constant
+setAnalyticTracerField -time 0 -name diffusionCoeff \
+     -tracerDict diffusionDict
 
 # Create initial conditions
-rm -rf [0-9]* core
-cp -r init_0 0
-rm 0/h0
+cp -r init_0/* 0
 time=0
 setBalancedHeightRC
 gmtFoam -time 0 hMesh

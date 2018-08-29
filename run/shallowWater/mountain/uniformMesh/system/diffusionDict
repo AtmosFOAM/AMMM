@@ -1,0 +1,17 @@
+FoamFile {
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object	tracerFieldDict;
+}
+
+type            ramps;
+nRamps 2;
+rampCentre0 (0 0 0);
+rampLength0 (0 2e6 0);
+rampMax0    7.2e7;    // 0.25*dx^2/dt = 0.25*24e4^2/200
+rampCentre1 (0 12e6 0);
+rampLength1 (0 2e6 0);
+rampMax1    7.2e7;
+

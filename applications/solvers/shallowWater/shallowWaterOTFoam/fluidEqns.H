@@ -1,15 +1,21 @@
 // Calculate the orography on the moved mesh
-fvScalarMatrix h0Eqn
-(
-    fvm::ddt(h0) - fvc::div(mesh.phi(), h0)
-);
-h0Eqn.solve();
+if (!fixedMesh)
+{
+    fvScalarMatrix h0Eqn
+    (
+        fvm::ddt(h0) - fvc::div(mesh.phi(), h0)
+    );
+    h0Eqn.solve();
+}
 
-fvTensorMatrix muSpongeEqn
-(
-    fvm::ddt(muSponge) - fvc::div(mesh.phi(), muSponge)
-);
-muSpongeEqn.solve();
+if (includeSponge)
+{
+    fvTensorMatrix muSpongeEqn
+    (
+        fvm::ddt(muSponge) - fvc::div(mesh.phi(), muSponge)
+    );
+    muSpongeEqn.solve();
+}
 
 // Calculate absolute flux from the mapped surface velocity
 phi = hUf & mesh.Sf();
@@ -24,8 +30,15 @@ fvVectorMatrix UEqn
   + fvc::div(phi, U)
   + (1-CoriRecon)*h*(twoOmega ^ U)
   + fvc::reconstruct(hf*g*fvc::snGrad(h0)*mesh.magSf())
-  + h/runTime.deltaT()*(muSponge & U)
 );
+if (includeSponge)
+{
+    UEqn += h/runTime.deltaT()*(muSponge & U);
+}
+if (includeDiffusion)
+{
+    UEqn -= fvm::laplacian(diffusionCoeff*h, U);
+}
 
 if (piso.momentumPredictor())
 {

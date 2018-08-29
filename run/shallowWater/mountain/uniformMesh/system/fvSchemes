@@ -35,7 +35,7 @@ gradSchemes
     linearUpwind    leastSquares;
     grad(h)         Gauss linear;
     grad(h0)        Gauss linear;
-    curl(U)         Gauss linear;
+    grad(U)         Gauss linear;
 }
 
 divSchemes

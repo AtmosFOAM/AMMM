@@ -57,9 +57,28 @@ volTensorField muSponge
     mesh,
     dimensionedTensor("muSponge", dimless, tensor::zero)
 );
-
+const bool includeSponge = (max(mag(muSponge)).value() > SMALL);
 Info << "muSponge goes from " << min(mag(muSponge)) << " to "
      << max(mag(muSponge)) << endl;
+
+Info << "Reading in diffusion coefficient, diffusionCoeff, if defined\n"
+     << endl;
+volScalarField diffusionCoeff
+(
+    IOobject
+    (
+        "diffusionCoeff",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("diffusionCoeff", dimensionSet(0,2,-1,0,0), scalar(0))
+);
+const bool includeDiffusion = (max(mag(diffusionCoeff)).value() > SMALL);
+Info << "diffusionCoeff goes from " << min(mag(diffusionCoeff)) << " to "
+     << max(mag(diffusionCoeff)) << endl;
 
 surfaceVectorField Uf
 (
