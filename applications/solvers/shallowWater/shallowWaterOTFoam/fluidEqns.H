@@ -5,6 +5,12 @@ fvScalarMatrix h0Eqn
 );
 h0Eqn.solve();
 
+fvTensorMatrix muSpongeEqn
+(
+    fvm::ddt(muSponge) - fvc::div(mesh.phi(), muSponge)
+);
+muSpongeEqn.solve();
+
 // Calculate absolute flux from the mapped surface velocity
 phi = hUf & mesh.Sf();
 
@@ -18,6 +24,7 @@ fvVectorMatrix UEqn
   + fvc::div(phi, U)
   + (1-CoriRecon)*h*(twoOmega ^ U)
   + fvc::reconstruct(hf*g*fvc::snGrad(h0)*mesh.magSf())
+  + h/runTime.deltaT()*(muSponge & U)
 );
 
 if (piso.momentumPredictor())

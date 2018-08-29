@@ -26,7 +26,7 @@ volVectorField U
     mesh
 );
 
-Info << "Reading mountain height, h0\n" << endl;
+Info << "Reading mountain height, h0, if defined\n" << endl;
 volScalarField h0
 (
     IOobject
@@ -40,6 +40,26 @@ volScalarField h0
     mesh,
     dimensionedScalar("h0", dimLength, scalar(0))
 );
+Info << "h0 goes from " << min(h0).value() << " to " << max(h0).value()
+     << endl;
+
+Info << "Reading in sponge tensor, muSponge, if defined\n" << endl;
+volTensorField muSponge
+(
+    IOobject
+    (
+        "muSponge",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedTensor("muSponge", dimless, tensor::zero)
+);
+
+Info << "muSponge goes from " << min(mag(muSponge)) << " to "
+     << max(mag(muSponge)) << endl;
 
 surfaceVectorField Uf
 (

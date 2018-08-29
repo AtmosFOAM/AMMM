@@ -14,18 +14,17 @@ FoamFile
 
 // How to plot
 // Compulsory inputs
-projection "X18c/6c";          // see man psxy for details on -J options
+projection "X18c/9c";          // see man psxy for details on -J options
 projection2D XY;                // either XY, XZ, YZ or latLon
 plotBoundaryDots false;
 
-
 FieldsToPlot
 (
-    [hDiff filledContours 0 0 0 "$GMTU/colours/red_white_blue.cpt"]
-    [UDiff vectors 0 4 "black"]
+    [hDiff filledContours -2.1e3 2.1e3 200 "$GMTU/colours/red_white_blue.cpt"]
+    [UDiff vectors 2e4 1 "black"]
 );
 
 // other options:
-region "1/36e6/1/12e6";
+//region "1/24e6/1/12e6";
 annotate "minMax 0 -0.01";
 

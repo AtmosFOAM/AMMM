@@ -28,7 +28,7 @@ solvers
         $h;
         relTol          0;
     }
-    h0
+    "h0|muSponge"
     {
         solver       none;
     }

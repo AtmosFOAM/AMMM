@@ -43,6 +43,7 @@ divSchemes
     default         none;
     div(phi,U)      Gauss linearUpwind linearUpwind;
     div(meshPhi,h0) Gauss downwind;
+    div(meshPhi,muSponge) Gauss downwind;
 }
 
 laplacianSchemes

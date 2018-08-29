@@ -19,6 +19,9 @@ rm -r 0
 gmtFoam -constant h0Mesh
 gv constant/h0Mesh.pdf &
 
+# Create the sponge
+createSpongeLayer
+
 # Create initial conditions
 rm -rf [0-9]* core
 cp -r init_0 0
@@ -35,5 +38,13 @@ shallowWaterOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
 time=10000
 sumFields $time UDiff $time U 0 U -scale1 -1
 sumFields $time hDiff  $time h  0 h  -scale1 -1
-gmtFoam -time $time hUDiff
+gmtFoam hUDiff -time $time
 gv $time/hUDiff.pdf &
+
+for time in [0-9]*; do
+    sumFields $time UDiff $time U 0 U -scale1 -1
+    sumFields $time hDiff  $time h  0 h  -scale1 -1
+done
+gmtFoam hUDiff
+eps2gif hUDiff.gif 0/hUDiff.pdf ?????/hUDiff.pdf ??????/hUDiff.pdf
+
