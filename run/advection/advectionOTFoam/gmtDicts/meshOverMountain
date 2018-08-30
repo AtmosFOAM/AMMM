@@ -24,3 +24,4 @@ FieldsToPlot
     [none mesh "black"]
 );
 
+region "0.01/0.9999e4/-1.01e3/1.01e3";
