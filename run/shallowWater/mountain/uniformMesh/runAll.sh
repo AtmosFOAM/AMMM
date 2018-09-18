@@ -39,17 +39,22 @@ gv 0/hMesh.pdf &
 # Solve the SWE
 shallowWaterOTFoam -fixedMesh >& log & sleep 0.01; tail -f log
 
-# Difference between solutions
-time=10000
-sumFields $time UDiff $time U 0 U -scale1 -1
-sumFields $time hDiff  $time h  0 h  -scale1 -1
-gmtFoam hUDiff -time $time
-gv $time/hUDiff.pdf &
+awk -F '(' '{print $1, $2, $3}' diags.dat | awk -F ')' '{print $1, $2}' > diags0.dat
+gmtPlot plots/energy.gmt
+gmtPlot plots/momentum.gmt
 
+# animation
 for time in [0-9]*; do
     sumFields $time UDiff $time U 0 U -scale1 -1
     sumFields $time hDiff  $time h  0 h  -scale1 -1
 done
 gmtFoam hUDiff
 eps2gif hUDiff.gif 0/hUDiff.pdf ?????/hUDiff.pdf ??????/hUDiff.pdf
+
+# Difference between solutions
+time=400000
+sumFields $time UDiff $time U 0 U -scale1 -1
+sumFields $time hDiff  $time h  0 h  -scale1 -1
+gmtFoam hUDiff -time $time
+gv $time/hUDiff.pdf &
 

@@ -89,6 +89,7 @@ Uf.oldTime();
 Uf.write();
 
 surfaceScalarField hf("hf", fvc::interpolate(h));
+hf.oldTime();
 
 surfaceVectorField hUf
 (

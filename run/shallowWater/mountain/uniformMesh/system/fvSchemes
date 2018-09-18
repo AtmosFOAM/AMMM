@@ -24,8 +24,9 @@ FoamFile
 
 ddtSchemes
 {
-    default CrankNicolson 0.8;
+    default Euler; //CrankNicolson 0.5;
 }
+ocCoeff       0.5;
 ACblend       0;
 CoriRecon     0;
 
@@ -48,7 +49,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         Gauss linear uncorrected;
 }
 
 interpolationSchemes
@@ -58,9 +59,9 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         none;
-    snGrad(h)       corrected;
-    snGrad(h0)       corrected;
+    default         uncorrected;
+    snGrad(h)       uncorrected;
+    snGrad(h0)       uncorrected;
 }
 
 fluxRequired

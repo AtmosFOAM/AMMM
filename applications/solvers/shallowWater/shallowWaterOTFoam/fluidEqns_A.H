@@ -40,38 +40,25 @@ if (includeDiffusion)
     UEqn -= fvm::laplacian(diffusionCoeff*h, U);
 }
 
-if (piso.momentumPredictor())
-{
-    solve(UEqn); // == -CoriRecon*h*(twoOmega ^ U) - h*g*fvc::grad(h));
-}
-/*
-fvVectorMatrix U2Eqn
-(
-    fvm::ddt(h,U)
-  + fvc::div(phi, U)
-  + fvc::reconstruct(hf*g*fvc::snGrad(h0)*mesh.magSf())
-  - fvm::laplacian(diffusionCoeff*h, U)
-);
-*/
 // --- PISO loop
 while (piso.correct())
 {
-    volScalarField rAU(1.0/UEqn.A());
-    surfaceScalarField hrAUf("hrAUf", hf*fvc::interpolate(rAU));
-//    surfaceScalarField hrAUf("hrAUf", fvc::interpolate(h*rAU));
-    volVectorField HbyA("HbyA",constrainHbyA(rAU*UEqn.H(), U, h));
+    UEqn.solve();
+    U -= fvc::reconstruct
+    (
+        ocCoeff/(1+ocCoeff)*runTime.deltaT()
+	*g*hf.oldTime()*fvc::snGrad(h.oldTime())*mesh.magSf()
+    )/h;
 
     surfaceScalarField CoriolisFlux
     (
-        CoriRecon*hf*fvc::flux(h*rAU*(twoOmega ^ U))
+        runTime.deltaT()*CoriRecon*fvc::flux(h*(twoOmega ^ U))
     );
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-//        hf*fvc::flux(HbyA)
-        fvc::flux(h*HbyA)
+        fvc::flux(h*U)
       - CoriolisFlux
-      + ACblend*hrAUf*fvc::ddtCorr(h, U, hUf)
     );
     fvc::makeRelative(phiHbyA, h, U);
 
@@ -83,8 +70,7 @@ while (piso.correct())
         (
             fvm::ddt(h)
           + fvc::div(phiHbyA)
-          - fvm::laplacian(hrAUf*hf*g, h, "laplacian(h)")
-//          - fvm::laplacian(runTime.deltaT()*hf*g, h, "laplacian(h)")
+          - fvm::laplacian(runTime.deltaT()/(1+ocCoeff)*hf*g, h, "laplacian(h)")
         );
 
         hEqn.solve(mesh.solver(h.select(piso.finalInnerIter())));
@@ -95,17 +81,15 @@ while (piso.correct())
         }
     }
 
-    U = HbyA - fvc::reconstruct
+    U -= fvc::reconstruct
     (
-        hrAUf*hf*g*fvc::snGrad(h)*mesh.magSf()
-      + CoriolisFlux
+        runTime.deltaT()/(1+ocCoeff)*g*hf*fvc::snGrad(h)*mesh.magSf()
     )/h;
     U -= (U & meshNormal)*meshNormal;
     U.correctBoundaryConditions();
 
     {
-        hUf = hf*fvc::interpolate(U);
-//        hUf = fvc::interpolate(h*U);
+        hUf = fvc::interpolate(h*U);
         surfaceVectorField n(mesh.Sf()/mesh.magSf());
         hUf += n*(fvc::absolute(phi,h,U)/mesh.magSf() - (n & hUf));
     }

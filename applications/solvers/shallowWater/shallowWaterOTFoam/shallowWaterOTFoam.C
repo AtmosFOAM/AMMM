@@ -55,6 +55,10 @@ int main(int argc, char *argv[])
     (
         mesh.schemesDict().lookup("CoriRecon")
     );
+    const scalar ocCoeff
+    (
+        readScalar(mesh.schemesDict().lookup("ocCoeff"))
+    );
     #include "createFields.H"
 
     if (reMeshOnly)
@@ -64,6 +68,7 @@ int main(int argc, char *argv[])
     }
 
     #include "readEnvironmentalProperties.H"
+    const dimensionedScalar H(envProperties.lookup("H"));
     #include "CourantNo.H"
 
     pisoControl piso(mesh);
@@ -74,6 +79,8 @@ int main(int argc, char *argv[])
     Info << meshNormal << endl;
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    #include "initDiags.H"
 
     Info<< "\nStarting time loop\n" << endl;
     while (runTime.loop())
@@ -86,6 +93,7 @@ int main(int argc, char *argv[])
             mesh.update();
         }
         #include "fluidEqns.H"
+        #include "diags.H"
 
         runTime.write();
 

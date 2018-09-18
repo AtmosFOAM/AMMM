@@ -32,6 +32,13 @@ solvers
     {
         solver       none;
     }
+    U
+    {
+        solver         PBiCGStab;
+        preconditioner DILU;
+        tolerance      1e-6
+        relTol         0;
+    }
 }
 
 "PISO|PIMPLE"

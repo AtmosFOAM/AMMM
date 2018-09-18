@@ -30,17 +30,17 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         8e5;
+endTime         4e5; //7e4; //8e5;
 
-deltaT          200;
+deltaT          1000;
 
 writeControl    runTime;
 
-writeInterval   2000;
+writeInterval   1e4;
 
 purgeWrite      0;
 
-writeFormat     ascii; //binary;
+writeFormat     ascii;
 
 writePrecision  6;
 
