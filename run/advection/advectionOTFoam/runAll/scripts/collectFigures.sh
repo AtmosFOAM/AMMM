@@ -43,4 +43,16 @@ for file in plots/*eps; do
     fileroot=`fileroot $filename`
     epstopdf $file
     mv plots/$fileroot.pdf figures
+    pdftk figures/$fileroot.pdf cat 1-endeast output figures/output.pdf
+    mv figures/output.pdf figures/$fileroot.pdf
 done
+
+cd figures
+pdftk AminMax.pdf cat 1-endeast output AminMax_curl.pdf
+pdftk Vchange.pdf cat 1-endeast output Vchange_curl.pdf
+pdftk ATchange.pdf cat 1-endeast output ATchange_curl.pdf
+pdftk l2norms.pdf cat 1-endeast output l2norms_curl.pdf
+mv AminMax_curl.pdf AminMax.pdf
+mv Vchange_curl.pdf Vchange.pdf
+mv ATchange_curl.pdf ATchange.pdf
+mv l2norms_curl.pdf l2norms.pdf
