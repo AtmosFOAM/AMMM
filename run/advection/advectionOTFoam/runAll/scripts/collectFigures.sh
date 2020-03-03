@@ -6,6 +6,7 @@ mkdir -p figures
 cp fixedOverMountains/n100/0/T.pdf figures/initial_tracer.pdf
 cp fixedOverMountains/n100/0/U.pdf figures/initial_velocity.pdf
 
+cp movingOverMountains/n100/0/mesh.pdf figures/initial_mesh.pdf
 cp movingOverMountains/n100/0/meshOverMountain.pdf figures/orography_slice.pdf
 
 cp movingOverMountains/n100/150/T.pdf figures/tracer_150.pdf
@@ -40,7 +41,6 @@ cp l2norms.pdf figures/l2norms.pdf
 for file in plots/*eps; do
     filename=`filename $file`
     fileroot=`fileroot $filename`
-    eps2pdf $file
+    epstopdf $file
     mv plots/$fileroot.pdf figures
 done
-

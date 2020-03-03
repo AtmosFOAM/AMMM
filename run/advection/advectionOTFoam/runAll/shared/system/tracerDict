@@ -23,7 +23,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Specify the initial tracer
-type      cosine;
+type      cosineSquared;
 width     500;
 centre    (5e3 7.5e3 500)
 maxTracer 1;

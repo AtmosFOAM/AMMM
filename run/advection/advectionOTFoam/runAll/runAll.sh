@@ -8,5 +8,7 @@
 ./scripts/plotAll.sh
 # Run & plot the results for longer test cases
 ./scripts/longRun.sh
+# Plot mesh convergence
+./scripts/plotMeshConvergence.sh
 # Collect figures for the paper
 ./scripts/collectFigures.sh
