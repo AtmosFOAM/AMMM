@@ -42,6 +42,7 @@ volScalarField h0
 );
 Info << "h0 goes from " << min(h0).value() << " to " << max(h0).value()
      << endl;
+const Switch withMountain = max(h0).value() - min(h0).value() > SMALL;
 
 Info << "Reading in sponge tensor, muSponge, if defined\n" << endl;
 volTensorField muSponge

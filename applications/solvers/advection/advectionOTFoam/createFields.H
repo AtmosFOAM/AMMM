@@ -53,6 +53,7 @@ surfaceScalarField phi
     ),
     mesh
 );
+phi.oldTime();
 
 Info<< "Reading field U" << endl;
 volVectorField U

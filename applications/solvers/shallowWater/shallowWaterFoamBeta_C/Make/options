@@ -15,7 +15,7 @@ EXE_LIBS = \
     -lfiniteVolume \
     -L$(FOAM_USER_LIBBIN) \
     -lHodgeOps \
-    -lfiniteVolumeAtmos \
     -lfiniteVolumeAtmosFOAMtools \
-    -lmonitorFunction
+    -lmonitorFunction \
+    -lgeometry
 

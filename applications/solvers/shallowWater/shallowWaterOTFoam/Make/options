@@ -16,4 +16,5 @@ EXE_LIBS = \
     -ldynamicFvMesh \
     -ldynamicMesh \
     -L$(FOAM_USER_LIBBIN) \
-    -lOTmesh
+    -lOTmesh \
+    -lgeometry

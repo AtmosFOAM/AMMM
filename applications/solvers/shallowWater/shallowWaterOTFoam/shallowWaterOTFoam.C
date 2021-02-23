@@ -55,10 +55,10 @@ int main(int argc, char *argv[])
     (
         mesh.schemesDict().lookup("CoriRecon")
     );
-    const scalar ocCoeff
-    (
-        readScalar(mesh.schemesDict().lookup("ocCoeff"))
-    );
+//    const scalar ocCoeff
+//    (
+//        readScalar(mesh.schemesDict().lookup("ocCoeff"))
+//    );
     #include "createFields.H"
 
     if (reMeshOnly)
@@ -68,7 +68,6 @@ int main(int argc, char *argv[])
     }
 
     #include "readEnvironmentalProperties.H"
-    const dimensionedScalar H(envProperties.lookup("H"));
     #include "CourantNo.H"
 
     pisoControl piso(mesh);

@@ -20,7 +20,7 @@ plotBoundaryDots false;
 
 FieldsToPlot
 (
-    [none mesh "black"]
+    [none mesh "grey"]
 );
 
 lastPlot false;

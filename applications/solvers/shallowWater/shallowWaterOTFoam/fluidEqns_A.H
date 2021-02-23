@@ -73,7 +73,7 @@ while (piso.correct())
           - fvm::laplacian(runTime.deltaT()/(1+ocCoeff)*hf*g, h, "laplacian(h)")
         );
 
-        hEqn.solve(mesh.solver(h.select(piso.finalInnerIter())));
+        hEqn.solve(h.select(piso.finalInnerIter()));
 
         if (piso.finalNonOrthogonalIter())
         {

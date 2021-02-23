@@ -38,11 +38,11 @@ for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
 
     if(nonOrth == nNonOrthCorr)
     {
-        hEqn.solve(rMesh.solver(h.name() + "Final"));
+        hEqn.solve(h.name() + "Final");
     }
     else
     {
-        hEqn.solve(rMesh.solver(h.name()));
+        hEqn.solve(h.name());
     }
 
     if (nonOrth == nNonOrthCorr)

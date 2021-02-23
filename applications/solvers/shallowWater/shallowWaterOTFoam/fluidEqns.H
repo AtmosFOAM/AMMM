@@ -1,5 +1,5 @@
 // Calculate the orography on the moved mesh
-if (!fixedMesh)
+if (!fixedMesh && withMountain)
 {
     fvScalarMatrix h0Eqn
     (
@@ -29,8 +29,11 @@ fvVectorMatrix UEqn
     fvm::ddt(h,U)
   + fvm::div(phi, U)
   + (1-CoriRecon)*h*(twoOmega ^ U)
-  + fvc::reconstruct(hf*g*fvc::snGrad(h0)*mesh.magSf())
 );
+if (withMountain)
+{
+    UEqn += fvc::reconstruct(hf*g*fvc::snGrad(h0)*mesh.magSf());
+}
 if (includeSponge)
 {
     UEqn += h/runTime.deltaT()*(muSponge & U);
@@ -42,7 +45,7 @@ if (includeDiffusion)
 
 if (piso.momentumPredictor())
 {
-    solve(UEqn); // == -CoriRecon*h*(twoOmega ^ U) - h*g*fvc::grad(h));
+    solve(UEqn == -CoriRecon*h*(twoOmega ^ U) - h*g*fvc::grad(h));
 }
 /*
 fvVectorMatrix U2Eqn
@@ -87,7 +90,7 @@ while (piso.correct())
 //          - fvm::laplacian(runTime.deltaT()*hf*g, h, "laplacian(h)")
         );
 
-        hEqn.solve(mesh.solver(h.select(piso.finalInnerIter())));
+        hEqn.solve(h.select(piso.finalInnerIter()));
 
         if (piso.finalNonOrthogonalIter())
         {

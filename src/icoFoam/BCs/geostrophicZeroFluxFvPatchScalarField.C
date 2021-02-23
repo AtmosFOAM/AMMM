@@ -137,7 +137,7 @@ void geostrophicZeroFluxFvPatchScalarField::updateCoeffs()
 void geostrophicZeroFluxFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

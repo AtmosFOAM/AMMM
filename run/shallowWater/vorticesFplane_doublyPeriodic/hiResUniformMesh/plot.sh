@@ -27,3 +27,4 @@ for field in vorticity hU mesh; do
 	ln -s ../$time/$field.pdf animategraphics/${field}_$t.pdf
     done
 done
+

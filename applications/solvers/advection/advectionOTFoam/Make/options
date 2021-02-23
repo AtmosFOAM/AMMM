@@ -6,8 +6,8 @@
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(ATMOSFOAM_TOOLS_SRC)/geometry/lnInclude \
-    -I$(ATMOSFOAM_SRC)/orography/lnInclude \
-    -I$(ATMOSFOAM_SRC)/prescribedFields/lnInclude \
+    -I$(ATMOSFOAM_TOOLS_SRC)/orography/lnInclude \
+    -I$(ATMOSFOAM_TOOLS_SRC)/prescribedFields/lnInclude \
     -I$(AMMM_SRC)/OTmesh/lnInclude
 
 EXE_LIBS = \

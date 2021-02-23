@@ -14,6 +14,7 @@ if (colinParameter)
 
     // Make the fluxes relative
     phi -= meshFlux;
+    phi.oldTime() -= meshFlux;
 
     // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
@@ -21,7 +22,7 @@ if (colinParameter)
         fvScalarMatrix AuniTEqn
         (
             fvm::ddt(A, uniT)
-          + (1-offCentre)*fvc::div(phi, uniT.oldTime(), "div(phi,T)")
+          + (1-offCentre)*fvc::div(phi.oldTime(), uniT.oldTime(), "div(phi,T)")
           + offCentre*fvc::div(phi, uniT, "div(phi,T)")
         );
         AuniTEqn.solve();
@@ -29,7 +30,7 @@ if (colinParameter)
         fvScalarMatrix ATEqn
         (
             fvm::ddt(A, T)
-          + (1-offCentre)*fvc::div(phi, T.oldTime(), "div(phi,T)")
+          + (1-offCentre)*fvc::div(phi.oldTime(), T.oldTime(), "div(phi,T)")
           + offCentre*fvc::div(phi, T, "div(phi,T)")
         );
         ATEqn.solve();
@@ -37,6 +38,7 @@ if (colinParameter)
 
     // Make the fluxes absolute
     phi += meshFlux;
+    phi.oldTime() += meshFlux;
 }
 else
 {
