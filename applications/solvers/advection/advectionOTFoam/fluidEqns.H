@@ -44,6 +44,7 @@ else
 {
     // Make the fluxes relative
     fvc::makeRelative(phi, U);
+    fvc::makeRelative(phi.oldTime(), U);
 
     // Solve T and uniT equations iterativelly
     for(int icorr = 0; icorr < nIteration; icorr++)
@@ -51,7 +52,7 @@ else
         fvScalarMatrix uniTEqn
         (
             fvm::ddt(uniT)
-          + (1-offCentre)*fvc::div(phi, uniT.oldTime(), "div(phi,T)")
+	  + (1-offCentre)*fvc::div(phi.oldTime(), uniT.oldTime(), "div(phi,T)")
           + offCentre*fvc::div(phi, uniT, "div(phi,T)")
         );
         uniTEqn.solve();
@@ -59,7 +60,7 @@ else
         fvScalarMatrix TEqn
         (
             fvm::ddt(T)
-          + (1-offCentre)*fvc::div(phi, T.oldTime(), "div(phi,T)")
+	  + (1-offCentre)*fvc::div(phi.oldTime(), T.oldTime(), "div(phi,T)")
           + offCentre*fvc::div(phi, T, "div(phi,T)")
         );
         TEqn.solve();
@@ -67,4 +68,5 @@ else
 
     // Make the fluxes absolute
     fvc::makeAbsolute(phi, U);
-}
+    fvc::makeAbsolute(phi.oldTime(), U);
+ }
