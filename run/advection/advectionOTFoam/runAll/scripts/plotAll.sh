@@ -87,6 +87,7 @@ for dir in movingOverMountains movingOverMountainsA; do
     gmtPlot ../../plots/Vchange.gmt
     gmtPlot ../../plots/Tchange.gmt
     gmtPlot ../../plots/ATchange.gmt
+    gmtPlot ../../plots/AVchange.gmt
     grep '\bTime =' log | awk '{print $3}' > time.dat
     grep '\bT goes from' log | awk '{print $4, $6}' > T.dat
     grep '\buniT goes from' log | awk '{print $4, $6}' > uniT.dat

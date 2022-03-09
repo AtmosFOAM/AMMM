@@ -18,7 +18,7 @@ projection2D XY;
 
 FieldsToPlot
 (
-    [Uf vectors 7.5 7.5 "black"]
+    [Uf vectors 10 30 "black"]
 );
 
 // options

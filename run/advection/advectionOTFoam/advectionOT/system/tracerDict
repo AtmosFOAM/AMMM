@@ -24,7 +24,7 @@ FoamFile
 
 // Specify the initial tracer
 type      cosine;
-width     500;
+width     1000;
 centre    (5e3 7.5e3 500);
 maxTracer 1;
 

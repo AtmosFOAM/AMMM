@@ -3,7 +3,7 @@
 # Collect figures for the paper and put them in ../figures
 
 mkdir -p figures
-cp fixedOverMountains/n100/0/T.pdf figures/initial_tracer.pdf
+cp movingOverMountains/n100/0/T.pdf figures/initial_tracer.pdf
 cp fixedOverMountains/n100/0/U.pdf figures/initial_velocity.pdf
 
 cp movingOverMountains/n100/0/mesh.pdf figures/initial_mesh.pdf
@@ -32,7 +32,7 @@ cp movingOverMountainsA/n100/300/A.pdf figures/A_300.pdf
 cp movingOverMountainsA/n100/450/A.pdf figures/A_450.pdf
 cp movingOverMountainsA/n100/600/A.pdf figures/A_600.pdf
 
-cp movingOverMountainsA/n100/plots/ATchange.pdf figures/ATchange.pdf
+cp movingOverMountainsA/n100/plots/AVchange.pdf figures/AVchange.pdf
 
 cp movingOverMountainsA/n100_long/plots/AminMax.pdf figures/AminMax.pdf
 
@@ -50,9 +50,9 @@ done
 cd figures
 pdftk AminMax.pdf cat 1-endeast output AminMax_curl.pdf
 pdftk Vchange.pdf cat 1-endeast output Vchange_curl.pdf
-pdftk ATchange.pdf cat 1-endeast output ATchange_curl.pdf
+pdftk AVchange.pdf cat 1-endeast output AVchange_curl.pdf
 pdftk l2norms.pdf cat 1-endeast output l2norms_curl.pdf
 mv AminMax_curl.pdf AminMax.pdf
 mv Vchange_curl.pdf Vchange.pdf
-mv ATchange_curl.pdf ATchange.pdf
+mv AVchange_curl.pdf AVchange.pdf
 mv l2norms_curl.pdf l2norms.pdf
