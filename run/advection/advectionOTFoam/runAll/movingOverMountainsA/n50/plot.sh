@@ -1,13 +1,19 @@
 #!/bin/bash -e
 
-# Create mountainOver.ps
-cp system/mountainDict ../../../drawMountain/system/mountainDict
-cd ../../../drawMountain
-./run.sh
-cd -
+# Plot monitor function and cell volume
+time=600
+postProcess -func writeCellVolumes -time $time
+gmtFoam -time $time monitor
+gv $time/monitor.pdf &
+
+## Create mountainOver.ps
+#cp system/mountainDict ../../../drawMountain/system/mountainDict
+#cd ../../../drawMountain
+#./run.sh
+#cd -
 
 # Post process
-for field in mesh A T uniT monitor; do
+for field in mesh A T uniT monitor UT; do
     gmtFoam ${field}under
     for time in [0-9]*; do
         cat $time/${field}under.ps ../../../drawMountain/0/mountainOver.ps \
@@ -37,3 +43,4 @@ done
 for field in mesh A T uniT monitor meshOverMountain; do
     eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf
 done
+

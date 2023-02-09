@@ -120,7 +120,9 @@ int main(int argc, char *argv[])
         Info << "uniT goes from " << min(uniT).value() << " to "
              << max(uniT).value() << endl;
         Info << "A goes from " << min(A).value() << " to " << max(A).value()
-             << nl << endl;
+             << endl;
+        dimensionedScalar Avar = fvc::domainIntegrate(sqr(A-1))/gSum(mesh.V());
+        Info << "Variance of A = " << Avar.value() << nl << endl;
     }
 
     Info<< "End\n" << endl;

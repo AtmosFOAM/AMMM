@@ -1,1 +1,103 @@
-../../../shared/system/blockMeshDict
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1000;
+
+ax 10;
+ay 10;
+az 1;
+
+nx 100;
+ny 100;
+//nx 25;
+//ny 25;
+
+vertices
+(
+    (0   0   0)
+    ($ax 0   0)
+    ($ax $ay 0)
+    (0   $ay 0)
+    (0   0   $az)
+    ($ax 0   $az)
+    ($ax $ay $az)
+    (0   $ay $az)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) ($nx $ny 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type wall;
+        faces
+        (
+            (4 7 3 0)
+        );
+    }
+    outlet
+    {
+        type wall;
+        faces
+        (
+            (1 2 6 5)
+        );
+    }
+    equator
+    {
+        type wall;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+    pole
+    {
+        type wall;
+        faces
+        (
+            (3 2 6 7)
+        );
+    }
+    top
+    {
+        type wall;
+        faces
+        (
+            (4 5 6 7)
+        );
+    }
+    ground
+    {
+        type wall;
+        faces
+        (
+            (0 3 2 1)
+        );
+    }
+);
+
+// ************************************************************************* //

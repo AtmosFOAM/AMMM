@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
-# Create mountainOver.ps
-cp system/mountainDict ../../../drawMountain/system/mountainDict
-cd ../../../drawMountain
-./run.sh
-cd -
+## Create mountainOver.ps
+#cp system/mountainDict ../../../drawMountain/system/mountainDict
+#cd ../../../drawMountain
+#./run.sh
+#cd -
 
 # Post process
 for field in mesh A T uniT monitor; do
@@ -37,3 +37,4 @@ done
 for field in mesh A T uniT monitor meshOverMountain; do
     eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf
 done
+

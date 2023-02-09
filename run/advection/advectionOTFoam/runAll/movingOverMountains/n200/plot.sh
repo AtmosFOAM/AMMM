@@ -2,6 +2,7 @@
 
 # Create mountainOver.ps
 cp system/mountainDict ../../../drawMountain/system/mountainDict
+cp system/blockMeshDict ../../../drawMountain/system/blockMeshDict
 cd ../../../drawMountain
 ./run.sh
 cd -

@@ -7,7 +7,7 @@ cd ../../../drawMountain
 cd -
 
 # Post process
-for field in mesh A T uniT monitor; do
+for field in T; do
     gmtFoam ${field}under
     for time in [0-9]*; do
         cat $time/${field}under.ps ../../../drawMountain/0/mountainOver.ps \
@@ -22,11 +22,11 @@ gmtFoam meshOverMountain
 # Make links for animategraphics
 mkdir -p animategraphics
 time=0
-for field in mesh A T uniT monitor meshOverMountain; do
+for field in T; do
 	ln -sf ../$time/$field.pdf animategraphics/${field}_$time.pdf
 done
 
-for field in mesh A T uniT monitor meshOverMountain; do
+for field in T; do
     for time in [1-9]*; do
 	    t=`echo $time | awk {'print $1/50'}`
 	    ln -sf ../$time/$field.pdf animategraphics/${field}_$t.pdf
@@ -34,6 +34,6 @@ for field in mesh A T uniT monitor meshOverMountain; do
 done
 
 # Make gif animation
-for field in mesh A T uniT monitor meshOverMountain; do
+for field in T; do
     eps2gif $field.gif ?/$field.pdf ??/$field.pdf ???/$field.pdf
 done

@@ -19,8 +19,8 @@ FoamFile
 
 libs
 (
-    "libfiniteVolumeAtmos.so"
-    "libshallowWater.so"
+//    "libfiniteVolumeAtmos.so"
+//    "libshallowWater.so"
     "libfiniteVolumeAtmosFOAMtools.so"
     "libmonitorFunction.so"
 );
@@ -33,7 +33,7 @@ stopAt          endTime;
 
 endTime         600;
 
-deltaT          1.0;
+deltaT          1;
 
 writeControl    runTime;
 

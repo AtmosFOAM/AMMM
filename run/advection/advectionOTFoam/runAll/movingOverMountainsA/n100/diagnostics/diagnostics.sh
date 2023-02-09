@@ -1,8 +1,6 @@
 # Create graphs
 mkdir -p plots
-gmtPlot diagnostics/Vchange.gmt
-gmtPlot diagnostics/Tchange.gmt
-gmtPlot diagnostics/ATchange.gmt
+gmtPlot diagnostics/AVchange.gmt
 grep '\bTime =' log | awk '{print $3}' > time.dat
 grep '\bT goes from' log | awk '{print $4, $6}' > T.dat
 grep '\buniT goes from' log | awk '{print $4, $6}' > uniT.dat

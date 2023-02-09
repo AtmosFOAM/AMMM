@@ -21,10 +21,12 @@ plotBoundaryDots false;
 FieldsToPlot
 (
     [monitor filledContours 1 4 0.1 "$GMTU/colours/white_blue_red.cpt"]
-    [none mesh "grey"]
+    [none mesh "0.25,black"]
+    [V contours 10e6 38e6 4e6 "2,black,10_5:0"]
+    [V contours 42e6 100e6 4e6 "2,black"]
 );
 
 // Options
 //region "0.01/0.9999e4/0/0.9999e4";
 //region "0.01/1.9999e4/0/2.01e4";
-annotate "minMax 0 -38000";
+//annotate "minMax 0 -38000";

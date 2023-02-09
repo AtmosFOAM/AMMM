@@ -1,1 +1,32 @@
-../../../shared/system/advectionDict
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "constant";
+    local           "";
+
+    class           dictionary;
+    object          advectionDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Specify the velocity field
+type              solidBodyRotation;
+solidBodyRotation (0 0 5.235987756e-3);
+centreOfRotation  (5e3 5e3 500);
+innerRadius       3.8e3;
+outerRadius       5e3;
+
+// ************************************************************************* //
